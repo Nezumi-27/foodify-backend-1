@@ -1,7 +1,7 @@
 # Foodify Capstone Project Back-end
 
-Information
-Spring Boot Version : 3.0.2\n
+**Information**
+Spring Boot Version : 3.0.2
 Java version : 17
 
 Dependencies:
