@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -26,7 +27,7 @@ public class Order {
     private String orderTrackingNumber;
 
     @Column(name = "order_time", nullable = false)
-    private Date orderTime;
+    private Timestamp orderTime;
 
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;

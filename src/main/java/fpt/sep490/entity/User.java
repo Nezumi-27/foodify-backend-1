@@ -1,40 +1,65 @@
 package fpt.sep490.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Set;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"username"}),
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"identified_code"})
+    })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "username", nullable = false)
+    private String username;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "phone", nullable = false)
-    private String phone;
+    @Column(name = "first_name", nullable = false)
+    private String firstname;
 
-    @Column(name = "district", nullable = false)
-    private String district;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
-    @Column(name = "ward", nullable = false)
-    private String ward;
+    @Column(name = "dob", nullable = false)
+    private Date dateOfBirth;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "is_locked", nullable = false)
+    private boolean isLocked;
+
+    @Column(name = "created_time", nullable = false)
+    private Timestamp createdTime;
 
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_address",
+                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "address_id", referencedColumnName = "id"))
+    private Set<Address> addresses;
 }
