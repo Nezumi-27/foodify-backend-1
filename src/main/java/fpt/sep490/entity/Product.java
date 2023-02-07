@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -33,11 +34,7 @@ public class Product {
 
     @Column(name = "created_time", nullable = false)
     @CreationTimestamp
-    private Date createdTime;
-
-    @Column(name = "updated_time", nullable = false)
-    @UpdateTimestamp
-    private Date updatedTime;
+    private Timestamp createdTime;
 
     @Column(name = "is_enabled", nullable = false)
     private boolean isEnabled;
@@ -64,5 +61,5 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    Set<Category> categories;
+    private Set<Category> categories;
 }
