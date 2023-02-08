@@ -17,6 +17,7 @@ public class UserDto {
     private Date dateOfBirth;
     private String phoneNumber;
     private String email;
+    private String imageUrl;
     private boolean isLocked;
     private Timestamp createdTime;
     private String identifiedCode;
