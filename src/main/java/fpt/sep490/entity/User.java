@@ -44,6 +44,9 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
     @Column(name = "is_locked", nullable = false)
     private boolean isLocked;
 

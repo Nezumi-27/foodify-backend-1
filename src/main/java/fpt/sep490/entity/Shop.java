@@ -22,6 +22,9 @@ public class Shop {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "is_enabled",nullable = false)
     private boolean isEnabled;
 
