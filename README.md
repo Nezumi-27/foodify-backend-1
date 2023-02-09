@@ -1,7 +1,7 @@
 # Foodify Capstone Project Back-end
 
 **Information:**
-- Spring Boot Version : 3.0.2
+- Spring Boot Version : 2.7.6
 - Java version : 17
 
 **Dependencies:**
@@ -11,3 +11,5 @@
 - Spring Security
 - MySQL driver
 - Lombok
+- Spring Rest Data
+- Swagger Documentation
