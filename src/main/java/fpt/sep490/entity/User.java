@@ -2,6 +2,7 @@ package fpt.sep490.entity;
 
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
         @UniqueConstraint(columnNames = {"email"}),
         @UniqueConstraint(columnNames = {"identified_code"})
     })
@@ -23,8 +23,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -41,9 +41,6 @@ public class User {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
@@ -51,12 +48,13 @@ public class User {
     private boolean isLocked;
 
     @Column(name = "created_time", nullable = false)
+    @CreationTimestamp
     private Timestamp createdTime;
 
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
 
