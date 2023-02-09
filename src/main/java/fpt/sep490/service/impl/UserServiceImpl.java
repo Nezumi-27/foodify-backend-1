@@ -5,7 +5,9 @@ import fpt.sep490.payload.UserDto;
 import fpt.sep490.repository.UserRepository;
 import fpt.sep490.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
@@ -16,9 +18,16 @@ public class UserServiceImpl implements UserService {
         this.mapper = mapper;
     }
 
+    //Create User
     @Override
     public UserDto createUser(UserDto userDto) {
-        return null;
+        User user = mapToEntity(userDto);
+
+        userRepository.save(user);
+
+        UserDto userResponse = mapToDTO(user);
+
+        return userResponse;
     }
 
     private User mapToEntity(UserDto userDto){

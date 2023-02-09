@@ -2,11 +2,11 @@ package fpt.sep490.payload;
 
 import fpt.sep490.entity.Address;
 import fpt.sep490.entity.Role;
-import jakarta.persistence.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Set;
 
 public class UserDto {
     private Long id;
@@ -16,11 +16,14 @@ public class UserDto {
     private String lastName;
     private Date dateOfBirth;
     private String phoneNumber;
+
+    @NotEmpty
+    @Email
     private String email;
     private String imageUrl;
     private boolean isLocked;
     private Timestamp createdTime;
     private String identifiedCode;
-//    private Role role;
+    private Role role;
 //    private Set<Address> addresses;
 }

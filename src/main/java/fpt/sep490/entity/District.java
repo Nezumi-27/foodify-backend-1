@@ -1,6 +1,6 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "district")
+@Table(name = "districts")
 public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

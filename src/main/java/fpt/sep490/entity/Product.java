@@ -1,6 +1,6 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +52,7 @@ public class Product {
     private int reviewCount;
 
     @ManyToOne
-    @JoinColumn(name = "shop_id", referencedColumnName = "id")
+    @JoinColumn(name = "shop_id")
     private Shop shop;
 
     @ManyToMany
