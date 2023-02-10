@@ -32,6 +32,15 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto){
+        if(userRepository.existsByEmail(signUpDto.getEmail())){
+            return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
+        }
+
+        if(userRepository.existsByPhoneNumber(signUpDto.getPhoneNumber())){
+            return new ResponseEntity<>("Phone number is already taken", HttpStatus.BAD_REQUEST);
+        }
+
+
         User user = new User();
         user.setEmail(signUpDto.getEmail());
         user.setPhoneNumber(signUpDto.getPhoneNumber());
