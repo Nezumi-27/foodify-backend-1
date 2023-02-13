@@ -4,6 +4,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"email"}),
         @UniqueConstraint(columnNames = {"identified_code"})
     })
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

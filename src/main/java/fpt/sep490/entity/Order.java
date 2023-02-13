@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "orders", uniqueConstraints = {@UniqueConstraint(columnNames = {"order_tracking_number"})})
-public class Order {
+public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
