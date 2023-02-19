@@ -9,7 +9,7 @@
 - Spring Boot devtools
 - Spring Data JPA
 - Spring Security
+- JSON Web token
 - MySQL driver
 - Lombok
-- Spring Rest Data
 - Swagger Documentation
