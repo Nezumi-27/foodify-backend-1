@@ -1,10 +1,12 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -12,8 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "ward")
-public class Ward {
+@Table(name = "wards")
+public class Ward implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +24,6 @@ public class Ward {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "district_id", referencedColumnName = "id")
+    @JoinColumn(name = "district_id")
     private District district;
 }

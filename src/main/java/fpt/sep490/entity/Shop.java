@@ -1,10 +1,12 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -12,8 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "shops")
-public class Shop {
+@Table(name = "shops", uniqueConstraints = {@UniqueConstraint(columnNames = "user_id")})
+public class Shop implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +24,14 @@ public class Shop {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "is_enabled",nullable = false)
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     @Column(name = "is_student",nullable = false)
-    private boolean isStudent;
+    private Boolean isStudent;
 
     @OneToOne
     @JoinColumn(name = "user_id")
