@@ -6,4 +6,5 @@ public class AppConstants {
     public static final String DEFAULT_SORT_DIRECTION = "asc";
 
     public static final String DEFAULT_ADDRESS_PAGE_SIZE = "5";
+    public static final String DEFAULT_SHOP_PAGE_SIZE = "10";
 }

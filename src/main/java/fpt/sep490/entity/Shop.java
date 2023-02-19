@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "shops")
+@Table(name = "shops", uniqueConstraints = {@UniqueConstraint(columnNames = "user_id")})
 public class Shop implements Serializable {
 
     @Id
@@ -28,10 +28,10 @@ public class Shop implements Serializable {
     private String imageUrl;
 
     @Column(name = "is_enabled",nullable = false)
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     @Column(name = "is_student",nullable = false)
-    private boolean isStudent;
+    private Boolean isStudent;
 
     @OneToOne
     @JoinColumn(name = "user_id")
