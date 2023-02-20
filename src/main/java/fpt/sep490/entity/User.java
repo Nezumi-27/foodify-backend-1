@@ -55,7 +55,7 @@ public class User implements Serializable {
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,7 +35,10 @@ public class Shop implements Serializable {
     @Column(name = "is_student",nullable = false)
     private Boolean isStudent;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
 }

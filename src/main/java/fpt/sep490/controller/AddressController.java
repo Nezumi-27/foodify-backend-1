@@ -39,19 +39,19 @@ public class AddressController {
 
     @ApiOperation("Get Address by Id")
     @GetMapping("{id}")
-    public ResponseEntity<AddressDto> getAddressById(@RequestParam(value = "id") Long addressId){
+    public ResponseEntity<AddressDto> getAddressById(@PathVariable(value = "id") Long addressId){
         return ResponseEntity.ok(addressService.getAddressById(addressId));
     }
 
     @ApiOperation("Update Address by Id")
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> updateAddress(@RequestBody AddressDto addressDto, @RequestParam(value = "id") Long addressId){
+    public ResponseEntity<AddressDto> updateAddress(@RequestBody AddressDto addressDto, @PathVariable(value = "id") Long addressId){
         return ResponseEntity.ok(addressService.updateAddress(addressId, addressDto));
     }
 
     @ApiOperation("Delete Address by Id")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteAddress(@RequestParam(value = "id") Long addressId){
+    public ResponseEntity<String> deleteAddress(@PathVariable(value = "id") Long addressId){
         addressService.deleteAddress(addressId);
         return ResponseEntity.ok("Address deleted successfully!");
     }
