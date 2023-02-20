@@ -70,4 +70,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Shipper shipper;
 }

@@ -25,7 +25,7 @@ public class Shipper implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "shop_id")
     private Shop shop;
 }
