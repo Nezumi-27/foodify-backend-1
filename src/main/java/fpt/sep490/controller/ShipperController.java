@@ -1,7 +1,7 @@
 package fpt.sep490.controller;
 
 import fpt.sep490.payload.ShipperDto;
-import fpt.sep490.payload.ShipperResponse;
+import fpt.sep490.payload.ShipperResponsePageable;
 import fpt.sep490.service.ShipperService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -28,7 +28,7 @@ public class ShipperController {
 
     @ApiOperation("Get All Shippers")
     @GetMapping
-    public ShipperResponse getAllShippers(
+    public ShipperResponsePageable getAllShippers(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHIPPER_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,

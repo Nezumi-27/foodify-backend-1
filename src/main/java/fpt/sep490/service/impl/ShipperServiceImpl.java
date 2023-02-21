@@ -7,8 +7,8 @@ import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.PageableDto;
 import fpt.sep490.payload.ShipperDto;
-import fpt.sep490.payload.ShipperDtoFull;
 import fpt.sep490.payload.ShipperResponse;
+import fpt.sep490.payload.ShipperResponsePageable;
 import fpt.sep490.repository.ShipperRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.repository.UserRepository;
@@ -58,14 +58,14 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
-    public ShipperResponse getAllShipper(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public ShipperResponsePageable getAllShipper(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
         Page<Shipper> shippers = shipperRepository.findAll(pageable);
         List<Shipper> shipperList = shippers.getContent();
-        List<ShipperDtoFull> content = shipperList.stream().map(shipper -> mapper.map(shipper, ShipperDtoFull.class)).collect(Collectors.toList());
+        List<ShipperResponse> content = shipperList.stream().map(shipper -> mapper.map(shipper, ShipperResponse.class)).collect(Collectors.toList());
 
         PageableDto pageableDto = new PageableDto();
         pageableDto.setPageNo(shippers.getNumber());
@@ -74,10 +74,10 @@ public class ShipperServiceImpl implements ShipperService {
         pageableDto.setTotalPages(shippers.getTotalPages());
         pageableDto.setLast(shippers.isLast());
 
-        ShipperResponse shipperResponse = new ShipperResponse();
-        shipperResponse.setShippers(content);
-        shipperResponse.setPage(pageableDto);
-        return shipperResponse;
+        ShipperResponsePageable shipperResponsePageable = new ShipperResponsePageable();
+        shipperResponsePageable.setShippers(content);
+        shipperResponsePageable.setPage(pageableDto);
+        return shipperResponsePageable;
     }
 
     @Override

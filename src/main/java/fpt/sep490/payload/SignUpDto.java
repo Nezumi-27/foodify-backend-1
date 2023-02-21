@@ -1,7 +1,7 @@
 package fpt.sep490.payload;
 
 import fpt.sep490.entity.Role;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -9,7 +9,10 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SignUpDto {
 
     @NotEmpty

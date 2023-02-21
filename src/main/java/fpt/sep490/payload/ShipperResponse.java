@@ -1,13 +1,13 @@
 package fpt.sep490.payload;
 
-import fpt.sep490.entity.Shop;
-import fpt.sep490.entity.User;
-import lombok.Data;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShipperResponse {
-    private List<ShipperDtoFull> shippers;
-    private PageableDto page;
+    private Long id;
+    private UserDto user;
+    private ShopDto shop;
 }
