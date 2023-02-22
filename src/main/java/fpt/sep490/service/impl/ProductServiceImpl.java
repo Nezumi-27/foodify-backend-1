@@ -10,6 +10,7 @@ import fpt.sep490.payload.ProductDto;
 import fpt.sep490.payload.ProductResponse;
 import fpt.sep490.payload.ProductResponsePageable;
 import fpt.sep490.repository.CategoryRepository;
+import fpt.sep490.repository.ProductImageRepository;
 import fpt.sep490.repository.ProductRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.service.ProductService;
@@ -31,12 +32,14 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
     private ProductRepository productRepository;
     private ShopRepository shopRepository;
+    private ProductImageRepository productImageRepository;
     private ModelMapper mapper;
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ModelMapper mapper) {
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ProductImageRepository productImageRepository, ModelMapper mapper) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
+        this.productImageRepository = productImageRepository;
         this.mapper = mapper;
     }
 
@@ -136,6 +139,13 @@ public class ProductServiceImpl implements ProductService {
         responses.setProducts(content);
         responses.setPage(pageableDto);
         return responses;
+    }
+
+    @Override
+    public ProductResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        return mapper.map(product, ProductResponse.class);
     }
 
     @Override

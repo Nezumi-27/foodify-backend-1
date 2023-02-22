@@ -21,5 +21,5 @@ public class ProductResponse {
     private int reviewCount;
     private ShopDto shop;
     private Set<CategoryDto> categories;
-    private Set<ProductImageDto> imageDtoSet;
+    private Set<ProductImageDto> images;
 }

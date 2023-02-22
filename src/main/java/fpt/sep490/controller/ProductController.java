@@ -64,6 +64,12 @@ public class ProductController {
         return productService.getAllProductsByCategoryIds(categoryIds, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @ApiOperation("Get Product By Id")
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable(value = "id") Long productId){
+        return ResponseEntity.ok(productService.getProductById(productId));
+    }
+
     @ApiOperation("Update Product By Id")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id") Long productId,

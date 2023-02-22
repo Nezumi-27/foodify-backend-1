@@ -15,6 +15,8 @@ public interface ProductService {
 
     ProductResponsePageable getAllProductsByCategoryIds(List<Long> categoryIds, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    ProductResponse getProductById(Long productId);
+
     ProductResponse updateProduct(Long productId, ProductDto productDto);
 
     void deleteProduct(Long productId);
