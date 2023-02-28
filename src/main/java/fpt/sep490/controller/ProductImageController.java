@@ -37,4 +37,43 @@ public class ProductImageController {
     ){
         return productImageService.getAllProductImages(pageNo, pageSize, sortBy, sortDir);
     }
+
+    @ApiOperation("Get Product Image By Product")
+    @GetMapping("/products/{productId}/images")
+    public ProductImageResponsePageable getImagesByProductId(
+            @PathVariable(value = "productId") Long productId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return productImageService.getProductImagesByProductId(productId, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @ApiOperation("Get Product Image By Id")
+    @GetMapping("/products/{productId}/images/{id}")
+    public ResponseEntity<ProductImageDto> getImageById(
+            @PathVariable(value = "productId") Long productId,
+            @PathVariable(value = "id") Long id
+    ){
+        return ResponseEntity.ok(productImageService.getProductImageById(productId, id));
+    }
+
+    @ApiOperation("Update Product Image By Id")
+    @PutMapping("/products/{productId}/images/{id}")
+    public ResponseEntity<ProductImageDto> updateImage(
+            @PathVariable(value = "productId") Long productId,
+            @PathVariable(value = "id") Long id,
+            @RequestBody ProductImageDto productImageDto
+    ){
+        return ResponseEntity.ok(productImageService.updateProductById(productId, id, productImageDto));
+    }
+
+    @ApiOperation("Delete Product Image By Id")
+    @DeleteMapping("/products/{productId}/images/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable(value = "productId") Long productId,
+                                              @PathVariable(value = "id") Long id){
+        productImageService.deleteProductById(productId, id);
+        return ResponseEntity.ok("Image deleted successfully");
+    }
 }

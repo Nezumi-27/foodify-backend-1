@@ -18,7 +18,7 @@ public class ProductDto {
     private String description;
     private Boolean isEnabled;
     private float discountPercent;
-    private BigInteger cost;
+    private Long cost;
     private float averageRating;
     private int reviewCount;
     private Long shopId;

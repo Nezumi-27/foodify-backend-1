@@ -46,8 +46,8 @@ public class ShipperController {
     @ApiOperation("Update Shipper by Id")
     @PutMapping("{id}")
     public ResponseEntity<ShipperDto> updateShipper(@PathVariable(value = "id") Long id,
-                                                    @RequestBody ShipperDto shipperDto){
-        return ResponseEntity.ok(shipperService.updateShipper(id, shipperDto));
+                                                    @RequestParam Boolean isShipping){
+        return ResponseEntity.ok(shipperService.updateShipper(id, isShipping));
     }
 
     @ApiOperation("Delete Shipper by Id")

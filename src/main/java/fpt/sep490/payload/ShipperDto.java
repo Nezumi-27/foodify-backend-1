@@ -10,4 +10,5 @@ public class ShipperDto {
     private Long id;
     private Long userId;
     private Long shopId;
+    private Boolean isShipping;
 }

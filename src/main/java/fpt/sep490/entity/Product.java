@@ -41,7 +41,7 @@ public class Product implements Serializable {
     private Boolean isEnabled;
 
     @Column(name = "cost", nullable = false)
-    private BigInteger cost;
+    private Long cost;
 
     @Column(name = "discount_percent")
     private float discountPercent;

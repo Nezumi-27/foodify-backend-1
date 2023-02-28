@@ -10,4 +10,5 @@ public class ShipperResponse {
     private Long id;
     private UserDto user;
     private ShopDto shop;
+    private Boolean isShipping;
 }

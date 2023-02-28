@@ -15,9 +15,8 @@ public class UserDto {
     private Long id;
     private String email;
     private String password;
-    private String firstname;
-    private String lastName;
-    private Date dateOfBirth;
+    private String fullName;
+    private String dateOfBirth;
     private String phoneNumber;
     private String imageUrl;
     private boolean isLocked;

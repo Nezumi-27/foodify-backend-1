@@ -88,23 +88,14 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
-    public ShipperDto updateShipper(Long shipperId, ShipperDto shipperDto) {
+    public ShipperDto updateShipper(Long shipperId, Boolean isShipping) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));
 
-        Shop shop = shopRepository.findById(shipperDto.getShopId())
-                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shipperDto.getShopId()));
+        shipper.setIsShipping(isShipping);
+        Shipper updateShipper = shipperRepository.save(shipper);
 
-        User user = userRepository.findById(shipperDto.getUserId())
-                .orElseThrow(()-> new ResourceNotFoundException("User", "id", shipperDto.getUserId()));
-
-        if(!user.getRole().getName().equals("ROLE_SHIPPER")){
-            throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This user doesn't have shipper role");
-        }
-        shipper.setShop(shop);
-        shipper.setUser(user);
-
-        return mapper.map(shipper, ShipperDto.class);
+        return mapper.map(updateShipper, ShipperDto.class);
     }
 
     @Override

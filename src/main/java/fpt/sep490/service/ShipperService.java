@@ -7,6 +7,6 @@ public interface ShipperService {
     ShipperDto createShipper(ShipperDto shipperDto);
     ShipperResponsePageable getAllShipper(int pageNo, int pageSize, String sortBy, String sortDir);
     ShipperDto getShipperById(Long shipperId);
-    ShipperDto updateShipper(Long shipperId, ShipperDto shipperDto);
+    ShipperDto updateShipper(Long shipperId, Boolean isShipping);
     void deleteShipper(Long shipperId);
 }

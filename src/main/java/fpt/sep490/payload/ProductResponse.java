@@ -16,7 +16,7 @@ public class ProductResponse {
     private String description;
     private Boolean isEnabled;
     private float discountPercent;
-    private BigInteger cost;
+    private Long cost;
     private float averageRating;
     private int reviewCount;
     private ShopDto shop;

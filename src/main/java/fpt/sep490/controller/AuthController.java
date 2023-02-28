@@ -45,12 +45,10 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setPhoneNumber(signUpDto.getPhoneNumber());
         user.setPassword(signUpDto.getPassword());
-        user.setFirstname(signUpDto.getFirstName());
-        user.setLastName(signUpDto.getLastName());
+        user.setFullName(signUpDto.getFullName());
         user.setDateOfBirth(signUpDto.getDateOfBirth());
         user.setImageUrl(signUpDto.getImageUrl());
         user.setIdentifiedCode(signUpDto.getIdentifiedCode());
-        System.out.println(signUpDto.getIsLocked());
         user.setLocked(signUpDto.getIsLocked());
 
         Role role = roleRepository.findByName(signUpDto.getRoleName());

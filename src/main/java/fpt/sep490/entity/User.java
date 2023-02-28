@@ -30,14 +30,11 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstname;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "dob", nullable = false)
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
@@ -71,6 +68,9 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Shipper shipper;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
 }
