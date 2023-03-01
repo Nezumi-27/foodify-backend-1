@@ -1,7 +1,7 @@
 package fpt.sep490.payload;
 
 import fpt.sep490.entity.Role;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -9,7 +9,10 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SignUpDto {
 
     @NotEmpty
@@ -23,14 +26,11 @@ public class SignUpDto {
     @NotEmpty(message = "Password must not be empty")
     private String password;
 
-    @NotEmpty(message = "First name must not be empty")
-    private String firstName;
-
-    @NotEmpty(message = "Last name must not be empty")
-    private String lastName;
+    @NotEmpty(message = "Full name must not be empty")
+    private String fullName;
 
     @NotEmpty(message = "Date of birth must not be empty")
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @NotEmpty(message = "Image url must not be empty")
     private String imageUrl;

@@ -38,18 +38,18 @@ public class Product implements Serializable {
     private Timestamp createdTime;
 
     @Column(name = "is_enabled", nullable = false)
-    private boolean isEnabled;
-
-    @Column(name = "discount_percent", nullable = false)
-    private float discountPercent;
+    private Boolean isEnabled;
 
     @Column(name = "cost", nullable = false)
-    private BigInteger cost;
+    private Long cost;
 
-    @Column(name = "average_rating", nullable = false)
+    @Column(name = "discount_percent")
+    private float discountPercent;
+
+    @Column(name = "average_rating")
     private float averageRating;
 
-    @Column(name = "review_count", nullable = false)
+    @Column(name = "review_count")
     private int reviewCount;
 
     @ManyToOne
@@ -63,4 +63,10 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductImage> images;
+
+    @ManyToMany(mappedBy = "products")
+    private Set<User> users;
 }

@@ -30,14 +30,11 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstname;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "dob", nullable = false)
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
@@ -46,7 +43,7 @@ public class User implements Serializable {
     private String imageUrl;
 
     @Column(name = "is_locked", nullable = false)
-    private boolean isLocked;
+    private Boolean isLocked;
 
     @Column(name = "created_time", nullable = false)
     @CreationTimestamp
@@ -55,7 +52,7 @@ public class User implements Serializable {
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -70,4 +67,10 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shipper shipper;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
 }

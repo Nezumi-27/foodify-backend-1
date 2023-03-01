@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,7 +26,13 @@ public class Shipper implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @Column(name = "is_shipping")
+    private Boolean isShipping;
+
+    @OneToMany(mappedBy = "shipper", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
 }

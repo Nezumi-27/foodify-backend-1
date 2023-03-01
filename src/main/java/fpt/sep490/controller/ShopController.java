@@ -45,13 +45,13 @@ public class ShopController {
 
     @ApiOperation("Update Shop by Id")
     @PutMapping("{id}")
-    public ResponseEntity<ShopDto> updateShop(@RequestBody ShopDto shopDto, @RequestParam(name = "id") Long shopId){
+    public ResponseEntity<ShopDto> updateShop(@RequestBody ShopDto shopDto, @PathVariable(name = "id") Long shopId){
         return ResponseEntity.ok(shopService.updateShop(shopId, shopDto));
     }
 
     @ApiOperation("Delete Shop by Id")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteShop(@RequestParam(name = "id") Long shopId){
+    public ResponseEntity<String> deleteShop(@PathVariable(name = "id") Long shopId){
         shopService.deleteShop(shopId);
         return ResponseEntity.ok("Shop deleted successfully");
     }

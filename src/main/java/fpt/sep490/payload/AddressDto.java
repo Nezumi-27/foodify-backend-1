@@ -1,8 +1,11 @@
 package fpt.sep490.payload;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddressDto {
     private Long id;
     private String address;

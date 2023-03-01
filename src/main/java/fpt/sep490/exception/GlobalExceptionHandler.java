@@ -1,6 +1,7 @@
 package fpt.sep490.exception;
 
 import fpt.sep490.payload.ErrorDetails;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
 
     //Global Exception
     @ExceptionHandler(Exception.class)

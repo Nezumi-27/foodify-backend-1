@@ -2,6 +2,8 @@ package fpt.sep490.controller;
 
 import fpt.sep490.entity.Role;
 import fpt.sep490.entity.User;
+import fpt.sep490.exception.FoodifyAPIException;
+import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.SignUpDto;
 import fpt.sep490.repository.RoleRepository;
 import fpt.sep490.repository.UserRepository;
@@ -45,15 +47,14 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setPhoneNumber(signUpDto.getPhoneNumber());
         user.setPassword(signUpDto.getPassword());
-        user.setFirstname(signUpDto.getFirstName());
-        user.setLastName(signUpDto.getLastName());
+        user.setFullName(signUpDto.getFullName());
         user.setDateOfBirth(signUpDto.getDateOfBirth());
         user.setImageUrl(signUpDto.getImageUrl());
         user.setIdentifiedCode(signUpDto.getIdentifiedCode());
-        System.out.println(signUpDto.getIsLocked());
-        user.setLocked(signUpDto.getIsLocked());
+        user.setIsLocked(signUpDto.getIsLocked());
 
-        Role role = roleRepository.findByName(signUpDto.getRoleName());
+        Role role = roleRepository.findByName(signUpDto.getRoleName())
+                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Role doesn't found with name: " + signUpDto.getRoleName()));
         user.setRole(role);
 
         userRepository.save(user);

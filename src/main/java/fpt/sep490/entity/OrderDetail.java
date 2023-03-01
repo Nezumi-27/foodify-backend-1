@@ -26,13 +26,13 @@ public class OrderDetail implements Serializable {
     private int quantity;
 
     @Column(name = "sub_total", nullable = false)
-    private BigInteger subTotal;
+    private Long subTotal;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }
