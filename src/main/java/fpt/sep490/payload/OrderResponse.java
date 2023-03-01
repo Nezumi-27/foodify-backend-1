@@ -1,11 +1,6 @@
 package fpt.sep490.payload;
 
-import fpt.sep490.entity.Address;
-import fpt.sep490.entity.Shipper;
-import fpt.sep490.entity.User;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 public class OrderResponse {

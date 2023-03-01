@@ -43,7 +43,7 @@ public class User implements Serializable {
     private String imageUrl;
 
     @Column(name = "is_locked", nullable = false)
-    private boolean isLocked;
+    private Boolean isLocked;
 
     @Column(name = "created_time", nullable = false)
     @CreationTimestamp
