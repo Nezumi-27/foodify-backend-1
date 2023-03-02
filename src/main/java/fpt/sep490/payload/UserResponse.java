@@ -19,7 +19,7 @@ public class UserResponse {
     private Timestamp createdTime;
     private String identifiedCode;
     private RoleDto role;
-    private Set<AddressResponse> addresses;
+    private Set<AddressDto> addresses;
     private Set<ProductResponse> products;
     private Set<OrderResponse> orders;
 }

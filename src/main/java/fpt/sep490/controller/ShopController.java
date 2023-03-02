@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD APIs for Shop Resources")
 @RestController
-@RequestMapping("/shops")
+@RequestMapping("/api/shops")
 public class ShopController {
     private ShopServiceImpl shopService;
 
