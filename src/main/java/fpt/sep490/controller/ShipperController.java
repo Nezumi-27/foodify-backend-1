@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/shippers")
 public class ShipperController {
-    private ShipperService shipperService;
+    private final ShipperService shipperService;
 
     public ShipperController(ShipperService shipperService) {
         this.shipperService = shipperService;
@@ -38,16 +38,23 @@ public class ShipperController {
     }
 
     @ApiOperation("Get Shipper By Id")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ShipperDto> getShipperById(@PathVariable(value = "id") Long id){
         return ResponseEntity.ok(shipperService.getShipperById(id));
     }
 
-    @ApiOperation("Update Shipper by Id")
-    @PutMapping("{id}")
-    public ResponseEntity<ShipperDto> updateShipper(@PathVariable(value = "id") Long id,
+    @ApiOperation("Update Shipper Shipping Status by Id")
+    @PutMapping("/{id}/shipping")
+    public ResponseEntity<ShipperDto> updateShipperShippingStatus(@PathVariable(value = "id") Long id,
                                                     @RequestParam Boolean isShipping){
-        return ResponseEntity.ok(shipperService.updateShipper(id, isShipping));
+        return ResponseEntity.ok(shipperService.updateShipperShippingStatus(id, isShipping));
+    }
+
+    @ApiOperation("Update Shipper Active Status by Id")
+    @PutMapping("/{id}/active")
+    public ResponseEntity<ShipperDto> updateShipperActiveStatus(@PathVariable(value = "id") Long id,
+                                                    @RequestParam Boolean isActive){
+        return ResponseEntity.ok(shipperService.swapShipperStatus(id, isActive));
     }
 
     @ApiOperation("Delete Shipper by Id")

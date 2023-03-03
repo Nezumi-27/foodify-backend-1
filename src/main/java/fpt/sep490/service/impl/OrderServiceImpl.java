@@ -54,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()-> new ResourceNotFoundException("Address", "id", orderDto.getAddressId()));
 
         Order order = mapper.map(orderDto, Order.class);
+        order.setTotal(orderDto.getShippingCost() + orderDto.getProductCost());
         order.setUser(user);
         order.setShipper(shipper);
         order.setAddress(address);
@@ -167,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(orderDto.getPaymentMethod());
         order.setProductCost(orderDto.getProductCost());
         order.setShippingCost(orderDto.getShippingCost());
-        order.setTotal(orderDto.getTotal());
+        order.setTotal(orderDto.getProductCost() + orderDto.getShippingCost());
         order.setStatus(orderDto.getStatus());
 
         return mapper.map(orderRepository.save(order), OrderResponse.class);
