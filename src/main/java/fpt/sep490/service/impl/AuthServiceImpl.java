@@ -7,9 +7,9 @@ import fpt.sep490.payload.LoginDto;
 import fpt.sep490.payload.SignUpDto;
 import fpt.sep490.repository.RoleRepository;
 import fpt.sep490.repository.UserRepository;
+import fpt.sep490.security.JwtTokenProvider;
 import fpt.sep490.service.AuthService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,12 +23,14 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -37,7 +39,9 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getEmailOrPhoneNumber(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User login successfully";
+
+        String token = jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 
     @Override

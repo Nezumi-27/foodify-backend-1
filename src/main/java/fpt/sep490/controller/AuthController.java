@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.entity.Role;
 import fpt.sep490.entity.User;
 import fpt.sep490.exception.FoodifyAPIException;
+import fpt.sep490.payload.JwtAuthResponse;
 import fpt.sep490.payload.LoginDto;
 import fpt.sep490.payload.SignUpDto;
 import fpt.sep490.repository.RoleRepository;
@@ -30,8 +31,13 @@ public class AuthController {
 
     @ApiOperation("Login")
     @PostMapping(value = {"/login", "/signin"})
-    public ResponseEntity<String> login(@RequestBody  LoginDto loginDto){
-        return ResponseEntity.ok(authService.login(loginDto));
+    public ResponseEntity<JwtAuthResponse> login(@RequestBody  LoginDto loginDto){
+        String token = authService.login(loginDto);
+
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+
+        return ResponseEntity.ok(jwtAuthResponse);
     }
 
     @ApiOperation("Sign-up")
