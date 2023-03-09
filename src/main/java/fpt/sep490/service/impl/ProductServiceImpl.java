@@ -177,4 +177,27 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         productRepository.delete(product);
     }
+
+    @Override
+    public ProductResponsePageable findProductsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Product> products = productRepository.findProductsByNameLikeOrNameContaining(name, name, pageable);
+        List<Product> list = products.getContent();
+        List<ProductResponse> content = list.stream().map(product -> mapper.map(product, ProductResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(products.getNumber());
+        pageableDto.setPageSize(products.getSize());
+        pageableDto.setTotalElements(products.getTotalElements());
+        pageableDto.setTotalPages(products.getTotalPages());
+        pageableDto.setLast(products.isLast());
+
+        ProductResponsePageable responses = new ProductResponsePageable();
+        responses.setProducts(content);
+        responses.setPage(pageableDto);
+        return responses;
+    }
 }
