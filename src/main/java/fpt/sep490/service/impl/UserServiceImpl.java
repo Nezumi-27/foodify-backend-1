@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setPassword(userDto.getPassword());
         user.setFullName(userDto.getFullName());
         user.setDateOfBirth(userDto.getDateOfBirth());
         user.setImageUrl(userDto.getImageUrl());
@@ -137,7 +136,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
         user.setFullName(userDto.getFullName());
         user.setDateOfBirth(userDto.getDateOfBirth());
         user.setPhoneNumber(userDto.getPhoneNumber());

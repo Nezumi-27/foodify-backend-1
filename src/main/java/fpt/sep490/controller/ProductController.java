@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @ApiOperation("Get Products By Categories")
-    @GetMapping("/categories/{id}")
+    @GetMapping("/categories")
     public ProductResponsePageable getProductsByCategories(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,

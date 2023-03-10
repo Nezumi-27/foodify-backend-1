@@ -26,7 +26,7 @@ public class Shop implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false, length = 512)
     private String description;
 
     @Column(name = "image_url", nullable = false)
