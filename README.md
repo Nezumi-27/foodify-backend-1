@@ -13,3 +13,4 @@
 - Lombok
 - JSON Web Token (Api, Jackson, Impl)
 - Spring Fox Swagger UI
+- Firebase Admin SDK
