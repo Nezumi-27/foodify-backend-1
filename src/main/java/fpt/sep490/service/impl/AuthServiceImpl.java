@@ -7,7 +7,6 @@ import fpt.sep490.payload.LoginDto;
 import fpt.sep490.payload.SignUpDto;
 import fpt.sep490.repository.RoleRepository;
 import fpt.sep490.repository.UserRepository;
-import fpt.sep490.security.JwtTokenProvider;
 import fpt.sep490.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,26 +22,26 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
-    private JwtTokenProvider jwtTokenProvider;
+//    private JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
+//        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @Override
-    public String login(LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getEmailOrPhoneNumber(), loginDto.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtTokenProvider.generateToken(authentication);
-        return token;
-    }
+//    @Override
+//    public String login(LoginDto loginDto) {
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                loginDto.getEmailOrPhoneNumber(), loginDto.getPassword()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        String token = jwtTokenProvider.generateToken(authentication);
+//        return token;
+//    }
 
     @Override
     public String register(SignUpDto signUpDto) {

@@ -4,7 +4,7 @@ import fpt.sep490.payload.LoginDto;
 import fpt.sep490.payload.SignUpDto;
 
 public interface AuthService {
-    String login(LoginDto loginDto);
+//    String login(LoginDto loginDto);
 
     String register(SignUpDto signUpDto);
 }

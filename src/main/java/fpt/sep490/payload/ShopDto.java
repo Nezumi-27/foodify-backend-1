@@ -11,6 +11,9 @@ import javax.validation.constraints.NotEmpty;
 public class ShopDto {
     private Long id;
 
+    @NotEmpty(message = "Shop name must not be empty")
+    private String name;
+
     @NotEmpty(message = "Shop description must not be empty")
     private String description;
 
