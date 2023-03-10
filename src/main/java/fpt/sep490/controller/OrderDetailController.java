@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("REST APIs for Order Details")
@@ -21,6 +22,7 @@ public class OrderDetailController {
         this.orderDetailService = orderDetailService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @ApiOperation("Create new Order Detail")
     @PostMapping("/api/orders/{orderId}/details")
     public ResponseEntity<OrderDetailResponse> createOrderDetail(@PathVariable(value = "orderId") Long orderId,
@@ -28,6 +30,7 @@ public class OrderDetailController {
         return new ResponseEntity<>(orderDetailService.createOrderDetail(orderId, orderDetailDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Get all Order Details")
     @GetMapping("/api/orders/details")
     public OrderDetailResponsePageable getAllOrderDetails(
@@ -39,6 +42,7 @@ public class OrderDetailController {
         return orderDetailService.getAllOrderDetail(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Get Order Details by Order")
     @GetMapping("/api/orders/{orderId}/details")
     public OrderDetailResponsePageable getOrderDetailsByOrder(
@@ -51,6 +55,7 @@ public class OrderDetailController {
         return orderDetailService.getOrderDetailsByOrderId(orderId ,pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Get Order Details By Id")
     @GetMapping("/api/orders/{orderId}/details/{detailId}")
     public ResponseEntity<OrderDetailResponse> getOrderDetailById(@PathVariable(value = "orderId") Long orderId,
@@ -58,6 +63,7 @@ public class OrderDetailController {
         return ResponseEntity.ok(orderDetailService.getOrderDetailById(orderId, detailId));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP')")
     @ApiOperation("Update Order Details By Id")
     @PutMapping("/api/orders/{orderId}/details/{detailId}")
     public ResponseEntity<OrderDetailResponse> updateOrderDetail(@PathVariable(value = "orderId") Long orderId,
@@ -66,6 +72,7 @@ public class OrderDetailController {
         return ResponseEntity.ok(orderDetailService.updateOrderDetail(orderId, detailId, detailDto));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP')")
     @ApiOperation("Delete Order Details By Id")
     @DeleteMapping("/api/orders/{orderId}/details/{detailId}")
     public ResponseEntity<String> deleteOrderDetail(@PathVariable(value = "orderId") Long orderId,

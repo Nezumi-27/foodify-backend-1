@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class WardController {
         this.wardService = wardService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create Ward by District Id")
     @PostMapping("/districts/{districtId}/wards")
     public ResponseEntity<WardDto> createWard(@PathVariable(value = "districtId") Long districtId,
@@ -42,6 +44,7 @@ public class WardController {
         return new ResponseEntity<>(wardDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Update Ward by Id")
     @PutMapping("/districts/{districtId}/wards/{wardId}")
     public ResponseEntity<WardDto> updateWard(@PathVariable(value = "districtId") Long districtId,
@@ -51,6 +54,7 @@ public class WardController {
         return new ResponseEntity<>(updateWard, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Delete Ward by Id")
     @DeleteMapping("/districts/{districtId}/wards/{wardId}")
     public ResponseEntity<String> updateWard(@PathVariable(value = "districtId") Long districtId,

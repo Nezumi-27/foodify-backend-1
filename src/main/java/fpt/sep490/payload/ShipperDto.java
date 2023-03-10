@@ -17,9 +17,9 @@ public class ShipperDto {
     @NotEmpty(message = "Shop id must not be empty")
     private Long shopId;
 
-    @NotEmpty(message = "Shipper status (isActive) must not be empty")
-    private Boolean isActive;
-
-    @NotEmpty(message = "Shipping status (isShipping) must not be empty")
-    private Boolean isShipping;
+//    @NotEmpty(message = "Shipper status (isActive) must not be empty")
+//    private Boolean isActive;
+//
+//    @NotEmpty(message = "Shipping status (isShipping) must not be empty")
+//    private Boolean isShipping;
 }

@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product")
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(ProductDto productDto){
@@ -70,6 +72,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(productId));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Product By Id")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id") Long productId,
@@ -77,6 +80,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(productId, productDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete product by Id")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Long productId){

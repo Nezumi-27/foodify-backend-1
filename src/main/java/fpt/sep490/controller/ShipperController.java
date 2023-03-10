@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD APIs for Shippers Resource")
@@ -20,12 +21,14 @@ public class ShipperController {
         this.shipperService = shipperService;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Shipper")
     @PostMapping
     public ResponseEntity<ShipperDto> createShipper(ShipperDto shipperDto){
         return new ResponseEntity<>(shipperService.createShipper(shipperDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Get All Shippers")
     @GetMapping
     public ShipperResponsePageable getAllShippers(
@@ -43,6 +46,7 @@ public class ShipperController {
         return ResponseEntity.ok(shipperService.getShipperById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")
     @ApiOperation("Update Shipper Shipping Status by Id")
     @PutMapping("/{id}/shipping")
     public ResponseEntity<ShipperDto> updateShipperShippingStatus(@PathVariable(value = "id") Long id,
@@ -50,6 +54,7 @@ public class ShipperController {
         return ResponseEntity.ok(shipperService.updateShipperShippingStatus(id, isShipping));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")
     @ApiOperation("Update Shipper Active Status by Id")
     @PutMapping("/{id}/active")
     public ResponseEntity<ShipperDto> updateShipperActiveStatus(@PathVariable(value = "id") Long id,
@@ -57,6 +62,7 @@ public class ShipperController {
         return ResponseEntity.ok(shipperService.swapShipperStatus(id, isActive));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Shipper by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteShipper(@PathVariable(value = "id") Long id){

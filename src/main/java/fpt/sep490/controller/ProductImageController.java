@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD APIs for Product Image Resources")
@@ -20,12 +21,14 @@ public class ProductImageController {
         this.productImageService = productImageService;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product Image")
     @PostMapping("/products/{productId}/images")
     public ResponseEntity<ProductImageDto> createImage(@PathVariable(value = "productId") Long productId,
                                                        @RequestBody ProductImageDto productImageDto){
         return new ResponseEntity<>(productImageService.createProductImage(productId, productImageDto), HttpStatus.CREATED);
     }
+
 
     @ApiOperation("Get All Product Images")
     @GetMapping("/products/images")
@@ -59,6 +62,7 @@ public class ProductImageController {
         return ResponseEntity.ok(productImageService.getProductImageById(productId, id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Product Image By Id")
     @PutMapping("/products/{productId}/images/{id}")
     public ResponseEntity<ProductImageDto> updateImage(
@@ -69,6 +73,7 @@ public class ProductImageController {
         return ResponseEntity.ok(productImageService.updateProductById(productId, id, productImageDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Product Image By Id")
     @DeleteMapping("/products/{productId}/images/{id}")
     public ResponseEntity<String> deleteImage(@PathVariable(value = "productId") Long productId,

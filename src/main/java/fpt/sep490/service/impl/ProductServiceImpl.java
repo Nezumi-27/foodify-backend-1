@@ -57,8 +57,8 @@ public class ProductServiceImpl implements ProductService {
         product.setIsEnabled(productDto.getIsEnabled());
         product.setCost(productDto.getCost());
         product.setDiscountPercent(productDto.getDiscountPercent());
-        product.setAverageRating(productDto.getAverageRating());
-        product.setReviewCount(productDto.getReviewCount());
+        product.setAverageRating(0);
+        product.setReviewCount(0);
         product.setShop(shop);
         product.setCategories(categorySet);
 

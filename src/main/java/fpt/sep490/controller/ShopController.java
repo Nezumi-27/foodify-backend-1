@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD APIs for Shop Resources")
@@ -43,12 +44,14 @@ public class ShopController {
         return ResponseEntity.ok(shopService.getShopById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Shop by Id")
     @PutMapping("{id}")
     public ResponseEntity<ShopDto> updateShop(@RequestBody ShopDto shopDto, @PathVariable(name = "id") Long shopId){
         return ResponseEntity.ok(shopService.updateShop(shopId, shopDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Shop by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteShop(@PathVariable(name = "id") Long shopId){

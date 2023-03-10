@@ -25,7 +25,7 @@ public class FirebaseTokenProvider {
             return firebaseToken.getEmail();
         }
         catch (FirebaseAuthException e){
-            throw new RuntimeException("F-a-i-l-e-d to validate Firebase JWT token", e);
+            throw new RuntimeException("Failed to validate Firebase JWT token", e);
         }
     }
 }

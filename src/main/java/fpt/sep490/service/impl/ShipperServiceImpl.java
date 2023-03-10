@@ -51,7 +51,8 @@ public class ShipperServiceImpl implements ShipperService {
                 .orElseThrow(()-> new ResourceNotFoundException("Shop", "id", shipperDto.getShopId()));
 
         Shipper shipper = new Shipper();
-        shipper.setIsShipping(shipperDto.getIsShipping());
+        shipper.setIsShipping(false);
+        shipper.setIsActive(false);
         shipper.setUser(user);
         shipper.setShop(shop);
 
