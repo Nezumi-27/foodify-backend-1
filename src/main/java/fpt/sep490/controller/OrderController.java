@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD Apis for Order Resource")
@@ -21,6 +22,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @ApiOperation("Create new Order")
     @PostMapping("/api/users/{userId}/orders")
     public ResponseEntity<OrderResponse> createOrder(@PathVariable(value = "userId") Long userId,
@@ -28,6 +30,7 @@ public class OrderController {
         return new ResponseEntity<>(orderService.createOrder(userId, orderDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get All Orders")
     @GetMapping("/api/orders")
     public OrderResponsePageable getAllOrders(
@@ -39,6 +42,7 @@ public class OrderController {
         return orderService.getAllOrders(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get Orders by User")
     @GetMapping("/api/users/{userId}/orders")
     public OrderResponsePageable getOrdersByUser(
@@ -51,6 +55,7 @@ public class OrderController {
         return orderService.getOrdersByUserId(userId, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get Orders by Shipper")
     @GetMapping("/api/shippers/{shipperId}/orders")
     public OrderResponsePageable getOrdersByShipper(
@@ -63,6 +68,7 @@ public class OrderController {
         return orderService.getOrdersByShipperId(shipperId, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get Order By Id")
     @GetMapping("/api/users/{userId}/orders/{orderId}")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable(value = "userId") Long userId,
@@ -70,6 +76,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderById(userId, orderId));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Update Order By Id")
     @PutMapping("/api/users/{userId}/orders/{orderId}")
     public ResponseEntity<OrderResponse> updateOrder(@PathVariable(value = "userId") Long userId,
@@ -78,6 +85,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrder(userId, orderId, orderDto));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Update Order Status")
     @PutMapping("/api/users/{userId}/orders/{orderId}/status/{status}")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable(value = "userId") Long userId,
@@ -86,6 +94,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrderStatus(userId, orderId, status));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Delete Order By Id")
     @DeleteMapping("/api/users/{userId}/orders/{orderId}")
     public ResponseEntity<String> deleteOrder(@PathVariable(value = "userId") Long userId,

@@ -23,9 +23,6 @@ public class SignUpDto {
     @Size(min = 10, message = "This must be a valid phone number")
     private String phoneNumber;
 
-    @NotEmpty(message = "Password must not be empty")
-    private String password;
-
     @NotEmpty(message = "Full name must not be empty")
     private String fullName;
 

@@ -27,9 +27,6 @@ public class User implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
     @Column(name = "full_name")
     private String fullName;
 
@@ -73,4 +70,7 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shop shop;
 }

@@ -8,24 +8,27 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api("CRUD APIs for Shippers Resource")
 @RestController
 @RequestMapping("/api/shippers")
 public class ShipperController {
-    private ShipperService shipperService;
+    private final ShipperService shipperService;
 
     public ShipperController(ShipperService shipperService) {
         this.shipperService = shipperService;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Shipper")
     @PostMapping
     public ResponseEntity<ShipperDto> createShipper(ShipperDto shipperDto){
         return new ResponseEntity<>(shipperService.createShipper(shipperDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Get All Shippers")
     @GetMapping
     public ShipperResponsePageable getAllShippers(
@@ -38,18 +41,28 @@ public class ShipperController {
     }
 
     @ApiOperation("Get Shipper By Id")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ShipperDto> getShipperById(@PathVariable(value = "id") Long id){
         return ResponseEntity.ok(shipperService.getShipperById(id));
     }
 
-    @ApiOperation("Update Shipper by Id")
-    @PutMapping("{id}")
-    public ResponseEntity<ShipperDto> updateShipper(@PathVariable(value = "id") Long id,
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")
+    @ApiOperation("Update Shipper Shipping Status by Id")
+    @PutMapping("/{id}/shipping")
+    public ResponseEntity<ShipperDto> updateShipperShippingStatus(@PathVariable(value = "id") Long id,
                                                     @RequestParam Boolean isShipping){
-        return ResponseEntity.ok(shipperService.updateShipper(id, isShipping));
+        return ResponseEntity.ok(shipperService.updateShipperShippingStatus(id, isShipping));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")
+    @ApiOperation("Update Shipper Active Status by Id")
+    @PutMapping("/{id}/active")
+    public ResponseEntity<ShipperDto> updateShipperActiveStatus(@PathVariable(value = "id") Long id,
+                                                    @RequestParam Boolean isActive){
+        return ResponseEntity.ok(shipperService.swapShipperStatus(id, isActive));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Shipper by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteShipper(@PathVariable(value = "id") Long id){

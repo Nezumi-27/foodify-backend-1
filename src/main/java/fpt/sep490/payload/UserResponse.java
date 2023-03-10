@@ -10,7 +10,6 @@ import java.util.Set;
 public class UserResponse {
     private Long id;
     private String email;
-    private String password;
     private String fullName;
     private String dateOfBirth;
     private String phoneNumber;

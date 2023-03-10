@@ -1,63 +1,44 @@
 package fpt.sep490.controller;
 
-import fpt.sep490.entity.Role;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import fpt.sep490.entity.User;
-import fpt.sep490.exception.FoodifyAPIException;
-import fpt.sep490.exception.ResourceNotFoundException;
+import fpt.sep490.payload.JwtAuthResponse;
+import fpt.sep490.payload.LoginDto;
 import fpt.sep490.payload.SignUpDto;
-import fpt.sep490.repository.RoleRepository;
 import fpt.sep490.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import fpt.sep490.service.AuthService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Api(value = "Login and Signup Controller")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private AuthService authService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    public AuthController(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
+    @ApiOperation("Sign-up")
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto){
-        if(userRepository.existsByEmail(signUpDto.getEmail())){
-            return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
-        }
-
-        if(userRepository.existsByPhoneNumber(signUpDto.getPhoneNumber())){
-            return new ResponseEntity<>("Phone number is already taken", HttpStatus.BAD_REQUEST);
-        }
-
-
-        User user = new User();
-        user.setEmail(signUpDto.getEmail());
-        user.setPhoneNumber(signUpDto.getPhoneNumber());
-        user.setPassword(signUpDto.getPassword());
-        user.setFullName(signUpDto.getFullName());
-        user.setDateOfBirth(signUpDto.getDateOfBirth());
-        user.setImageUrl(signUpDto.getImageUrl());
-        user.setIdentifiedCode(signUpDto.getIdentifiedCode());
-        user.setIsLocked(signUpDto.getIsLocked());
-
-        Role role = roleRepository.findByName(signUpDto.getRoleName())
-                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Role doesn't found with name: " + signUpDto.getRoleName()));
-        user.setRole(role);
-
-        userRepository.save(user);
-        return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
+    public ResponseEntity<String> registerUser(@RequestBody SignUpDto signUpDto){
+        return ResponseEntity.ok(authService.register(signUpDto));
     }
+
 }

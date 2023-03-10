@@ -1,7 +1,7 @@
 # Foodify Capstone Project Back-end
 
 **Information:**
-- Spring Boot Version : 2.7.8
+- Spring Boot Version : 2.7.6
 - Java version : 17
 
 **Dependencies:**
@@ -11,5 +11,5 @@
 - Spring Security
 - MySQL driver
 - Lombok
-- JSON Web Token
-- Swagger UI
+- JSON Web Token (Api, Jackson, Impl)
+- Spring Fox Swagger UI

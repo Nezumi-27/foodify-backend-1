@@ -82,6 +82,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public ShopDto updateShop(Long shopId, ShopDto shopDto) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+        shop.setName(shopDto.getName());
         shop.setDescription(shopDto.getDescription());
         shop.setImageUrl(shopDto.getImageUrl());
         shop.setIsStudent(shopDto.getIsStudent());

@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Create Role")
     @PostMapping
     public ResponseEntity<RoleDto> createRole(RoleDto roleDto){
@@ -38,6 +40,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getRoleById(roleId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Update Role by Id")
     @PutMapping("/{id}")
     public ResponseEntity<RoleDto> updateRole(@PathVariable(value = "id") Long roleId,
@@ -45,6 +48,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.updateRoleById(roleId, roleDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Delete Role by Id")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable(value = "id") Long roleId){

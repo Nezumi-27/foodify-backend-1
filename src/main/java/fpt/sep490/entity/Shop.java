@@ -23,10 +23,13 @@ public class Shop implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "description", nullable = false, length = 512)
     private String description;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     @Column(name = "is_enabled",nullable = false)

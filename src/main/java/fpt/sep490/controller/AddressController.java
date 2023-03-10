@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "CRUD APIs for Address Resources")
@@ -20,12 +21,14 @@ public class AddressController {
         this.addressService = addressService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Create Address")
     @PostMapping
     public ResponseEntity<AddressDto> createAddress(AddressDto addressDto){
         return new ResponseEntity<>(addressService.createAddress(addressDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation("Get all Addresses")
     @GetMapping
     public AddressResponse getAllAddress(
@@ -37,18 +40,21 @@ public class AddressController {
         return addressService.getAllAddresses(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Get Address by Id")
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> getAddressById(@PathVariable(value = "id") Long addressId){
         return ResponseEntity.ok(addressService.getAddressById(addressId));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Update Address by Id")
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> updateAddress(@RequestBody AddressDto addressDto, @PathVariable(value = "id") Long addressId){
         return ResponseEntity.ok(addressService.updateAddress(addressId, addressDto));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Delete Address by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAddress(@PathVariable(value = "id") Long addressId){

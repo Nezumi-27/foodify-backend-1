@@ -20,4 +20,6 @@ public interface ProductService {
     ProductResponse updateProduct(Long productId, ProductDto productDto);
 
     void deleteProduct(Long productId);
+
+    ProductResponsePageable findProductsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
 }

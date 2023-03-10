@@ -51,7 +51,8 @@ public class ShipperServiceImpl implements ShipperService {
                 .orElseThrow(()-> new ResourceNotFoundException("Shop", "id", shipperDto.getShopId()));
 
         Shipper shipper = new Shipper();
-        shipper.setIsShipping(shipperDto.getIsShipping());
+        shipper.setIsShipping(false);
+        shipper.setIsActive(false);
         shipper.setUser(user);
         shipper.setShop(shop);
 
@@ -89,11 +90,23 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
-    public ShipperDto updateShipper(Long shipperId, Boolean isShipping) {
+    public ShipperDto updateShipperShippingStatus(Long shipperId, Boolean isShipping) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));
 
         shipper.setIsShipping(isShipping);
+        Shipper updateShipper = shipperRepository.save(shipper);
+
+        return mapper.map(updateShipper, ShipperDto.class);
+    }
+
+    @Override
+    public ShipperDto swapShipperStatus(Long shipperId, Boolean isActive) {
+        Shipper shipper = shipperRepository.findById(shipperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));
+
+        if(isActive) shipper.setIsShipping(false);
+        shipper.setIsActive(isActive);
         Shipper updateShipper = shipperRepository.save(shipper);
 
         return mapper.map(updateShipper, ShipperDto.class);

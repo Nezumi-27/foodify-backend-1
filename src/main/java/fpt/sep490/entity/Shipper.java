@@ -33,6 +33,9 @@ public class Shipper implements Serializable {
     @Column(name = "is_shipping")
     private Boolean isShipping;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @OneToMany(mappedBy = "shipper", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders;
 }

@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product")
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(ProductDto productDto){
@@ -53,7 +55,7 @@ public class ProductController {
     }
 
     @ApiOperation("Get Products By Categories")
-    @GetMapping("/categories/{id}")
+    @GetMapping("/categories")
     public ProductResponsePageable getProductsByCategories(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -70,6 +72,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(productId));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Product By Id")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id") Long productId,
@@ -77,10 +80,22 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(productId, productDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete product by Id")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Long productId){
         productService.deleteProduct(productId);
         return ResponseEntity.ok("Product Deleted Successfully!");
+    }
+
+    @ApiOperation("Search products by name")
+    @GetMapping("/search/{name}")
+    public ProductResponsePageable searchByName(
+            @PathVariable(value = "name") String name,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir){
+        return productService.findProductsByName(name, pageNo, pageSize, sortBy, sortDir);
     }
 }

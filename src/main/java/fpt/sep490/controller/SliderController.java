@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class SliderController {
         this.sliderService = sliderService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create new Slider")
     @PostMapping
     public ResponseEntity<SliderDto> createSlider(SliderDto sliderDto){
@@ -38,6 +40,7 @@ public class SliderController {
         return ResponseEntity.ok(sliderService.getSlider(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Update Slider by Id")
     @PutMapping("{id}")
     public ResponseEntity<SliderDto> updateSlider(@RequestBody SliderDto sliderDto,
@@ -45,6 +48,7 @@ public class SliderController {
         return ResponseEntity.ok(sliderService.updateSlider(sliderDto, id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Delete Slider by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteSlider(@PathVariable("id") Long id){

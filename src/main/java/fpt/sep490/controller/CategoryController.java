@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','SHOP')")
     @ApiOperation(value = "Create new Category")
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(CategoryDto categoryDto){
@@ -39,6 +41,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Update Category by Id")
     @PutMapping("{id}")
     public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryDto,
@@ -46,6 +49,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.updateCategory(categoryDto, categoryId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Delete Category by Id")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Long categoryId){
