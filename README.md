@@ -11,5 +11,6 @@
 - Spring Security
 - MySQL driver
 - Lombok
-- JSON Web Token (Api, Jackson, Impl)
+- Model Mapper
 - Spring Fox Swagger UI
+- Firebase Admin SDK
