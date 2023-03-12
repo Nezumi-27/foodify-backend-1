@@ -23,7 +23,7 @@ public class ProductImageController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product Image")
-    @PostMapping("/products/{productId}/images")
+    @PostMapping("/api/products/{productId}/images")
     public ResponseEntity<ProductImageDto> createImage(@PathVariable(value = "productId") Long productId,
                                                        @RequestBody ProductImageDto productImageDto){
         return new ResponseEntity<>(productImageService.createProductImage(productId, productImageDto), HttpStatus.CREATED);
@@ -31,7 +31,7 @@ public class ProductImageController {
 
 
     @ApiOperation("Get All Product Images")
-    @GetMapping("/products/images")
+    @GetMapping("/api/products/images")
     public ProductImageResponsePageable getAllImages(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -42,7 +42,7 @@ public class ProductImageController {
     }
 
     @ApiOperation("Get Product Image By Product")
-    @GetMapping("/products/{productId}/images")
+    @GetMapping("/api/products/{productId}/images")
     public ProductImageResponsePageable getImagesByProductId(
             @PathVariable(value = "productId") Long productId,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -54,7 +54,7 @@ public class ProductImageController {
     }
 
     @ApiOperation("Get Product Image By Id")
-    @GetMapping("/products/{productId}/images/{id}")
+    @GetMapping("/api/products/{productId}/images/{id}")
     public ResponseEntity<ProductImageDto> getImageById(
             @PathVariable(value = "productId") Long productId,
             @PathVariable(value = "id") Long id
@@ -64,7 +64,7 @@ public class ProductImageController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Product Image By Id")
-    @PutMapping("/products/{productId}/images/{id}")
+    @PutMapping("/api/products/{productId}/images/{id}")
     public ResponseEntity<ProductImageDto> updateImage(
             @PathVariable(value = "productId") Long productId,
             @PathVariable(value = "id") Long id,
@@ -75,7 +75,7 @@ public class ProductImageController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Product Image By Id")
-    @DeleteMapping("/products/{productId}/images/{id}")
+    @DeleteMapping("/api/products/{productId}/images/{id}")
     public ResponseEntity<String> deleteImage(@PathVariable(value = "productId") Long productId,
                                               @PathVariable(value = "id") Long id){
         productImageService.deleteProductById(productId, id);
