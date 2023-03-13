@@ -131,6 +131,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getUserByEmailOrPhoneNumber(String emailOrPhoneNumber) {
+        User user = userRepository.findByEmailOrPhoneNumber(emailOrPhoneNumber, emailOrPhoneNumber)
+                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "User can not found with email or phone number: " + emailOrPhoneNumber));
+
+        return mapper.map(user, UserResponse.class);
+    }
+
+    @Override
     public UserResponse updateUser(Long userId, UserDto userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

@@ -10,6 +10,8 @@ public interface UserService {
 
     UserResponse getUserById(Long userId);
 
+    UserResponse getUserByEmailOrPhoneNumber(String emailOrPhoneNumber);
+
     UserResponse updateUser(Long userId, UserDto userDto);
 
     void deleteUser(Long userId);
