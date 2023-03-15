@@ -4,10 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import fpt.sep490.entity.User;
-import fpt.sep490.payload.AddressDto;
-import fpt.sep490.payload.JwtAuthResponse;
-import fpt.sep490.payload.LoginDto;
-import fpt.sep490.payload.SignUpDto;
+import fpt.sep490.payload.*;
 import fpt.sep490.repository.UserRepository;
 import fpt.sep490.service.AuthService;
 import io.swagger.annotations.Api;
@@ -38,7 +35,7 @@ public class AuthController {
 
     @ApiOperation("Sign-up")
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody SignUpDto signUpDto){
+    public ResponseEntity<UserDto> registerUser(@RequestBody SignUpDto signUpDto){
         return ResponseEntity.ok(authService.register(signUpDto));
     }
 

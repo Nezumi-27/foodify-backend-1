@@ -6,6 +6,7 @@ import fpt.sep490.entity.User;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.payload.AddressDto;
 import fpt.sep490.payload.SignUpDto;
+import fpt.sep490.payload.UserDto;
 import fpt.sep490.repository.AddressRepository;
 import fpt.sep490.repository.RoleRepository;
 import fpt.sep490.repository.UserRepository;
@@ -34,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(SignUpDto signUpDto) {
+    public UserDto register(SignUpDto signUpDto) {
         if(userRepository.existsByEmail(signUpDto.getEmail())){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This email has been taken");
         }
@@ -84,6 +85,6 @@ public class AuthServiceImpl implements AuthService {
             addressRepository.save(newAddress);
             userRepository.save(savedUser);
         }
-        return "User register successfully";
+        return mapper.map(savedUser, UserDto.class);
     }
 }
