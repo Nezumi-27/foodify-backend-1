@@ -15,7 +15,6 @@ import java.util.Set;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-    @Value("${app.password}")
     private String password;
 
     private UserRepository userRepository;
@@ -32,6 +31,6 @@ public class CustomUserDetailService implements UserDetailsService {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), password, authorities);
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getId().toString(), authorities);
     }
 }

@@ -52,14 +52,14 @@ public class UserController {
         return userService.getUsersByRoles(roleName, pageNo, pageSize, sortBy, sortDir);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Get User By Id")
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable(value = "userId") Long userId){
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
-//    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.username==#emailOrPhoneNumber")
     @ApiOperation("Get User By Email or Phone Number")
     @GetMapping("/email/{emailOrPhoneNumber}")
     public ResponseEntity<UserResponse> getUserByEmailOrPhoneNumber(@PathVariable(value = "emailOrPhoneNumber") String emailOrPhoneNumber){
@@ -67,7 +67,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Update User by Id")
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable(value = "userId") Long userId,
@@ -75,7 +75,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, userDto));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete user by Id")
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable(value = "userId") Long userId){
@@ -83,7 +83,7 @@ public class UserController {
         return ResponseEntity.ok("User deleted successfully");
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Create love product")
     @PostMapping("/{userId}/loves/{productId}")
     public ResponseEntity<String> createLoveProduct(@PathVariable(value = "userId") Long userId,
@@ -92,7 +92,7 @@ public class UserController {
         return ResponseEntity.ok("Create love product successfully");
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Get All Love Product By User Id")
     @GetMapping("/{userId}/loves")
     public ProductResponsePageable getAllLoveProducts(@PathVariable(value = "userId") Long userId,
@@ -103,7 +103,7 @@ public class UserController {
         return userService.getLoveProductByUserId(userId, pageNo, pageSize, sortBy, sortDir);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete love product")
     @DeleteMapping("/{userId}/loves/{productId}")
     public ResponseEntity<String> deleteLoveProduct(@PathVariable(value = "userId") Long userId,
@@ -112,7 +112,7 @@ public class UserController {
         return ResponseEntity.ok("Delete love product successfully");
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Create Address for User")
     @PostMapping("/{userId}/addresses")
     public ResponseEntity<String> createAddressForUser(@PathVariable(value = "userId") Long userId,
@@ -121,7 +121,7 @@ public class UserController {
         return ResponseEntity.ok("Address add to user successfully");
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Get Addresses by User")
     @GetMapping("/{userId}/addresses")
     public AddressResponse getAddressByUser(@PathVariable(value = "userId") Long userId,
@@ -132,7 +132,7 @@ public class UserController {
         return userService.getAddressesByUser(userId, pageNo, pageSize, sortBy, sortDir);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete user address")
     @DeleteMapping("/{userId}/addresses/{addressId}")
     public ResponseEntity<String> deleteUserAddress(@PathVariable(value = "userId") Long userId,

@@ -17,6 +17,7 @@ public class UserResponse {
     private boolean isLocked;
     private Timestamp createdTime;
     private String identifiedCode;
+    private Long defaultAddress;
     private RoleDto role;
     private Set<AddressDto> addresses;
     private Set<ProductResponse> products;

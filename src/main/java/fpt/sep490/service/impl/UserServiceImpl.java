@@ -67,8 +67,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Role doesn't found with name: " + userDto.getRoleName()));
         user.setRole(role);
 
-        userRepository.save(user);
-        return mapper.map(user, UserResponse.class);
+        User userSaved = userRepository.save(user);
+        return mapper.map(userSaved, UserResponse.class);
     }
 
     @Override
@@ -143,6 +143,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
+        Address address = addressRepository.findById(userDto.getDefaultAddress())
+                        .orElseThrow(() -> new ResourceNotFoundException("Address","id", userDto.getDefaultAddress()));
+
         user.setEmail(userDto.getEmail());
         user.setFullName(userDto.getFullName());
         user.setDateOfBirth(userDto.getDateOfBirth());
@@ -150,6 +153,7 @@ public class UserServiceImpl implements UserService {
         user.setImageUrl(userDto.getImageUrl());
         user.setIsLocked(userDto.getIsLocked());
         user.setIdentifiedCode(userDto.getIdentifiedCode());
+        user.setDefaultAddress(userDto.getDefaultAddress());
 
         return mapper.map(userRepository.save(user), UserResponse.class);
     }

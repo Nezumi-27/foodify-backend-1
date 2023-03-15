@@ -53,6 +53,9 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @Column(name = "default_address")
+    private Long defaultAddress;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_address",
                 joinColumns = @JoinColumn(name = "user_id"),

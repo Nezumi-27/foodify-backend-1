@@ -41,4 +41,6 @@ public class UserDto {
 
     @NotEmpty(message = "Role name must not be empty")
     private String roleName;
+
+    private Long defaultAddress;
 }
