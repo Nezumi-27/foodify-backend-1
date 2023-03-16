@@ -43,4 +43,4 @@ public class SignUpDto {
     private String roleName;
 
     private AddressDto addressDto;
-}
+}   

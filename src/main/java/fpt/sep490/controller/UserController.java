@@ -86,10 +86,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Create love product")
     @PostMapping("/{userId}/loves/{productId}")
-    public ResponseEntity<String> createLoveProduct(@PathVariable(value = "userId") Long userId,
+    public ResponseEntity<ProductResponse> createLoveProduct(@PathVariable(value = "userId") Long userId,
                                                     @PathVariable(value = "productId") Long productId){
-        userService.createLoveProduct(productId, userId);
-        return ResponseEntity.ok("Create love product successfully");
+        return ResponseEntity.ok(userService.createLoveProduct(productId, userId));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")

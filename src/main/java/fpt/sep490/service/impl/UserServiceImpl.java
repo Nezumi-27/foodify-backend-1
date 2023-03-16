@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createLoveProduct(Long productId, Long userId) {
+    public ProductResponse createLoveProduct(Long productId, Long userId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
@@ -179,6 +179,8 @@ public class UserServiceImpl implements UserService {
 
         productRepository.save(product);
         userRepository.save(user);
+
+        return mapper.map(product, ProductResponse.class);
     }
 
     @Override

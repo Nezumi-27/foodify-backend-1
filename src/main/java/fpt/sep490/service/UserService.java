@@ -16,7 +16,7 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    void createLoveProduct(Long userId, Long productId);
+    ProductResponse createLoveProduct(Long userId, Long productId);
     ProductResponsePageable getLoveProductByUserId(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
     void deleteLoveProduct(Long userId, Long productId);
 
