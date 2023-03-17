@@ -20,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -167,7 +164,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProductResponse createLoveProduct(Long productId, Long userId) {
+    public StringBoolObject createLoveProduct(Long productId, Long userId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
@@ -180,7 +177,11 @@ public class UserServiceImpl implements UserService {
         productRepository.save(product);
         userRepository.save(user);
 
-        return mapper.map(product, ProductResponse.class);
+        StringBoolObject stringBoolObject = new StringBoolObject();
+        stringBoolObject.setTitle("isSuccess");
+        stringBoolObject.setIsTrue(true);
+
+        return stringBoolObject;
     }
 
     @Override
@@ -211,6 +212,34 @@ public class UserServiceImpl implements UserService {
         responsePageable.setPage(pageableDto);
 
         return responsePageable;
+    }
+
+    @Override
+    public StringBoolObject getLoveProductByUserAndProductId(Long userId, Long productId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new ResourceNotFoundException("Product", "id", productId));
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+
+        List<Product> products = productRepository.findProductsByUsersIn(users);
+        List<Long> loveproductIds = products.stream().map(loveproduct -> loveproduct.getId()).collect(Collectors.toList());
+        System.out.println(loveproductIds);
+        if(loveproductIds.contains(productId)){
+            StringBoolObject stringBoolObject = new StringBoolObject();
+            stringBoolObject.setTitle("Love product");
+            stringBoolObject.setIsTrue(true);
+            return stringBoolObject;
+        }
+        else {
+            StringBoolObject stringBoolObject = new StringBoolObject();
+            stringBoolObject.setTitle("Love product");
+            stringBoolObject.setIsTrue(false);
+            return stringBoolObject;
+        }
     }
 
     @Override

@@ -33,6 +33,12 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @ApiOperation("Check email or phone number")
+    @PostMapping("/check")
+    public ResponseEntity<StringBoolObject> checkEmailOrPhoneNumber(@RequestBody SignUpDto signUpDto){
+        return ResponseEntity.ok(authService.checkEmailOrPhoneNumberExist(signUpDto));
+    }
+
     @ApiOperation("Sign-up")
     @PostMapping("/signup")
     public ResponseEntity<UserDto> registerUser(@RequestBody SignUpDto signUpDto){

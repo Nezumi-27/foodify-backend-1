@@ -86,8 +86,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Create love product")
     @PostMapping("/{userId}/loves/{productId}")
-    public ResponseEntity<ProductResponse> createLoveProduct(@PathVariable(value = "userId") Long userId,
-                                                    @PathVariable(value = "productId") Long productId){
+    public ResponseEntity<StringBoolObject> createLoveProduct(@PathVariable(value = "userId") Long userId,
+                                                              @PathVariable(value = "productId") Long productId){
         return ResponseEntity.ok(userService.createLoveProduct(productId, userId));
     }
 
@@ -100,6 +100,13 @@ public class UserController {
                                                       @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                                       @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir){
         return userService.getLoveProductByUserId(userId, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @ApiOperation("Get Love Product By Id")
+    @GetMapping("/{userId}/loves/{productId}")
+    public StringBoolObject getLoveProduct(@PathVariable(value = "userId") Long userId,
+                                           @PathVariable(value = "productId") Long productId){
+        return userService.getLoveProductByUserAndProductId(userId, productId);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")

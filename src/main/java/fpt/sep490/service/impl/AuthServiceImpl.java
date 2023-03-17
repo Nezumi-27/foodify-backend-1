@@ -6,6 +6,7 @@ import fpt.sep490.entity.User;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.payload.AddressDto;
 import fpt.sep490.payload.SignUpDto;
+import fpt.sep490.payload.StringBoolObject;
 import fpt.sep490.payload.UserDto;
 import fpt.sep490.repository.AddressRepository;
 import fpt.sep490.repository.RoleRepository;
@@ -32,6 +33,30 @@ public class AuthServiceImpl implements AuthService {
         this.roleRepository = roleRepository;
         this.addressRepository = addressRepository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public StringBoolObject checkEmailOrPhoneNumberExist(SignUpDto signUpDto) {
+        if(userRepository.existsByEmail(signUpDto.getEmail())){
+            StringBoolObject object = new StringBoolObject();
+            object.setTitle("emailExist");
+            object.setIsTrue(true);
+            return object;
+        }
+        else {
+            if(userRepository.existsByPhoneNumber(signUpDto.getPhoneNumber())){
+                StringBoolObject object = new StringBoolObject();
+                object.setTitle("phoneNumExist");
+                object.setIsTrue(true);
+                return object;
+            }
+            else {
+                StringBoolObject object = new StringBoolObject();
+                object.setTitle("emailOrPhoneNumExist");
+                object.setIsTrue(false);
+                return object;
+            }
+        }
     }
 
     @Override
