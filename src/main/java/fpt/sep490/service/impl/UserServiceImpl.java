@@ -177,11 +177,7 @@ public class UserServiceImpl implements UserService {
         productRepository.save(product);
         userRepository.save(user);
 
-        StringBoolObject stringBoolObject = new StringBoolObject();
-        stringBoolObject.setTitle("isSuccess");
-        stringBoolObject.setIsTrue(true);
-
-        return stringBoolObject;
+        return new StringBoolObject("isSuccess", true);
     }
 
     @Override
@@ -229,21 +225,15 @@ public class UserServiceImpl implements UserService {
         List<Long> loveproductIds = products.stream().map(loveproduct -> loveproduct.getId()).collect(Collectors.toList());
         System.out.println(loveproductIds);
         if(loveproductIds.contains(productId)){
-            StringBoolObject stringBoolObject = new StringBoolObject();
-            stringBoolObject.setTitle("Love product");
-            stringBoolObject.setIsTrue(true);
-            return stringBoolObject;
+            return new StringBoolObject("Love product", true);
         }
-        else {
-            StringBoolObject stringBoolObject = new StringBoolObject();
-            stringBoolObject.setTitle("Love product");
-            stringBoolObject.setIsTrue(false);
-            return stringBoolObject;
+        else{
+            return new StringBoolObject("Love product", false);
         }
     }
 
     @Override
-    public void deleteLoveProduct(Long productId, Long userId) {
+    public StringBoolObject deleteLoveProduct(Long productId, Long userId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
@@ -255,6 +245,8 @@ public class UserServiceImpl implements UserService {
 
         productRepository.save(product);
         userRepository.save(user);
+
+        return new StringBoolObject("isDeleted", true);
     }
 
     @Override
@@ -312,6 +304,68 @@ public class UserServiceImpl implements UserService {
         response.setAddresses(content);
         response.setPage(pageableDto);
         return response;
+    }
+
+    @Override
+    public AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(()-> new ResourceNotFoundException("Address", "id", addressId));
+
+        if(addressRepository.existsByAddress(addressDto.getAddress())){
+            Address addressGet = addressRepository.findAddressByAddress(addressDto.getAddress())
+                    .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Address not found"));
+
+            if(addressGet.getDistrict().equals(addressDto.getDistrict()) && addressGet.getWard().equals(addressDto.getWard())){
+                user.getAddresses().add(addressGet);
+                addressGet.getUsers().add(user);
+
+                //Remove old user_address
+                user.getAddresses().remove(address);
+                address.getUsers().remove(user);
+
+                userRepository.save(user);
+                addressRepository.save(addressGet);
+
+                return mapper.map(addressGet, AddressDto.class);
+            }
+            else {
+                Address newAddress = mapper.map(addressDto, Address.class);
+                Address savedAddress = addressRepository.save(newAddress);
+                savedAddress.setUsers(new HashSet<>());
+
+                savedAddress.getUsers().add(user);
+                user.getAddresses().add(savedAddress);
+
+                //Remove old user_address
+                user.getAddresses().remove(address);
+                address.getUsers().remove(user);
+
+                addressRepository.save(savedAddress);
+                userRepository.save(user);
+
+                return mapper.map(savedAddress, AddressDto.class);
+            }
+        }
+        else {
+            Address newAddress = mapper.map(addressDto, Address.class);
+            Address savedAddress = addressRepository.save(newAddress);
+            savedAddress.setUsers(new HashSet<>());
+
+            savedAddress.getUsers().add(user);
+            user.getAddresses().add(savedAddress);
+
+            //Remove old user_address
+            user.getAddresses().remove(address);
+            address.getUsers().remove(user);
+
+            addressRepository.save(savedAddress);
+            userRepository.save(user);
+
+            return mapper.map(savedAddress, AddressDto.class);
+        }
     }
 
     @Override

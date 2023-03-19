@@ -102,6 +102,7 @@ public class UserController {
         return userService.getLoveProductByUserId(userId, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Get Love Product By Id")
     @GetMapping("/{userId}/loves/{productId}")
     public StringBoolObject getLoveProduct(@PathVariable(value = "userId") Long userId,
@@ -112,10 +113,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete love product")
     @DeleteMapping("/{userId}/loves/{productId}")
-    public ResponseEntity<String> deleteLoveProduct(@PathVariable(value = "userId") Long userId,
+    public ResponseEntity<StringBoolObject> deleteLoveProduct(@PathVariable(value = "userId") Long userId,
                                                     @PathVariable(value = "productId") Long productId){
-        userService.deleteLoveProduct(productId, userId);
-        return ResponseEntity.ok("Delete love product successfully");
+        return ResponseEntity.ok(userService.deleteLoveProduct(productId, userId));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
@@ -136,6 +136,15 @@ public class UserController {
                                             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir){
         return userService.getAddressesByUser(userId, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
+    @ApiOperation("Delete user address")
+    @DeleteMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<AddressDto> updateUserAddress(@PathVariable(value = "userId") Long userId,
+                                                        @PathVariable(value = "addressId") Long addressId,
+                                                        @RequestBody AddressDto addressDto){
+        return ResponseEntity.ok(userService.updateUserAddress(userId, addressId, addressDto));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")

@@ -1,8 +1,12 @@
 package fpt.sep490.payload;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class StringBoolObject {
     private String title;
     private Boolean isTrue;

@@ -20,11 +20,11 @@ public interface UserService {
     ProductResponsePageable getLoveProductByUserId(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     StringBoolObject getLoveProductByUserAndProductId(Long userId, Long productId);
-    void deleteLoveProduct(Long userId, Long productId);
+    StringBoolObject deleteLoveProduct(Long userId, Long productId);
 
     void createAddressForUser(Long userId, AddressDto addressDto);
 
     AddressResponse getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
-
+    AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto);
     public void deleteUserAddress(Long userId, Long addressId);
 }
