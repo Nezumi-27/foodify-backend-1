@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,4 +27,7 @@ public class Category implements Serializable {
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    private Set<Product> products;
 }

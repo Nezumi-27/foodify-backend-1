@@ -258,11 +258,23 @@ public class UserServiceImpl implements UserService {
             Address address = addressRepository.findAddressByAddress(addressDto.getAddress())
                     .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Address not found"));
 
-            user.getAddresses().add(address);
-            address.getUsers().add(user);
+            if(address.getDistrict().equals(addressDto.getDistrict()) && address.getWard().equals(addressDto.getWard())){
+                user.getAddresses().add(address);
+                address.getUsers().add(user);
 
-            userRepository.save(user);
-            addressRepository.save(address);
+                userRepository.save(user);
+                addressRepository.save(address);
+            }
+            else{
+                Address newAddress = addressRepository.save(mapper.map(addressDto, Address.class));
+                newAddress.setUsers(new HashSet<>());
+
+                newAddress.getUsers().add(user);
+                user.getAddresses().add(newAddress);
+
+                addressRepository.save(newAddress);
+                userRepository.save(user);
+            }
         }
         else {
             Address address = mapper.map(addressDto, Address.class);
@@ -369,18 +381,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserAddress(Long userId, Long addressId) {
+    public StringBoolObject deleteUserAddress(Long userId, Long addressId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new ResourceNotFoundException("Address", "id", addressId));
 
-        address.getUsers().remove(user);
-        user.getAddresses().remove(address);
+        Set<Address> setAddress = user.getAddresses();
 
-        addressRepository.save(address);
-        userRepository.save(user);
+        //If address in setAddress -> return true
+        for(Address addr : setAddress){
+            if(addr.equals(address)){
+                address.getUsers().remove(user);
+                user.getAddresses().remove(address);
+
+                addressRepository.save(address);
+                userRepository.save(user);
+
+                return new StringBoolObject("Address deleted", true);
+            }
+        }
+        return new StringBoolObject("Address deleted", false);
     }
 
 

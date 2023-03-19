@@ -26,5 +26,5 @@ public interface UserService {
 
     AddressResponse getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
     AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto);
-    public void deleteUserAddress(Long userId, Long addressId);
+    public StringBoolObject deleteUserAddress(Long userId, Long addressId);
 }

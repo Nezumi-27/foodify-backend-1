@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductImageRepository productImageRepository;
     private ModelMapper mapper;
 
+    private String newCategoryImage = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Category%2Fupdating.png?alt=media&token=a64a5b4d-76cb-48a3-a3db-64fa37c712c8";
+
     public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ProductImageRepository productImageRepository, ModelMapper mapper) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
@@ -45,7 +48,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse createProduct(ProductDto productDto) {
-        List<Category> categories = categoryRepository.findCategoriesByIdIn(productDto.getCategoryIds());
+        List<String> categoryNames = productDto.getCategoryNames();
+
+        List<Category> categories = new ArrayList<>();
+
+        for(String categoryName : categoryNames){
+            categoryName = categoryName.replaceAll("\\s+", " ").trim().toLowerCase();
+            categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+
+            if(categoryRepository.existsByName(categoryName)){
+                Category category = categoryRepository.findByName(categoryName)
+                        .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Category not found"));
+                categories.add(category);
+            }
+            else {
+                Category category = new Category();
+                category.setName(categoryName);
+                category.setImageUrl(newCategoryImage);
+                Category newCategory = categoryRepository.save(category);
+                categories.add(newCategory);
+            }
+        }
+
         Shop shop = shopRepository.findById(productDto.getShopId())
                 .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", productDto.getShopId()));
 
@@ -150,13 +174,38 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse updateProduct(Long productId, ProductDto productDto) {
-        List<Category> categories = categoryRepository.findCategoriesByIdIn(productDto.getCategoryIds());
-        if(categories.isEmpty()) throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Categories not found");
-
-        Set<Category> categorySet = new HashSet<Category>(categories);
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        Set<Category> productCategories = product.getCategories();
+        for(Category cat : productCategories){
+            cat.getProducts().remove(product);
+            categoryRepository.save(cat);
+        }
+
+        List<String> categoryNames = productDto.getCategoryNames();
+
+        List<Category> categories = new ArrayList<>();
+
+        for(String categoryName : categoryNames){
+            categoryName = categoryName.replaceAll("\\s+", " ").trim().toLowerCase();
+            categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+
+            if(categoryRepository.existsByName(categoryName)){
+                Category category = categoryRepository.findByName(categoryName)
+                        .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Category not found"));
+                categories.add(category);
+            }
+            else {
+                Category category = new Category();
+                category.setName(categoryName);
+                category.setImageUrl(newCategoryImage);
+                Category newCategory = categoryRepository.save(category);
+                categories.add(newCategory);
+            }
+        }
+
+        Set<Category> categorySet = new HashSet<Category>(categories);
 
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
@@ -165,9 +214,11 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountPercent(productDto.getDiscountPercent());
         product.setAverageRating(productDto.getAverageRating());
         product.setReviewCount(productDto.getReviewCount());
-        product.setCategories(categorySet);
+        product.setCategories(new HashSet<>());
 
         Product updateProduct = productRepository.save(product);
+        updateProduct.setCategories(categorySet);
+        updateProduct = productRepository.save(updateProduct);
         return mapper.map(updateProduct, ProductResponse.class);
     }
 

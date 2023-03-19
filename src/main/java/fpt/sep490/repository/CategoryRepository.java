@@ -10,5 +10,9 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findCategoriesByIdIn(List<Long> categoryIds);
+
+    List<Category> findCategoriesByNameIn(List<String> categoryNames);
+
+    boolean existsByName(String name);
     Optional<Category> findByName(String name);
 }

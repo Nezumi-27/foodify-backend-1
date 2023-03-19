@@ -121,10 +121,10 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Create Address for User")
     @PostMapping("/{userId}/addresses")
-    public ResponseEntity<String> createAddressForUser(@PathVariable(value = "userId") Long userId,
+    public ResponseEntity<StringBoolObject> createAddressForUser(@PathVariable(value = "userId") Long userId,
                                                        @RequestBody AddressDto addressDto){
         userService.createAddressForUser(userId, addressDto);
-        return ResponseEntity.ok("Address add to user successfully");
+        return ResponseEntity.ok(new StringBoolObject("Address created", true));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
@@ -139,8 +139,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
-    @ApiOperation("Delete user address")
-    @DeleteMapping("/{userId}/addresses/{addressId}")
+    @ApiOperation("Update user address")
+    @PutMapping("/{userId}/addresses/{addressId}")
     public ResponseEntity<AddressDto> updateUserAddress(@PathVariable(value = "userId") Long userId,
                                                         @PathVariable(value = "addressId") Long addressId,
                                                         @RequestBody AddressDto addressDto){
@@ -150,9 +150,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete user address")
     @DeleteMapping("/{userId}/addresses/{addressId}")
-    public ResponseEntity<String> deleteUserAddress(@PathVariable(value = "userId") Long userId,
+    public ResponseEntity<StringBoolObject> deleteUserAddress(@PathVariable(value = "userId") Long userId,
                                                     @PathVariable(value = "addressId") Long addressId){
-        userService.deleteUserAddress(userId, addressId);
-        return ResponseEntity.ok("User Address delete successfully");
+        return ResponseEntity.ok(userService.deleteUserAddress(userId, addressId));
     }
 }
