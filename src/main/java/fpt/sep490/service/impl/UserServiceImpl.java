@@ -256,7 +256,9 @@ public class UserServiceImpl implements UserService {
 
         Set<Address> addressSet = user.getAddresses();
         for(Address addr : addressSet){
-            if(addr.getAddress().equals(addressDto.getAddress()) && addr.getDistrict().equals(addressDto.getDistrict()) && addr.getWard().equals(addressDto.getWard())) return new StringBoolObject("Address has existed", true);
+            if(addr.getAddress().equals(addressDto.getAddress()) &&
+                    addr.getDistrict().equals(addressDto.getDistrict()) &&
+                    addr.getWard().equals(addressDto.getWard())) return new StringBoolObject("Address has existed", true);
         }
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
@@ -336,6 +338,13 @@ public class UserServiceImpl implements UserService {
 
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(()-> new ResourceNotFoundException("Address", "id", addressId));
+
+        Set<Address> addressSet = user.getAddresses();
+        for(Address addr : addressSet){
+            if(addr.getAddress().equals(addressDto.getAddress()) &&
+                    addr.getDistrict().equals(addressDto.getDistrict()) &&
+                    addr.getWard().equals(addressDto.getWard())) throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Address has existed");
+        }
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
             Address addressGet = addressRepository.findAddressByAddress(addressDto.getAddress())
