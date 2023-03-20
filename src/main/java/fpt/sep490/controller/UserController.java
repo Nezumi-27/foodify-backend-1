@@ -123,8 +123,7 @@ public class UserController {
     @PostMapping("/{userId}/addresses")
     public ResponseEntity<StringBoolObject> createAddressForUser(@PathVariable(value = "userId") Long userId,
                                                        @RequestBody AddressDto addressDto){
-        userService.createAddressForUser(userId, addressDto);
-        return ResponseEntity.ok(new StringBoolObject("Address created", true));
+        return ResponseEntity.ok(userService.createAddressForUser(userId, addressDto));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")

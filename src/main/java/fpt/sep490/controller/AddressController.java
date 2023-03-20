@@ -24,7 +24,7 @@ public class AddressController {
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Create Address")
     @PostMapping
-    public ResponseEntity<AddressDto> createAddress(AddressDto addressDto){
+    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto){
         return new ResponseEntity<>(addressService.createAddress(addressDto), HttpStatus.CREATED);
     }
 

@@ -14,6 +14,7 @@ import fpt.sep490.repository.ProductImageRepository;
 import fpt.sep490.repository.ProductRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.service.ProductService;
+import fpt.sep490.utils.StringConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,15 +36,17 @@ public class ProductServiceImpl implements ProductService {
     private ShopRepository shopRepository;
     private ProductImageRepository productImageRepository;
     private ModelMapper mapper;
+    private StringConverter stringConverter;
 
     private String newCategoryImage = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Category%2Fupdating.png?alt=media&token=a64a5b4d-76cb-48a3-a3db-64fa37c712c8";
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ProductImageRepository productImageRepository, ModelMapper mapper) {
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ProductImageRepository productImageRepository, ModelMapper mapper, StringConverter stringConverter) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
         this.productImageRepository = productImageRepository;
         this.mapper = mapper;
+        this.stringConverter = stringConverter;
     }
 
     @Override
@@ -53,8 +56,7 @@ public class ProductServiceImpl implements ProductService {
         List<Category> categories = new ArrayList<>();
 
         for(String categoryName : categoryNames){
-            categoryName = categoryName.replaceAll("\\s+", " ").trim().toLowerCase();
-            categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+            categoryName = stringConverter.convertString(categoryName);
 
             if(categoryRepository.existsByName(categoryName)){
                 Category category = categoryRepository.findByName(categoryName)
@@ -76,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
         Set<Category> categorySet = new HashSet<Category>(categories);
 
         Product product = new Product();
-        product.setName(productDto.getName());
+        product.setName(stringConverter.convertString(productDto.getName()));
         product.setDescription(productDto.getDescription());
         product.setIsEnabled(productDto.getIsEnabled());
         product.setCost(productDto.getCost());
@@ -188,8 +190,7 @@ public class ProductServiceImpl implements ProductService {
         List<Category> categories = new ArrayList<>();
 
         for(String categoryName : categoryNames){
-            categoryName = categoryName.replaceAll("\\s+", " ").trim().toLowerCase();
-            categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+            categoryName = stringConverter.convertString(categoryName);
 
             if(categoryRepository.existsByName(categoryName)){
                 Category category = categoryRepository.findByName(categoryName)
@@ -207,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
 
         Set<Category> categorySet = new HashSet<Category>(categories);
 
-        product.setName(productDto.getName());
+        product.setName(stringConverter.convertString(productDto.getName()));
         product.setDescription(productDto.getDescription());
         product.setIsEnabled(productDto.getIsEnabled());
         product.setCost(productDto.getCost());

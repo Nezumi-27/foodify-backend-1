@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "address", uniqueConstraints = {@UniqueConstraint(columnNames = {"address"})})
+@Table(name = "address")
 public class Address implements Serializable {
 
     @Id

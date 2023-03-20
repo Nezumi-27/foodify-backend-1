@@ -27,7 +27,8 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product")
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(ProductDto productDto){
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductDto productDto){
+        System.out.println(productDto.toString());
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
     }
 

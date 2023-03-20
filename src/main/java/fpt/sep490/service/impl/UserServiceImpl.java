@@ -250,9 +250,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createAddressForUser(Long userId, AddressDto addressDto){
+    public StringBoolObject createAddressForUser(Long userId, AddressDto addressDto){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Set<Address> addressSet = user.getAddresses();
+        for(Address addr : addressSet){
+            if(addr.getAddress().equals(addressDto.getAddress()) && addr.getDistrict().equals(addressDto.getDistrict()) && addr.getWard().equals(addressDto.getWard())) return new StringBoolObject("Address has existed", true);
+        }
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
             Address address = addressRepository.findAddressByAddress(addressDto.getAddress())
@@ -264,6 +269,8 @@ public class UserServiceImpl implements UserService {
 
                 userRepository.save(user);
                 addressRepository.save(address);
+
+                return new StringBoolObject("Create address", true);
             }
             else{
                 Address newAddress = addressRepository.save(mapper.map(addressDto, Address.class));
@@ -274,6 +281,8 @@ public class UserServiceImpl implements UserService {
 
                 addressRepository.save(newAddress);
                 userRepository.save(user);
+
+                return new StringBoolObject("Create address", true);
             }
         }
         else {
@@ -286,6 +295,8 @@ public class UserServiceImpl implements UserService {
 
             addressRepository.save(newAddress);
             userRepository.save(user);
+
+            return new StringBoolObject("Create address", true);
         }
     }
 
