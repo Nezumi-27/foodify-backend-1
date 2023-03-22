@@ -11,4 +11,8 @@ public class AppConstants {
     public static final String DEFAULT_PRODUCT_PAGE_SIZE = "20";
     public static final String DEFAULT_ORDER_PAGE_SIZE = "10";
     public static final String DEFAULT_USER_PAGE_SIZE = "10";
+
+    public enum ORDER_STATUS {
+        AWAITING, CONFIRMED, SHIPPING, COMPLETED, CANCELED
+    }
 }

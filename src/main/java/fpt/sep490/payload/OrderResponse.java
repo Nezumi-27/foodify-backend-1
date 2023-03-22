@@ -2,6 +2,8 @@ package fpt.sep490.payload;
 
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 public class OrderResponse {
     private Long id;
@@ -14,4 +16,5 @@ public class OrderResponse {
     private UserDto user;
     private ShipperResponse shipper;
     private AddressDto address;
+    private Set<OrderDetailResponse> orderDetails;
 }

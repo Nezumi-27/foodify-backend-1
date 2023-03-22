@@ -1,20 +1,12 @@
 package fpt.sep490.service.impl;
 
-import fpt.sep490.entity.Address;
-import fpt.sep490.entity.Order;
-import fpt.sep490.entity.Shipper;
-import fpt.sep490.entity.User;
+import fpt.sep490.entity.*;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
-import fpt.sep490.payload.OrderDto;
-import fpt.sep490.payload.OrderResponse;
-import fpt.sep490.payload.OrderResponsePageable;
-import fpt.sep490.payload.PageableDto;
-import fpt.sep490.repository.AddressRepository;
-import fpt.sep490.repository.OrderRepository;
-import fpt.sep490.repository.ShipperRepository;
-import fpt.sep490.repository.UserRepository;
+import fpt.sep490.payload.*;
+import fpt.sep490.repository.*;
 import fpt.sep490.service.OrderService;
+import fpt.sep490.utils.AppConstants;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,15 +24,20 @@ public class OrderServiceImpl implements OrderService {
     private UserRepository userRepository;
     private ShipperRepository shipperRepository;
     private OrderRepository orderRepository;
+    private OrderDetailRepository orderDetailRepository;
     private AddressRepository addressRepository;
     private ModelMapper mapper;
+    private final ProductRepository productRepository;
 
-    public OrderServiceImpl(UserRepository userRepository, ShipperRepository shipperRepository, OrderRepository orderRepository, AddressRepository addressRepository, ModelMapper mapper) {
+    public OrderServiceImpl(UserRepository userRepository, ShipperRepository shipperRepository, OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, AddressRepository addressRepository, ModelMapper mapper,
+                            ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.shipperRepository = shipperRepository;
         this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
         this.addressRepository = addressRepository;
         this.mapper = mapper;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -53,13 +51,40 @@ public class OrderServiceImpl implements OrderService {
         Address address = addressRepository.findById(orderDto.getAddressId())
                 .orElseThrow(()-> new ResourceNotFoundException("Address", "id", orderDto.getAddressId()));
 
-        Order order = mapper.map(orderDto, Order.class);
-        order.setTotal(orderDto.getShippingCost() + orderDto.getProductCost());
+        List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
+
+        Long productCost= 0L;
+        Order order = new Order();
+        order.setOrderTrackingNumber(orderDto.getOrderTrackingNumber());
+        order.setPaymentMethod(orderDto.getPaymentMethod());
+        order.setStatus(String.valueOf(AppConstants.ORDER_STATUS.AWAITING));
+        order.setShippingCost(orderDto.getShippingCost());
+        order.setProductCost(0L);
+        order.setTotal(orderDto.getShippingCost() + productCost);
         order.setUser(user);
         order.setShipper(shipper);
         order.setAddress(address);
-
         Order newOrder = orderRepository.save(order);
+
+
+        for(OrderDetailDto orderDetail : orderDetails){
+            Product product = productRepository.findById(orderDetail.getProductId())
+                    .orElseThrow(()-> new ResourceNotFoundException("Product", "id", orderDetail.getProductId()));
+
+
+            OrderDetail newOrderDetail = new OrderDetail();
+            newOrderDetail.setProduct(product);
+            newOrderDetail.setQuantity(orderDetail.getQuantity());
+            newOrderDetail.setSubTotal(product.getCost() * orderDetail.getQuantity());
+            productCost = productCost + newOrderDetail.getSubTotal();
+            newOrderDetail.setOrder(newOrder);
+            orderDetailRepository.save(newOrderDetail);
+        }
+
+        newOrder.setProductCost(productCost);
+        newOrder.setTotal(newOrder.getShippingCost() + productCost);
+        newOrder = orderRepository.save(newOrder);
+
         return mapper.map(newOrder, OrderResponse.class);
     }
 
@@ -160,18 +185,48 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("Order", "id", orderId));
 
+        Address address = addressRepository.findById(orderDto.getAddressId())
+                .orElseThrow(()-> new ResourceNotFoundException("Address", "id", orderDto.getAddressId()));
+
         if(!order.getUser().getId().equals(userId)){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This order doesn't belong to user");
         }
 
+        List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
+        Long productCost = 0L;
+
+        order.setAddress(address);
         order.setOrderTrackingNumber(orderDto.getOrderTrackingNumber());
         order.setPaymentMethod(orderDto.getPaymentMethod());
-        order.setProductCost(orderDto.getProductCost());
         order.setShippingCost(orderDto.getShippingCost());
-        order.setTotal(orderDto.getProductCost() + orderDto.getShippingCost());
         order.setStatus(orderDto.getStatus());
 
-        return mapper.map(orderRepository.save(order), OrderResponse.class);
+        Set<OrderDetail> oldOrderDetailLists = order.getOrderDetails();
+        for(OrderDetail oldOrderDetail : oldOrderDetailLists){
+            orderDetailRepository.delete(oldOrderDetail);
+        }
+
+        System.out.println("Debug here");
+        Order orderUpdated = orderRepository.save(order);
+
+        for(OrderDetailDto orderDetail : orderDetails){
+            Product product = productRepository.findById(orderDetail.getProductId())
+                    .orElseThrow(()-> new ResourceNotFoundException("Product", "id", orderDetail.getProductId()));
+
+
+            OrderDetail newOrderDetail = new OrderDetail();
+            newOrderDetail.setProduct(product);
+            newOrderDetail.setQuantity(orderDetail.getQuantity());
+            newOrderDetail.setSubTotal(product.getCost() * orderDetail.getQuantity());
+            productCost = productCost + newOrderDetail.getSubTotal();
+            newOrderDetail.setOrder(orderUpdated);
+            orderDetailRepository.save(newOrderDetail);
+        }
+
+        orderUpdated.setProductCost(productCost);
+        orderUpdated.setTotal(order.getShippingCost() + productCost);
+
+        return mapper.map(orderRepository.save(orderUpdated), OrderResponse.class);
     }
 
     @Override
