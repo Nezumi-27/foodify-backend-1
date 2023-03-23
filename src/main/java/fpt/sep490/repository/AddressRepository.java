@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface AddressRepository extends JpaRepository<Address, Long> {
     Boolean existsByAddress(String address);
     Optional<Address> findAddressByAddress(String address);
+
+    List<Address> findAddressesByAddress(String address);
     Page<Address> findAddressesByUsersIn(List<User> users, Pageable pageable);
 }

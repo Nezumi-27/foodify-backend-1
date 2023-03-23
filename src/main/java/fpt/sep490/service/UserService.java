@@ -24,7 +24,7 @@ public interface UserService {
 
     StringBoolObject createAddressForUser(Long userId, AddressDto addressDto);
 
-    AddressResponse getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
+    AddressResponsePageable getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
     AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto);
     StringBoolObject deleteUserAddress(Long userId, Long addressId);
 }

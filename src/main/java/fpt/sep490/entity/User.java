@@ -15,10 +15,11 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email"}),
-        @UniqueConstraint(columnNames = {"identified_code"})
-    })
+//@Table(name = "users", uniqueConstraints = {
+//        @UniqueConstraint(columnNames = {"email"}),
+//        @UniqueConstraint(columnNames = {"identified_code"})
+//    })
+@Table(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -254,6 +254,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
+        //Check if user have that address
         Set<Address> addressSet = user.getAddresses();
         for(Address addr : addressSet){
             if(addr.getAddress().equals(addressDto.getAddress()) &&
@@ -262,19 +263,24 @@ public class UserServiceImpl implements UserService {
         }
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
-            Address address = addressRepository.findAddressByAddress(addressDto.getAddress())
-                    .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Address not found"));
+            List<Address> listAddress = addressRepository.findAddressesByAddress(addressDto.getAddress());
 
-            if(address.getDistrict().equals(addressDto.getDistrict()) && address.getWard().equals(addressDto.getWard())){
-                user.getAddresses().add(address);
-                address.getUsers().add(user);
+            boolean isExisted = false;
 
-                userRepository.save(user);
-                addressRepository.save(address);
+            for(Address address : listAddress){
+                if(address.getDistrict().equals(addressDto.getDistrict()) && address.getWard().equals(addressDto.getWard())){
+                    user.getAddresses().add(address);
+                    address.getUsers().add(user);
 
-                return new StringBoolObject("Create address", true);
+                    userRepository.save(user);
+                    addressRepository.save(address);
+
+                    isExisted = true;
+                    return new StringBoolObject("Create address", true);
+                }
             }
-            else{
+
+            if(!isExisted){
                 Address newAddress = addressRepository.save(mapper.map(addressDto, Address.class));
                 newAddress.setUsers(new HashSet<>());
 
@@ -303,7 +309,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AddressResponse getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir) {
+    public AddressResponsePageable getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -316,7 +322,7 @@ public class UserServiceImpl implements UserService {
 
         Page<Address> addresses = addressRepository.findAddressesByUsersIn(users, pageable);
         List<Address> addressList = addresses.getContent();
-        List<AddressDto> content = addressList.stream().map(address -> mapper.map(address, AddressDto.class)).collect(Collectors.toList());
+        List<AddressResponse> content = addressList.stream().map(address -> mapper.map(address, AddressResponse.class)).collect(Collectors.toList());
 
         PageableDto pageableDto = new PageableDto();
         pageableDto.setPageNo(addresses.getNumber());
@@ -325,7 +331,7 @@ public class UserServiceImpl implements UserService {
         pageableDto.setTotalPages(addresses.getTotalPages());
         pageableDto.setLast(addresses.isLast());
 
-        AddressResponse response = new AddressResponse();
+        AddressResponsePageable response = new AddressResponsePageable();
         response.setAddresses(content);
         response.setPage(pageableDto);
         return response;
@@ -347,21 +353,42 @@ public class UserServiceImpl implements UserService {
         }
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
-            Address addressGet = addressRepository.findAddressByAddress(addressDto.getAddress())
-                    .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Address not found"));
+            boolean isExisted = false;
 
-            if(addressGet.getDistrict().equals(addressDto.getDistrict()) && addressGet.getWard().equals(addressDto.getWard())){
-                user.getAddresses().add(addressGet);
-                addressGet.getUsers().add(user);
+            List<Address> addresses = addressRepository.findAddressesByAddress(addressDto.getAddress());
+
+            for(Address addr : addresses){
+                if(addr.getDistrict().equals(addressDto.getDistrict()) && addr.getWard().equals(addressDto.getWard())){
+                    user.getAddresses().add(addr);
+                    addr.getUsers().add(user);
+
+                    //Remove old user_address
+                    user.getAddresses().remove(address);
+                    address.getUsers().remove(user);
+
+                    userRepository.save(user);
+                    addressRepository.save(addr);
+                    isExisted = true;
+                    return mapper.map(addr, AddressDto.class);
+                }
+            }
+
+            if(!isExisted){
+                Address newAddress = mapper.map(addressDto, Address.class);
+                Address savedAddress = addressRepository.save(newAddress);
+                savedAddress.setUsers(new HashSet<>());
+
+                savedAddress.getUsers().add(user);
+                user.getAddresses().add(savedAddress);
 
                 //Remove old user_address
                 user.getAddresses().remove(address);
                 address.getUsers().remove(user);
 
+                addressRepository.save(savedAddress);
                 userRepository.save(user);
-                addressRepository.save(addressGet);
 
-                return mapper.map(addressGet, AddressDto.class);
+                return mapper.map(savedAddress, AddressDto.class);
             }
             else {
                 Address newAddress = mapper.map(addressDto, Address.class);

@@ -1,14 +1,12 @@
 package fpt.sep490.service;
 
 import fpt.sep490.payload.AddressDto;
-import fpt.sep490.payload.AddressResponse;
-
-import java.util.List;
+import fpt.sep490.payload.AddressResponsePageable;
 
 public interface AddressService {
     AddressDto createAddress(AddressDto addressDto);
 
-    AddressResponse getAllAddresses(int pageNo, int pageSize, String sortBy, String sortDir);
+    AddressResponsePageable getAllAddresses(int pageNo, int pageSize, String sortBy, String sortDir);
 
     AddressDto getAddressById(Long addressId);
 
