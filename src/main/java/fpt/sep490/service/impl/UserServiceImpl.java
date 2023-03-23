@@ -306,6 +306,7 @@ public class UserServiceImpl implements UserService {
 
             return new StringBoolObject("Create address", true);
         }
+        return new StringBoolObject("Error", true);
     }
 
     @Override
@@ -390,23 +391,6 @@ public class UserServiceImpl implements UserService {
 
                 return mapper.map(savedAddress, AddressDto.class);
             }
-            else {
-                Address newAddress = mapper.map(addressDto, Address.class);
-                Address savedAddress = addressRepository.save(newAddress);
-                savedAddress.setUsers(new HashSet<>());
-
-                savedAddress.getUsers().add(user);
-                user.getAddresses().add(savedAddress);
-
-                //Remove old user_address
-                user.getAddresses().remove(address);
-                address.getUsers().remove(user);
-
-                addressRepository.save(savedAddress);
-                userRepository.save(user);
-
-                return mapper.map(savedAddress, AddressDto.class);
-            }
         }
         else {
             Address newAddress = mapper.map(addressDto, Address.class);
@@ -425,6 +409,7 @@ public class UserServiceImpl implements UserService {
 
             return mapper.map(savedAddress, AddressDto.class);
         }
+        return addressDto;
     }
 
     @Override
