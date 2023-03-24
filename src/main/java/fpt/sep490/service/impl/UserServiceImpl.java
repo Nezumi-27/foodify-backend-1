@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
         user.setImageUrl(userDto.getImageUrl());
         user.setIdentifiedCode(userDto.getIdentifiedCode());
         user.setIsLocked(userDto.getIsLocked());
+        user.setDefaultAddress(userDto.getDefaultAddress());
 
         Role role = roleRepository.findByName(userDto.getRoleName())
                 .orElseThrow(() -> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Role doesn't found with name: " + userDto.getRoleName()));
