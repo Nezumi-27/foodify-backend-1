@@ -8,9 +8,9 @@ import fpt.sep490.payload.StringBoolObject;
 public interface CommentService {
     CommentResponse createComment(Long productId, CommentDto commentDto);
 
-    CommentResponsePageable getAllComments();
+    CommentResponsePageable getAllComments(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    CommentResponsePageable getAllCommentsByProductId(Long productId);
+    CommentResponsePageable getAllCommentsByProductId(Long productId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     CommentResponse getCommentById(Long productId, Long commentId);
 
