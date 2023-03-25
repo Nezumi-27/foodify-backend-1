@@ -22,4 +22,5 @@ public class ProductResponse {
     private ShopDto shop;
     private Set<CategoryDto> categories;
     private Set<ProductImageDto> images;
+    private Set<CommentResponse> comments;
 }

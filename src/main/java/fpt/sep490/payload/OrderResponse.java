@@ -13,8 +13,8 @@ public class OrderResponse {
     private Long shippingCost;
     private Long total;
     private String status;
+    private String address;
     private UserDto user;
     private ShipperResponse shipper;
-    private AddressDto address;
     private Set<OrderDetailResponse> orderDetails;
 }
