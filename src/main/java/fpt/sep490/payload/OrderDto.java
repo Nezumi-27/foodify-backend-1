@@ -33,6 +33,5 @@ public class OrderDto {
     @NotEmpty(message = "Status must not be empty")
     private String status;
 
-    @NotEmpty(message = "Address Id must not be empty")
-    private Long addressId;
+    private String address;
 }

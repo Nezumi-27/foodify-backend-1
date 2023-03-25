@@ -31,9 +31,6 @@ public class Address implements Serializable {
     @Column(name = "ward", nullable = false)
     private String ward;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Order> orders;
-
     @ManyToMany(mappedBy = "addresses")
     private Set<User> users;
 }

@@ -59,10 +59,9 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderDetail> orderDetails;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
-
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Transaction transaction;
+
+    @Column(name = "address")
+    private String address;
 }

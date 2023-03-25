@@ -38,6 +38,12 @@ public class Shop implements Serializable {
     @Column(name = "is_student",nullable = false)
     private Boolean isStudent;
 
+    @Column(name = "lat")
+    private double lat;
+
+    @Column(name = "lng")
+    private double lng;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

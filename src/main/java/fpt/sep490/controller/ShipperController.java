@@ -1,6 +1,7 @@
 package fpt.sep490.controller;
 
 import fpt.sep490.payload.ShipperDto;
+import fpt.sep490.payload.ShipperResponse;
 import fpt.sep490.payload.ShipperResponsePageable;
 import fpt.sep490.service.ShipperService;
 import fpt.sep490.utils.AppConstants;
@@ -24,7 +25,7 @@ public class ShipperController {
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Shipper")
     @PostMapping
-    public ResponseEntity<ShipperDto> createShipper(ShipperDto shipperDto){
+    public ResponseEntity<ShipperDto> createShipper(@RequestBody ShipperDto shipperDto){
         return new ResponseEntity<>(shipperService.createShipper(shipperDto), HttpStatus.CREATED);
     }
 
@@ -42,7 +43,7 @@ public class ShipperController {
 
     @ApiOperation("Get Shipper By Id")
     @GetMapping("/{id}")
-    public ResponseEntity<ShipperDto> getShipperById(@PathVariable(value = "id") Long id){
+    public ResponseEntity<ShipperResponse> getShipperById(@PathVariable(value = "id") Long id){
         return ResponseEntity.ok(shipperService.getShipperById(id));
     }
 

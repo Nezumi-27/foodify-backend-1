@@ -83,10 +83,10 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
-    public ShipperDto getShipperById(Long shipperId) {
+    public ShipperResponse getShipperById(Long shipperId) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));
-        return mapper.map(shipper, ShipperDto.class);
+        return mapper.map(shipper, ShipperResponse.class);
     }
 
     @Override

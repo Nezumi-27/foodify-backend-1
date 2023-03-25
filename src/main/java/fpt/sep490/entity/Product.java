@@ -69,4 +69,7 @@ public class Product implements Serializable {
 
     @ManyToMany(mappedBy = "products")
     private Set<User> users;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
 }

@@ -48,8 +48,6 @@ public class OrderServiceImpl implements OrderService {
         Shipper shipper = shipperRepository.findById(orderDto.getShipperId())
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", orderDto.getShipperId()));
 
-        Address address = addressRepository.findById(orderDto.getAddressId())
-                .orElseThrow(()-> new ResourceNotFoundException("Address", "id", orderDto.getAddressId()));
 
         List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
 
@@ -63,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(orderDto.getShippingCost() + productCost);
         order.setUser(user);
         order.setShipper(shipper);
-        order.setAddress(address);
+        order.setAddress(orderDto.getAddress());
         Order newOrder = orderRepository.save(order);
 
 
@@ -185,8 +183,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("Order", "id", orderId));
 
-        Address address = addressRepository.findById(orderDto.getAddressId())
-                .orElseThrow(()-> new ResourceNotFoundException("Address", "id", orderDto.getAddressId()));
 
         if(!order.getUser().getId().equals(userId)){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This order doesn't belong to user");
@@ -195,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
         Long productCost = 0L;
 
-        order.setAddress(address);
+        order.setAddress(orderDto.getAddress());
         order.setOrderTrackingNumber(orderDto.getOrderTrackingNumber());
         order.setPaymentMethod(orderDto.getPaymentMethod());
         order.setShippingCost(orderDto.getShippingCost());
