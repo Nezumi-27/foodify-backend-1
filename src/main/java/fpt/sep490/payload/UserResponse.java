@@ -1,12 +1,14 @@
 package fpt.sep490.payload;
 
-import fpt.sep490.entity.*;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
     private Long id;
     private String email;
@@ -14,7 +16,7 @@ public class UserResponse {
     private String dateOfBirth;
     private String phoneNumber;
     private String imageUrl;
-    private boolean isLocked;
+    private Boolean isLocked;
     private Timestamp createdTime;
     private String identifiedCode;
     private Long defaultAddress;
