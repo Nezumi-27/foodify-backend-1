@@ -11,6 +11,8 @@ public interface ProductService {
 
     ProductResponsePageable getAllProducts(int pageNo, int pageSize, String sortBy, String sortDir);
 
+    ProductResponsePageable getAllEnableProducts(int pageNo, int pageSize, String sortBy, String sortDir);
+
     ProductResponsePageable getAllProductsByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     ProductResponsePageable getAllProductsByCategoryIds(List<Long> categoryIds, int pageNo, int pageSize, String sortBy, String sortDir);

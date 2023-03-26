@@ -43,6 +43,17 @@ public class ProductController {
         return productService.getAllProducts(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @ApiOperation("Get All Enable Products")
+    @GetMapping("/enable")
+    public ProductResponsePageable getAllProductEnable(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return productService.getAllEnableProducts(pageNo, pageSize, sortBy, sortDir);
+    }
+
     @ApiOperation("Get Products By Shop Id")
     @GetMapping("/shops/{id}")
     public ProductResponsePageable getProductsByShopId(
