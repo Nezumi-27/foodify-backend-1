@@ -183,6 +183,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("Order", "id", orderId));
 
+        Shipper shipper = shipperRepository.findById(orderDto.getShipperId())
+                .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id",orderDto.getShipperId()));
+
 
         if(!order.getUser().getId().equals(userId)){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This order doesn't belong to user");
@@ -196,6 +199,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(orderDto.getPaymentMethod());
         order.setShippingCost(orderDto.getShippingCost());
         order.setStatus(orderDto.getStatus());
+        order.setShipper(shipper);
 
         Set<OrderDetail> oldOrderDetailLists = order.getOrderDetails();
         for(OrderDetail oldOrderDetail : oldOrderDetailLists){

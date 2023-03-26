@@ -3,6 +3,7 @@ package fpt.sep490.service.impl;
 import fpt.sep490.entity.District;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.DistrictDto;
+import fpt.sep490.payload.DistrictResponse;
 import fpt.sep490.repository.DistrictRepository;
 import fpt.sep490.service.DistrictService;
 import org.modelmapper.ModelMapper;
@@ -30,18 +31,18 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public List<DistrictDto> getAllDistricts() {
+    public List<DistrictResponse> getAllDistricts() {
         List<District> districts = districtRepository.findAll();
-        return districts.stream().map((district -> mapper.map(district, DistrictDto.class)))
+        return districts.stream().map((district -> mapper.map(district, DistrictResponse.class)))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public DistrictDto getDistrict(Long districtId) {
+    public DistrictResponse getDistrict(Long districtId) {
         District district = districtRepository.findById(districtId)
                 .orElseThrow(() -> new ResourceNotFoundException("District", "id", districtId));
 
-        return mapper.map(district, DistrictDto.class);
+        return mapper.map(district, DistrictResponse.class);
     }
 
     @Override

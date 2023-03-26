@@ -2,6 +2,7 @@ package fpt.sep490.controller;
 
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
+import fpt.sep490.payload.ShopResponsePageable;
 import fpt.sep490.service.impl.ShopServiceImpl;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class ShopController {
 
     @ApiOperation("Get all Shops")
     @GetMapping
-    public ShopResponse getAllShops(
+    public ShopResponsePageable getAllShops(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHOP_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
@@ -40,7 +41,7 @@ public class ShopController {
 
     @ApiOperation("Get Shop by Id")
     @GetMapping("{id}")
-    public ResponseEntity<ShopDto> getShopById(@PathVariable(name = "id") Long id){
+    public ResponseEntity<ShopResponse> getShopById(@PathVariable(name = "id") Long id){
         return ResponseEntity.ok(shopService.getShopById(id));
     }
 

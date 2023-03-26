@@ -7,6 +7,7 @@ import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.PageableDto;
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
+import fpt.sep490.payload.ShopResponsePageable;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.repository.UserRepository;
 import fpt.sep490.service.ShopService;
@@ -49,7 +50,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public ShopResponse getAllShops(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public ShopResponsePageable getAllShops(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
@@ -67,16 +68,16 @@ public class ShopServiceImpl implements ShopService {
         pageableDto.setTotalPages(shops.getTotalPages());
         pageableDto.setLast(shops.isLast());
 
-        ShopResponse shopResponse = new ShopResponse();
-        shopResponse.setShops(content);
-        shopResponse.setPage(pageableDto);
-        return shopResponse;
+        ShopResponsePageable shopResponsePageable = new ShopResponsePageable();
+        shopResponsePageable.setShops(content);
+        shopResponsePageable.setPage(pageableDto);
+        return shopResponsePageable;
     }
 
     @Override
-    public ShopDto getShopById(Long shopId) {
+    public ShopResponse getShopById(Long shopId) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
-        return mapper.map(shop, ShopDto.class);
+        return mapper.map(shop, ShopResponse.class);
     }
 
     @Override

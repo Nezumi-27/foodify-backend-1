@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,4 +23,7 @@ public class District implements Serializable {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "district", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Ward> wards;
 }

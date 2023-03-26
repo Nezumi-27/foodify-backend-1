@@ -1,15 +1,16 @@
 package fpt.sep490.payload;
 
-import fpt.sep490.entity.User;
-import lombok.*;
+import lombok.Data;
 
-import java.util.List;
+import javax.validation.constraints.NotEmpty;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class ShopResponse {
-    private List<ShopDto> shops;
-    private PageableDto page;
+    private Long id;
+    private String name;
+    private String description;
+    private String imageUrl;
+    private Boolean isEnabled;
+    private Boolean isStudent;
+    private UserResponse user;
 }
