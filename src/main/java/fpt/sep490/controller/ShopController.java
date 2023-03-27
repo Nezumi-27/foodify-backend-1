@@ -24,7 +24,7 @@ public class ShopController {
 
     @ApiOperation("Create Shop")
     @PostMapping
-    public ResponseEntity<ShopDto> createShop(ShopDto shopDto){
+    public ResponseEntity<ShopDto> createShop(@RequestBody ShopDto shopDto){
         return new ResponseEntity<>(shopService.createShop(shopDto), HttpStatus.CREATED);
     }
 

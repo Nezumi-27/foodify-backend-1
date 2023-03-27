@@ -28,4 +28,10 @@ public class ShopDto {
 
     @NotEmpty(message = "User must not be empty")
     private Long userId;
+
+    @NotEmpty(message = "Shop name must not be empty")
+    private String lat;
+
+    @NotEmpty(message = "Shop name must not be empty")
+    private String lng;
 }

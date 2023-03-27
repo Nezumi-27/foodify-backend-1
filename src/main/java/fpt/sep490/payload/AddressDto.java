@@ -18,6 +18,5 @@ public class AddressDto {
     @NotEmpty(message = "District must not be empty")
     private String district;
 
-    @NotEmpty(message = "Ward must not be empty")
     private String ward;
 }

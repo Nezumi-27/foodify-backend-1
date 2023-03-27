@@ -68,6 +68,7 @@ public class CommentServiceImpl implements CommentService {
 
             product.setAverageRating(sum/i);
         }
+        product.setReviewCount(product.getReviewCount() + 1);
 
         productRepository.save(product);
         return mapper.map(newComment, CommentResponse.class);
@@ -201,6 +202,8 @@ public class CommentServiceImpl implements CommentService {
 
             product.setAverageRating(sum/i);
         }
+
+        product.setReviewCount(product.getReviewCount() - 1);
         productRepository.save(product);
         return new StringBoolObject("isDeteled", true);
     }

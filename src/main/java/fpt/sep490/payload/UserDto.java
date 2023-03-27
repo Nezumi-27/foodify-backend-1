@@ -15,6 +15,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    private Long id;
+    
     @NotEmpty
     @Email(message = "Email must be a valid email")
     private String email;

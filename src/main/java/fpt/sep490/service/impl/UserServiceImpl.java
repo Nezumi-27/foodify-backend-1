@@ -255,6 +255,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
+        if(addressDto.getDistrict() == "Huyện Hoàng Sa") addressDto.setWard("");
+
         //Check if user have that address
         Set<Address> addressSet = user.getAddresses();
         for(Address addr : addressSet){
