@@ -75,6 +75,31 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public ShopResponsePageable getAllEnabledShops(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Shop> shops = shopRepository.findShopsByIsEnabled(true, pageable);
+
+        List<Shop> listOfShops = shops.getContent();
+        List<ShopDto> content = listOfShops.stream().map(shop -> mapper.map(shop, ShopDto.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(shops.getNumber());
+        pageableDto.setPageSize(shops.getSize());
+        pageableDto.setTotalElements(shops.getTotalElements());
+        pageableDto.setTotalPages(shops.getTotalPages());
+        pageableDto.setLast(shops.isLast());
+
+        ShopResponsePageable shopResponsePageable = new ShopResponsePageable();
+        shopResponsePageable.setShops(content);
+        shopResponsePageable.setPage(pageableDto);
+        return shopResponsePageable;
+    }
+
+    @Override
     public ShopResponse getShopById(Long shopId) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
         return mapper.map(shop, ShopResponse.class);

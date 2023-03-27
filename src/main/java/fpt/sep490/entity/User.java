@@ -63,7 +63,7 @@ public class User implements Serializable {
                 inverseJoinColumns = @JoinColumn(name = "address_id"))
     private Set<Address> addresses;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_wishlist",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))

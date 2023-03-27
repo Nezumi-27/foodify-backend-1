@@ -39,6 +39,17 @@ public class ShopController {
         return shopService.getAllShops(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @ApiOperation("Get all Enabled Shops")
+    @GetMapping("/enable")
+    public ShopResponsePageable getAllEnabledShops(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHOP_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return shopService.getAllEnabledShops(pageNo, pageSize, sortBy, sortDir);
+    }
+
     @ApiOperation("Get Shop by Id")
     @GetMapping("{id}")
     public ResponseEntity<ShopResponse> getShopById(@PathVariable(name = "id") Long id){

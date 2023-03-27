@@ -67,7 +67,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany
     private Set<User> users;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
