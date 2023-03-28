@@ -160,7 +160,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
-        if(!comment.getProduct().getId().equals(commentId)){
+        if(!comment.getProduct().getId().equals(productId)){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Comment doesn't belong to product");
         }
 
@@ -219,6 +219,6 @@ public class CommentServiceImpl implements CommentService {
 
         product.setReviewCount(product.getReviewCount() - 1);
         productRepository.save(product);
-        return new StringBoolObject("isDeteled", true);
+        return new StringBoolObject("isDeleted", true);
     }
 }
