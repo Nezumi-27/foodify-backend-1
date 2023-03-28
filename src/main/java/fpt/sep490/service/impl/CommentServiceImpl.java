@@ -124,6 +124,20 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentResponse getCommentByProductIdAndUserId(Long productId, Long userId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Comment comment = commentRepository.findCommentByProductAndUser(product, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "product id & user id", productId));
+
+        return mapper.map(comment, CommentResponse.class);
+    }
+
+    @Override
     public CommentResponse getCommentById(Long productId, Long commentId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));

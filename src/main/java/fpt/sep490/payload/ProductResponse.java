@@ -1,5 +1,6 @@
 package fpt.sep490.payload;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.math.BigInteger;
@@ -22,5 +23,8 @@ public class ProductResponse {
     private ShopDto shop;
     private Set<CategoryDto> categories;
     private Set<ProductImageDto> images;
+    private CommentResponse comment;
+
+    @JsonIgnore
     private Set<CommentResponse> comments;
 }

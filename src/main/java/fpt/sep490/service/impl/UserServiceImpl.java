@@ -141,8 +141,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        Address address = addressRepository.findById(userDto.getDefaultAddress())
-                        .orElseThrow(() -> new ResourceNotFoundException("Address","id", userDto.getDefaultAddress()));
+        if(userDto.getDefaultAddress() != 0L){
+            Address address = addressRepository.findById(userDto.getDefaultAddress())
+                    .orElseThrow(() -> new ResourceNotFoundException("Address","id", userDto.getDefaultAddress()));
+        }
 
         user.setEmail(userDto.getEmail());
         user.setFullName(userDto.getFullName());
@@ -151,8 +153,7 @@ public class UserServiceImpl implements UserService {
         user.setImageUrl(userDto.getImageUrl());
         user.setIsLocked(userDto.getIsLocked());
         user.setIdentifiedCode(userDto.getIdentifiedCode());
-        user.setDefaultAddress(userDto.getDefaultAddress());
-
+        if(userDto.getDefaultAddress() != 0L){ user.setDefaultAddress(userDto.getDefaultAddress());}
         return mapper.map(userRepository.save(user), UserResponse.class);
     }
 

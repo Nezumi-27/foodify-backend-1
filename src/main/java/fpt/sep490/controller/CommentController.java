@@ -52,6 +52,15 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getAllCommentsByProductId(productId, pageNo, pageSize, sortBy, sortDir));
     }
 
+    @ApiOperation("Get Comment By Product and User")
+    @GetMapping("/products/{productId}/users/{userId}")
+    public ResponseEntity<CommentResponse> getCommentByProductIdAndUserId(
+            @PathVariable(value = "productId") Long productId,
+            @PathVariable(value = "userId") Long userId
+    ){
+        return ResponseEntity.ok(commentService.getCommentByProductIdAndUserId(productId, userId));
+    }
+
     @ApiOperation("Get Comment By Id")
     @GetMapping("/products/{productId}/comments/{commentId}")
     public ResponseEntity<CommentResponse> getCommentById(

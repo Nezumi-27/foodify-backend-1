@@ -12,6 +12,8 @@ public interface CommentService {
 
     CommentResponsePageable getAllCommentsByProductId(Long productId, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    CommentResponse getCommentByProductIdAndUserId(Long productId, Long userId);
+
     CommentResponse getCommentById(Long productId, Long commentId);
 
     CommentResponse updateComment(Long productId, Long commentId, CommentDto commentDto);
