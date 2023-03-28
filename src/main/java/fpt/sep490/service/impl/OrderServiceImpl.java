@@ -45,11 +45,16 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        Shipper shipper = shipperRepository.findById(orderDto.getShipperId())
-                .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", orderDto.getShipperId()));
-
 
         List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
+
+        for(OrderDetailDto orderDetail : orderDetails){
+            Product product = productRepository.findById(orderDetail.getProductId())
+                    .orElseThrow(()-> new ResourceNotFoundException("Product", "id", orderDetail.getProductId()));
+            if(!product.getIsEnabled()){
+                throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Product [" + product.getName() + "] has been disabled");
+            }
+        }
 
         Long productCost= 0L;
         Order order = new Order();
@@ -60,7 +65,6 @@ public class OrderServiceImpl implements OrderService {
         order.setProductCost(0L);
         order.setTotal(orderDto.getShippingCost() + productCost);
         order.setUser(user);
-        order.setShipper(shipper);
         order.setAddress(orderDto.getAddress());
         Order newOrder = orderRepository.save(order);
 
@@ -68,7 +72,6 @@ public class OrderServiceImpl implements OrderService {
         for(OrderDetailDto orderDetail : orderDetails){
             Product product = productRepository.findById(orderDetail.getProductId())
                     .orElseThrow(()-> new ResourceNotFoundException("Product", "id", orderDetail.getProductId()));
-
 
             OrderDetail newOrderDetail = new OrderDetail();
             newOrderDetail.setProduct(product);
