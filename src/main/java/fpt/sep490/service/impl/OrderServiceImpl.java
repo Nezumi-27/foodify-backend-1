@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,14 +48,19 @@ public class OrderServiceImpl implements OrderService {
 
 
         List<OrderDetailDto> orderDetails = orderDto.getOrderDetails();
+        List<String> productDisable = new ArrayList<>();
 
         for(OrderDetailDto orderDetail : orderDetails){
             Product product = productRepository.findById(orderDetail.getProductId())
                     .orElseThrow(()-> new ResourceNotFoundException("Product", "id", orderDetail.getProductId()));
-            if(!product.getIsEnabled()){
-                throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Product [" + product.getName() + "] has been disabled");
+            if(!product.getIsEnabled()) {
+                productDisable.add(product.getName());
             }
         }
+        if(!productDisable.isEmpty()){
+            throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Product " + productDisable + " has been disabled");
+        }
+
 
         Long productCost= 0L;
         Order order = new Order();

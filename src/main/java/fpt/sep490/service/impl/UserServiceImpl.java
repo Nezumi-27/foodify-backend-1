@@ -359,11 +359,10 @@ public class UserServiceImpl implements UserService {
 
         if(addressRepository.existsByAddress(addressDto.getAddress())){
             boolean isExisted = false;
-
             List<Address> addresses = addressRepository.findAddressesByAddress(addressDto.getAddress());
 
             for(Address addr : addresses){
-                if(addr.getDistrict().equals(addressDto.getDistrict()) && addr.getWard().equals(addressDto.getWard())){
+                if(addressDto.getDistrict().equals(addr.getDistrict()) && addressDto.getWard().equals(addr.getWard())){
                     user.getAddresses().add(addr);
                     addr.getUsers().add(user);
 
@@ -378,10 +377,19 @@ public class UserServiceImpl implements UserService {
                 }
             }
 
-            if(!isExisted){
-                Address newAddress = mapper.map(addressDto, Address.class);
+            if(isExisted == false){
+                Address newAddress = new Address();
+                newAddress.setAddress(addressDto.getAddress());
+                newAddress.setDistrict(addressDto.getDistrict());
+                newAddress.setWard(addressDto.getWard());
                 Address savedAddress = addressRepository.save(newAddress);
                 savedAddress.setUsers(new HashSet<>());
+
+                //Remove old user_address
+                user.getAddresses().remove(address);
+                address.getUsers().remove(user);
+                addressRepository.save(address);
+                userRepository.save(user);
 
                 savedAddress.getUsers().add(user);
                 user.getAddresses().add(savedAddress);
@@ -397,16 +405,21 @@ public class UserServiceImpl implements UserService {
             }
         }
         else {
-            Address newAddress = mapper.map(addressDto, Address.class);
+            Address newAddress = new Address();
+            newAddress.setAddress(addressDto.getAddress());
+            newAddress.setDistrict(addressDto.getDistrict());
+            newAddress.setWard(addressDto.getWard());
             Address savedAddress = addressRepository.save(newAddress);
             savedAddress.setUsers(new HashSet<>());
-
-            savedAddress.getUsers().add(user);
-            user.getAddresses().add(savedAddress);
 
             //Remove old user_address
             user.getAddresses().remove(address);
             address.getUsers().remove(user);
+            addressRepository.save(address);
+            userRepository.save(user);
+
+            savedAddress.getUsers().add(user);
+            user.getAddresses().add(savedAddress);
 
             addressRepository.save(savedAddress);
             userRepository.save(user);

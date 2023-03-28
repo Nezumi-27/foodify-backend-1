@@ -196,7 +196,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
-        if(!comment.getProduct().getId().equals(commentId)){
+        if(!comment.getProduct().getId().equals(productId)){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Comment doesn't belong to product");
         }
 
