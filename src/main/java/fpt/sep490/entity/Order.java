@@ -62,6 +62,12 @@ public class Order implements Serializable {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Transaction transaction;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
+
+    @Column(name = "lat", nullable = false)
+    private String lat;
+
+    @Column(name = "lng", nullable = false)
+    private String lng;
 }
