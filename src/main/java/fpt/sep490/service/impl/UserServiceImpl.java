@@ -256,6 +256,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
+        boolean isHaveAddress = false;
+
+        if(!user.getAddresses().isEmpty()){
+            isHaveAddress = true;
+        }
+        System.out.println(isHaveAddress);
+
         if(addressDto.getDistrict() == "Huyện Hoàng Sa") addressDto.setWard("");
 
         //Check if user have that address
@@ -275,6 +282,7 @@ public class UserServiceImpl implements UserService {
                 if(address.getDistrict().equals(addressDto.getDistrict()) && address.getWard().equals(addressDto.getWard())){
                     user.getAddresses().add(address);
                     address.getUsers().add(user);
+                    if(!isHaveAddress) user.setDefaultAddress(address.getId());
 
                     userRepository.save(user);
                     addressRepository.save(address);
@@ -292,6 +300,7 @@ public class UserServiceImpl implements UserService {
                 user.getAddresses().add(newAddress);
 
                 addressRepository.save(newAddress);
+                if(!isHaveAddress) user.setDefaultAddress(newAddress.getId());
                 userRepository.save(user);
 
                 return new StringBoolObject("Create address", true);
@@ -306,6 +315,7 @@ public class UserServiceImpl implements UserService {
             user.getAddresses().add(newAddress);
 
             addressRepository.save(newAddress);
+            if(!isHaveAddress) user.setDefaultAddress(newAddress.getId());
             userRepository.save(user);
 
             return new StringBoolObject("Create address", true);
