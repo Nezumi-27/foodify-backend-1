@@ -72,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(orderDto.getShippingCost() + productCost);
         order.setUser(user);
         order.setAddress(orderDto.getAddress());
+        order.setLat(orderDto.getLat());
+        order.setLng(orderDto.getLng());
         Order newOrder = orderRepository.save(order);
 
 

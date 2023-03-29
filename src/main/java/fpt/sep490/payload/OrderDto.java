@@ -34,4 +34,7 @@ public class OrderDto {
     private String status;
 
     private String address;
+
+    private String lat;
+    private String lng;
 }
