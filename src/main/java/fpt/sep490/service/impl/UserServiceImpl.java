@@ -440,6 +440,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public StringBoolObject updateUserDefaultAddress(Long userId, Long defaultAddressId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Address address = addressRepository.findById(defaultAddressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address", "id", defaultAddressId));
+
+        user.setDefaultAddress(defaultAddressId);
+        userRepository.save(user);
+        return new StringBoolObject("Update default address", true);
+    }
+
+    @Override
     public StringBoolObject deleteUserAddress(Long userId, Long addressId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

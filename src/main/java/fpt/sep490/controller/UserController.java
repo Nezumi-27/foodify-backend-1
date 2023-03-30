@@ -147,6 +147,14 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
+    @ApiOperation("Update user default address")
+    @PutMapping("/{userId}/addresses/default")
+    public ResponseEntity<StringBoolObject> updateUserAddress(@PathVariable(value = "userId") Long userId,
+                                                        @RequestParam(value = "addressId") Long addressId){
+        return ResponseEntity.ok(userService.updateUserDefaultAddress(userId, addressId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete user address")
     @DeleteMapping("/{userId}/addresses/{addressId}")
     public ResponseEntity<StringBoolObject> deleteUserAddress(@PathVariable(value = "userId") Long userId,

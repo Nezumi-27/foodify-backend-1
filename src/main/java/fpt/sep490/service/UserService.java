@@ -26,5 +26,7 @@ public interface UserService {
 
     AddressResponsePageable getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
     AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto);
+
+    StringBoolObject updateUserDefaultAddress(Long userId, Long defaultAddressId);
     StringBoolObject deleteUserAddress(Long userId, Long addressId);
 }
