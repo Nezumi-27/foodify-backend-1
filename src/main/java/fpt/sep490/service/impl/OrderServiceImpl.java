@@ -147,6 +147,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponsePageable getOrdersByUserIdAndStatus(Long userId, String status, int pageNo, int pageSize, String sortBy, String sortDir) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Order> orders = orderRepository.findOrdersByUserAndStatus(user, status, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
     public OrderResponsePageable getOrdersByShipperId(Long shipperId, int pageNo, int pageSize, String sortBy, String sortDir) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(()-> new ResourceNotFoundException("Shipper", "id", shipperId));

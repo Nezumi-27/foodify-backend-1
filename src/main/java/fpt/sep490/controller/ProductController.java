@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api("CRUD APIs for Products Resources")
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api")
 public class ProductController {
     private ProductService productService;
 
@@ -26,14 +26,14 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Product")
-    @PostMapping
+    @PostMapping("/products")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductDto productDto){
         System.out.println(productDto.toString());
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
     }
 
     @ApiOperation("Get All Products")
-    @GetMapping
+    @GetMapping("/products")
     public ProductResponsePageable getAllProduct(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -44,7 +44,7 @@ public class ProductController {
     }
 
     @ApiOperation("Get All Enable Products")
-    @GetMapping("/enable")
+    @GetMapping("/products/enable")
     public ProductResponsePageable getAllProductEnable(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @ApiOperation("Get Products By Shop Id")
-    @GetMapping("/shops/{id}")
+    @GetMapping("/products/shops/{id}")
     public ProductResponsePageable getProductsByShopId(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -67,7 +67,7 @@ public class ProductController {
     }
 
     @ApiOperation("Get Products By Categories")
-    @GetMapping("/categories")
+    @GetMapping("/products/categories")
     public ProductResponsePageable getProductsByCategories(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
@@ -79,14 +79,14 @@ public class ProductController {
     }
 
     @ApiOperation("Get Product By Id")
-    @GetMapping("/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable(value = "id") Long productId){
         return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Product By Id")
-    @PutMapping("/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id") Long productId,
                                          @RequestBody ProductDto productDto){
         return ResponseEntity.ok(productService.updateProduct(productId, productDto));
@@ -94,14 +94,14 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete product by Id")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Long productId){
         productService.deleteProduct(productId);
         return ResponseEntity.ok("Product Deleted Successfully!");
     }
 
     @ApiOperation("Search products by name")
-    @GetMapping("/search/{name}")
+    @GetMapping("/products/search/{name}")
     public ProductResponsePageable searchByName(
             @PathVariable(value = "name") String name,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,

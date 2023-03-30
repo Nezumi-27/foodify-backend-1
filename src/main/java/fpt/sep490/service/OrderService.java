@@ -11,6 +11,8 @@ public interface OrderService {
 
     OrderResponsePageable getOrdersByUserId(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    OrderResponsePageable getOrdersByUserIdAndStatus(Long userId, String status, int pageNo, int pageSize, String sortBy, String sortDir);
+
     OrderResponsePageable getOrdersByShipperId(Long shipperId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     OrderResponse getOrderById(Long userId, Long orderId);
