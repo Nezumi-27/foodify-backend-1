@@ -1,5 +1,6 @@
 package fpt.sep490.payload;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
@@ -8,5 +9,7 @@ public class CommentResponse {
     private String content;
     private float rating;
     private UserDto user;
+
+    @JsonIgnore
     private ProductDto product;
 }
