@@ -3,6 +3,7 @@ package fpt.sep490.service;
 import fpt.sep490.payload.OrderDto;
 import fpt.sep490.payload.OrderResponse;
 import fpt.sep490.payload.OrderResponsePageable;
+import fpt.sep490.payload.StringBoolObject;
 
 public interface OrderService {
     OrderResponse createOrder(Long userId, OrderDto orderDto);
@@ -21,5 +22,5 @@ public interface OrderService {
 
     OrderResponse updateOrderStatus(Long userId, Long orderId, String status);
 
-    void deleteOrder(Long userId, Long orderId);
+    StringBoolObject deleteOrder(Long userId, Long orderId);
 }

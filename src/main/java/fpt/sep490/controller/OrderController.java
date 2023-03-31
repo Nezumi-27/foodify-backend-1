@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.payload.OrderDto;
 import fpt.sep490.payload.OrderResponse;
 import fpt.sep490.payload.OrderResponsePageable;
+import fpt.sep490.payload.StringBoolObject;
 import fpt.sep490.service.OrderService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -111,9 +112,9 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Delete Order By Id")
     @DeleteMapping("/api/users/{userId}/orders/{orderId}")
-    public ResponseEntity<String> deleteOrder(@PathVariable(value = "userId") Long userId,
-                                                      @PathVariable(value = "orderId") Long orderId){
-        return ResponseEntity.ok("Order deleted successfully");
+    public ResponseEntity<StringBoolObject> deleteOrder(@PathVariable(value = "userId") Long userId,
+                                                        @PathVariable(value = "orderId") Long orderId){
+        return ResponseEntity.ok(this.orderService.deleteOrder(userId, orderId));
     }
 
 }

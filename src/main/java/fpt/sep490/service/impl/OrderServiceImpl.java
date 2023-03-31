@@ -84,14 +84,14 @@ public class OrderServiceImpl implements OrderService {
             OrderDetail newOrderDetail = new OrderDetail();
             newOrderDetail.setProduct(product);
             newOrderDetail.setQuantity(orderDetail.getQuantity());
-            newOrderDetail.setSubTotal(product.getCost() * orderDetail.getQuantity());
+            newOrderDetail.setSubTotal((long) ((product.getCost() - product.getCost() * product.getDiscountPercent()/100)* orderDetail.getQuantity()));
             productCost = productCost + newOrderDetail.getSubTotal();
             newOrderDetail.setOrder(newOrder);
             orderDetailRepository.save(newOrderDetail);
         }
 
         newOrder.setProductCost(productCost);
-        newOrder.setTotal(newOrder.getShippingCost() + productCost);
+        newOrder.setTotal(newOrder.getShippingCost() + (productCost));
         newOrder = orderRepository.save(newOrder);
 
         return mapper.map(newOrder, OrderResponse.class);
@@ -283,7 +283,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Long userId, Long orderId) {
+    public StringBoolObject deleteOrder(Long userId, Long orderId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
 
@@ -295,5 +295,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderRepository.delete(order);
+
+        return new StringBoolObject("isDeleted", true);
     }
 }
