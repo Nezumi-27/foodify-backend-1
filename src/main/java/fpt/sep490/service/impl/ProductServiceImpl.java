@@ -5,12 +5,8 @@ import fpt.sep490.entity.Product;
 import fpt.sep490.entity.Shop;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
-import fpt.sep490.payload.PageableDto;
-import fpt.sep490.payload.ProductDto;
-import fpt.sep490.payload.ProductResponse;
-import fpt.sep490.payload.ProductResponsePageable;
+import fpt.sep490.payload.*;
 import fpt.sep490.repository.CategoryRepository;
-import fpt.sep490.repository.ProductImageRepository;
 import fpt.sep490.repository.ProductRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.service.ProductService;
@@ -31,20 +27,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private CategoryRepository categoryRepository;
-    private ProductRepository productRepository;
-    private ShopRepository shopRepository;
-    private ProductImageRepository productImageRepository;
-    private ModelMapper mapper;
-    private StringConverter stringConverter;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final ShopRepository shopRepository;
+    private final ModelMapper mapper;
+    private final StringConverter stringConverter;
 
-    private String newCategoryImage = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Category%2Fupdating.png?alt=media&token=a64a5b4d-76cb-48a3-a3db-64fa37c712c8";
+    private final String newCategoryImage = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Category%2Fupdating.png?alt=media&token=a64a5b4d-76cb-48a3-a3db-64fa37c712c8";
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ProductImageRepository productImageRepository, ModelMapper mapper, StringConverter stringConverter) {
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ModelMapper mapper, StringConverter stringConverter) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
-        this.productImageRepository = productImageRepository;
         this.mapper = mapper;
         this.stringConverter = stringConverter;
     }
@@ -75,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         Shop shop = shopRepository.findById(productDto.getShopId())
                 .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", productDto.getShopId()));
 
-        Set<Category> categorySet = new HashSet<Category>(categories);
+        Set<Category> categorySet = new HashSet<>(categories);
 
         Product product = new Product();
         product.setName(stringConverter.convertString(productDto.getName()));
@@ -90,8 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product newProduct = productRepository.save(product);
 
-        ProductResponse productResponse = mapper.map(newProduct, ProductResponse.class);
-        return productResponse;
+        return mapper.map(newProduct, ProductResponse.class);
     }
 
     @Override
@@ -138,6 +131,13 @@ public class ProductServiceImpl implements ProductService {
         responses.setProducts(content);
         responses.setPage(pageableDto);
         return responses;
+    }
+
+    @Override
+    public Set<ProductSimpleResponse> getAllEnableProductsNoPageable() {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream().map(product -> mapper.map(product, ProductSimpleResponse.class)).collect(Collectors.toSet());
     }
 
     @Override
@@ -229,7 +229,7 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        Set<Category> categorySet = new HashSet<Category>(categories);
+        Set<Category> categorySet = new HashSet<>(categories);
 
         product.setName(stringConverter.convertString(productDto.getName()));
         product.setDescription(productDto.getDescription());

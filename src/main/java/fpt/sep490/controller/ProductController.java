@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.payload.ProductDto;
 import fpt.sep490.payload.ProductResponse;
 import fpt.sep490.payload.ProductResponsePageable;
+import fpt.sep490.payload.ProductSimpleResponse;
 import fpt.sep490.service.ProductService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Api("CRUD APIs for Products Resources")
 @RestController
@@ -52,6 +54,12 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return productService.getAllEnableProducts(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @ApiOperation("Get all enable product no pageable")
+    @GetMapping("/v1/products/enable")
+    public ResponseEntity<Set<ProductSimpleResponse>> getAllProductEnableNoPageable(){
+        return ResponseEntity.ok(this.productService.getAllEnableProductsNoPageable());
     }
 
     @ApiOperation("Get Products By Shop Id")

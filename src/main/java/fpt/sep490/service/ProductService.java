@@ -3,8 +3,10 @@ package fpt.sep490.service;
 import fpt.sep490.payload.ProductDto;
 import fpt.sep490.payload.ProductResponse;
 import fpt.sep490.payload.ProductResponsePageable;
+import fpt.sep490.payload.ProductSimpleResponse;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductService {
     ProductResponse createProduct(ProductDto productDto);
@@ -12,6 +14,8 @@ public interface ProductService {
     ProductResponsePageable getAllProducts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     ProductResponsePageable getAllEnableProducts(int pageNo, int pageSize, String sortBy, String sortDir);
+
+    Set<ProductSimpleResponse> getAllEnableProductsNoPageable();
 
     ProductResponsePageable getAllProductsByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
 
