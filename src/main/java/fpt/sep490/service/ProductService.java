@@ -1,9 +1,6 @@
 package fpt.sep490.service;
 
-import fpt.sep490.payload.ProductDto;
-import fpt.sep490.payload.ProductResponse;
-import fpt.sep490.payload.ProductResponsePageable;
-import fpt.sep490.payload.ProductSimpleResponse;
+import fpt.sep490.payload.*;
 
 import java.util.List;
 import java.util.Set;
@@ -14,6 +11,8 @@ public interface ProductService {
     ProductResponsePageable getAllProducts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     ProductResponsePageable getAllEnableProducts(int pageNo, int pageSize, String sortBy, String sortDir);
+
+    RandomProductResponsePageable getRandomEnableProducts(int pageNo, int pageSize);
 
     Set<ProductSimpleResponse> getAllEnableProductsNoPageable();
 

@@ -1,9 +1,6 @@
 package fpt.sep490.controller;
 
-import fpt.sep490.payload.ProductDto;
-import fpt.sep490.payload.ProductResponse;
-import fpt.sep490.payload.ProductResponsePageable;
-import fpt.sep490.payload.ProductSimpleResponse;
+import fpt.sep490.payload.*;
 import fpt.sep490.service.ProductService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -56,7 +53,16 @@ public class ProductController {
         return productService.getAllEnableProducts(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @ApiOperation("Get all enable product no pageable")
+    @ApiOperation("Get Random Enable Products")
+    @GetMapping("/products/random")
+    public ResponseEntity<RandomProductResponsePageable> getRandomProducts(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize
+    ){
+        return ResponseEntity.ok(this.productService.getRandomEnableProducts(pageNo, pageSize));
+    }
+
+    @ApiOperation("Get All Enable Products No Pageable")
     @GetMapping("/v1/products/enable")
     public ResponseEntity<Set<ProductSimpleResponse>> getAllProductEnableNoPageable(){
         return ResponseEntity.ok(this.productService.getAllEnableProductsNoPageable());
