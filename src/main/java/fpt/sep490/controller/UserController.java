@@ -52,6 +52,33 @@ public class UserController {
         return userService.getUsersByRoles(roleName, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @ApiOperation("Find Users By Email Or Phone Number And Role")
+    @GetMapping("/roles/{roleName}/email")
+    public ResponseEntity<UserResponsePageable> getUsersByEmailOrPhoneNumberAndRole(
+            @RequestParam(value = "emailOrPhoneNumber") String emailOrPhoneNumber,
+            @PathVariable(value = "roleName") String roleName,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_USER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return ResponseEntity.ok(userService.getUserByEmailOrPhoneNumberAndRole(emailOrPhoneNumber ,roleName, pageNo, pageSize, sortBy, sortDir));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
+    @ApiOperation("Find Users By Email Or Phone Number")
+    @GetMapping("/email/search")
+    public ResponseEntity<UserResponsePageable> getUsersByEmailOrPhoneNumberContaining(
+            @RequestParam(value = "emailOrPhoneNumber") String emailOrPhoneNumber,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_USER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return ResponseEntity.ok(userService.getUsersByEmailOrPhoneNumber(emailOrPhoneNumber , pageNo, pageSize, sortBy, sortDir));
+    }
+
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Get User By Id")
     @GetMapping("/{userId}")

@@ -121,6 +121,57 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponsePageable getUsersByEmailOrPhoneNumber(String emailOrPhoneNumber, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<User> users = userRepository.findUsersByEmailContainingOrPhoneNumberContaining(emailOrPhoneNumber, emailOrPhoneNumber, pageable);
+        List<User> userList = users.getContent();
+        List<UserResponse> content = userList.stream().map(user -> mapper.map(user, UserResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(users.getNumber());
+        pageableDto.setPageSize(users.getSize());
+        pageableDto.setTotalElements(users.getTotalElements());
+        pageableDto.setTotalPages(users.getTotalPages());
+        pageableDto.setLast(users.isLast());
+
+        UserResponsePageable response = new UserResponsePageable();
+        response.setUsers(content);
+        response.setPage(pageableDto);
+
+        return response;
+    }
+
+    @Override
+    public UserResponsePageable getUserByEmailOrPhoneNumberAndRole(String emailOrPhoneNumber, String roleName, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(()-> new FoodifyAPIException(HttpStatus.NOT_FOUND, "Role does not found with name: " + roleName));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<User> users = userRepository.findUsersByRoleAndEmailContainingOrPhoneNumberContaining(role , emailOrPhoneNumber, emailOrPhoneNumber, pageable);
+        List<User> userList = users.getContent();
+        List<UserResponse> content = userList.stream().map(user -> mapper.map(user, UserResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(users.getNumber());
+        pageableDto.setPageSize(users.getSize());
+        pageableDto.setTotalElements(users.getTotalElements());
+        pageableDto.setTotalPages(users.getTotalPages());
+        pageableDto.setLast(users.isLast());
+
+        UserResponsePageable response = new UserResponsePageable();
+        response.setUsers(content);
+        response.setPage(pageableDto);
+
+        return response;
+    }
+
+    @Override
     public UserResponse getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

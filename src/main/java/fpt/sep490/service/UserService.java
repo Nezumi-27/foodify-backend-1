@@ -8,6 +8,10 @@ public interface UserService {
 
     UserResponsePageable getUsersByRoles(String roleName, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    UserResponsePageable getUsersByEmailOrPhoneNumber(String emailOrPhoneNumber, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    UserResponsePageable getUserByEmailOrPhoneNumberAndRole(String emailOrPhoneNumber, String roleName, int pageNo, int pageSize, String sortBy, String sortDir);
+
     UserResponse getUserById(Long userId);
 
     UserResponse getUserByEmailOrPhoneNumber(String emailOrPhoneNumber);

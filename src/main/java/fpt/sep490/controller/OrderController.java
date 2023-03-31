@@ -102,7 +102,7 @@ public class OrderController {
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Update Order Status")
-    @PutMapping("/api/users/{userId}/orders/{orderId}/status/{status}")
+    @PutMapping("/api/users/{userId}/orders/{orderId}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable(value = "userId") Long userId,
                                                      @PathVariable(value = "orderId") Long orderId,
                                                      @RequestParam(value = "status") String status){
