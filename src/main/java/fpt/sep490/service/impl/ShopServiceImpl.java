@@ -106,6 +106,17 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public ShopResponse getShopByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Shop shop = shopRepository.findShopByUser(user)
+                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This user don't have shop"));
+
+        return mapper.map(shop, ShopResponse.class);
+    }
+
+    @Override
     public ShopDto updateShop(Long shopId, ShopDto shopDto) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
         shop.setName(shopDto.getName());

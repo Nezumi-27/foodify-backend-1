@@ -56,6 +56,12 @@ public class ShopController {
         return ResponseEntity.ok(shopService.getShopById(id));
     }
 
+    @ApiOperation("Get Shop by User Id")
+    @GetMapping("/user")
+    public ResponseEntity<ShopResponse> getShopByUserId(@RequestParam(name = "userId") Long userId){
+        return ResponseEntity.ok(shopService.getShopByUserId(userId));
+    }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Update Shop by Id")
     @PutMapping("{id}")

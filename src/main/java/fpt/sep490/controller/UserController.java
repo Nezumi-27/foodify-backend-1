@@ -92,6 +92,14 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserByEmailOrPhoneNumber(@PathVariable(value = "emailOrPhoneNumber") String emailOrPhoneNumber){
         return ResponseEntity.ok(userService.getUserByEmailOrPhoneNumber(emailOrPhoneNumber));
     }
+    
+    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.username==#emailOrPhoneNumber")
+    @ApiOperation("Get User By Email or Phone Number V1")
+    @GetMapping("/v1/email")
+    public ResponseEntity<UserResponse> getUserByEmailOrPhoneNumberV1(@RequestParam(value = "emailOrPhoneNumber") String emailOrPhoneNumber){
+        return ResponseEntity.ok(userService.getUserByEmailOrPhoneNumber(emailOrPhoneNumber));
+    }
+
 
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")

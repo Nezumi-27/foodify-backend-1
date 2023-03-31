@@ -13,4 +13,6 @@ public class ShopResponse {
     private Boolean isEnabled;
     private Boolean isStudent;
     private UserResponse user;
+    private String lat;
+    private String lng;
 }

@@ -13,6 +13,8 @@ public interface ShopService {
 
     ShopResponse getShopById(Long shopId);
 
+    ShopResponse getShopByUserId(Long userId);
+
     ShopDto updateShop(Long shopId, ShopDto shopDto);
 
     void deleteShop(Long shopId);
