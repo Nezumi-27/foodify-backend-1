@@ -57,8 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponsePageable getRandomCategories(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Random random = new Random();
-
         List<Category> categories = categoryRepository.findAll();
         List<Category> shuffle = (new ArrayList<>(categories));
         Collections.shuffle(shuffle);

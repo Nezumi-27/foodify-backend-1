@@ -12,6 +12,8 @@ import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findProductsByIsEnabled(Boolean isEnabled, Pageable pageable);
+
+    List<Product> findProductsByIsEnabled(Boolean isEnabled);
     Page<Product> findProductsByCategoriesIn(List<Category> categories, Pageable pageable);
 
     Page<Product> findDistinctByCategoriesIn(List<Category> categories, Pageable pageable);

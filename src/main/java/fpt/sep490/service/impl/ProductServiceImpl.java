@@ -12,17 +12,11 @@ import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.service.ProductService;
 import fpt.sep490.utils.StringConverter;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,16 +131,23 @@ public class ProductServiceImpl implements ProductService {
     public RandomProductResponsePageable getRandomEnableProducts(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Page<Product> products = productRepository.findProductsByIsEnabled(true, pageable);
-        List<Product> productList = products.getContent();
+        List<Product> products = productRepository.findProductsByIsEnabled(true);
+        List<Product> shuffle = new ArrayList<>(products);
+        Collections.shuffle(shuffle);
+
+        int start = pageNo * pageSize;
+        int end = Math.min(start + pageSize, products.size());
+
+        List<Product> productList = shuffle.subList(start, end);
+        Page<Product> page = new PageImpl<>(productList, pageable, products.size());
         Set<ProductResponse> content = productList.stream().map(product -> mapper.map(product, ProductResponse.class)).collect(Collectors.toSet());
 
         PageableDto pageableDto = new PageableDto();
-        pageableDto.setPageNo(products.getNumber());
-        pageableDto.setPageSize(products.getSize());
-        pageableDto.setTotalElements(products.getTotalElements());
-        pageableDto.setTotalPages(products.getTotalPages());
-        pageableDto.setLast(products.isLast());
+        pageableDto.setPageNo(page.getNumber());
+        pageableDto.setPageSize(page.getSize());
+        pageableDto.setTotalElements(page.getTotalElements());
+        pageableDto.setTotalPages(page.getTotalPages());
+        pageableDto.setLast(page.isLast());
 
         RandomProductResponsePageable responses = new RandomProductResponsePageable();
         responses.setProducts(content);
