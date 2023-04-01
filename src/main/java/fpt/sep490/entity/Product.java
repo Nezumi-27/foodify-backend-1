@@ -52,6 +52,9 @@ public class Product implements Serializable {
     @Column(name = "review_count")
     private int reviewCount;
 
+    @Column(name = "sold")
+    private int sold;
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;

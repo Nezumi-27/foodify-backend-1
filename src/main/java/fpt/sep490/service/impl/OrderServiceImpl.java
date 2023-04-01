@@ -279,6 +279,15 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setStatus(status);
+        if(status.equals("COMPLETED")){
+            Set<OrderDetail> details = order.getOrderDetails();
+
+            for(OrderDetail detail : details){
+                Product product = detail.getProduct();
+                product.setSold(product.getSold() + detail.getQuantity());
+                productRepository.save(product);
+            }
+        }
         return mapper.map(orderRepository.save(order), OrderResponse.class);
     }
 

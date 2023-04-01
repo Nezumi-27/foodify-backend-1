@@ -20,6 +20,7 @@ public class ProductResponse {
     private Long cost;
     private float averageRating;
     private int reviewCount;
+    private int sold;
     private ShopDto shop;
     private Set<CategoryDto> categories;
     private Set<ProductImageDto> images;
