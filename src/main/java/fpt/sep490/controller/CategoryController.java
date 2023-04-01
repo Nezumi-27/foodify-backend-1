@@ -1,7 +1,9 @@
 package fpt.sep490.controller;
 
 import fpt.sep490.payload.CategoryDto;
+import fpt.sep490.payload.CategoryResponsePageable;
 import fpt.sep490.service.CategoryService;
+import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,15 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(CategoryDto categoryDto){
         return new ResponseEntity<>(categoryService.createCategory(categoryDto), HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Get Random Categories")
+    @GetMapping("/randoms")
+    public ResponseEntity<CategoryResponsePageable> getAllCategories(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_CATEGORY_PAGE_SIZE, required = false) int pageSize
+    ){
+        return ResponseEntity.ok(categoryService.getRandomCategories(pageNo, pageSize));
     }
 
     @ApiOperation(value = "Get All Categories")
