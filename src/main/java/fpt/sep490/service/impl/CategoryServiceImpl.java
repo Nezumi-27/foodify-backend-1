@@ -10,6 +10,7 @@ import fpt.sep490.repository.CategoryRepository;
 import fpt.sep490.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,19 +59,23 @@ public class CategoryServiceImpl implements CategoryService {
 
         Random random = new Random();
 
-        Page<Category> categories = categoryRepository.findAll(pageable);
+        List<Category> categories = categoryRepository.findAll();
+        List<Category> shuffle = (new ArrayList<>(categories));
+        Collections.shuffle(shuffle);
 
-        List<Category> list = categories.getContent();
-        List<Category> shuffleList = new ArrayList<>(list);
-        Collections.shuffle(shuffleList);
-        Set<CategoryDto> content = shuffleList.stream().map(category -> mapper.map(category, CategoryDto.class)).collect(Collectors.toSet());
+        int start = pageNo * pageSize;
+        int end = Math.min(start + pageSize, categories.size());
+
+        List<Category> contentList = shuffle.subList(start, end);
+        Set<CategoryDto> content = contentList.stream().map(category -> mapper.map(category, CategoryDto.class)).collect(Collectors.toSet());
+        Page<Category> page = new PageImpl<>(contentList, pageable, categories.size());
 
         PageableDto pageableDto = new PageableDto();
-        pageableDto.setPageNo(categories.getNumber());
-        pageableDto.setPageSize(categories.getSize());
-        pageableDto.setTotalElements(categories.getTotalElements());
-        pageableDto.setTotalPages(categories.getTotalPages());
-        pageableDto.setLast(categories.isLast());
+        pageableDto.setPageNo(page.getNumber());
+        pageableDto.setPageSize(page.getSize());
+        pageableDto.setTotalElements(page.getTotalElements());
+        pageableDto.setTotalPages(page.getTotalPages());
+        pageableDto.setLast(page.isLast());
 
         CategoryResponsePageable responses = new CategoryResponsePageable();
         responses.setCategories(content);
