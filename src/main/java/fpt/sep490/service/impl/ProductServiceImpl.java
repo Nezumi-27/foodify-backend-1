@@ -163,6 +163,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductSimpleResponse> getAllProductsByShop(Long shopId) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        List<Product> products = productRepository.findProductsByShop(shop);
+        return products.stream().map(product -> mapper.map(product, ProductSimpleResponse.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public ProductResponsePageable getAllProductsByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -196,6 +205,30 @@ public class ProductServiceImpl implements ProductService {
 
         List<Category> categories = categoryRepository.findCategoriesByIdIn(categoryIds);
         Page<Product> products = productRepository.findDistinctByCategoriesIn(categories, pageable);
+        List<Product> productList = products.getContent();
+        List<ProductResponse> content = productList.stream().map(product -> mapper.map(product, ProductResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(products.getNumber());
+        pageableDto.setPageSize(products.getSize());
+        pageableDto.setTotalElements(products.getTotalElements());
+        pageableDto.setTotalPages(products.getTotalPages());
+        pageableDto.setLast(products.isLast());
+
+        ProductResponsePageable responses = new ProductResponsePageable();
+        responses.setProducts(content);
+        responses.setPage(pageableDto);
+        return responses;
+    }
+
+    @Override
+    public ProductResponsePageable findProductsByCategoryIdsAndName(List<Long> categoryIds, String name, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        List<Category> categories = categoryRepository.findCategoriesByIdIn(categoryIds);
+        Page<Product> products = productRepository.findDistinctByCategoriesInAndIsEnabledAndNameContainingOrNameLike(categories, true, name, name, pageable);
         List<Product> productList = products.getContent();
         List<ProductResponse> content = productList.stream().map(product -> mapper.map(product, ProductResponse.class)).collect(Collectors.toList());
 

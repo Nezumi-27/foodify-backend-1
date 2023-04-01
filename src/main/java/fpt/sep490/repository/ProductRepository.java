@@ -2,6 +2,7 @@ package fpt.sep490.repository;
 
 import fpt.sep490.entity.Category;
 import fpt.sep490.entity.Product;
+import fpt.sep490.entity.Shop;
 import fpt.sep490.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findProductsByUsersIn(List<User> users, Pageable pageable);
     Page<Product> findProductsByNameLikeOrNameContaining(String name, String namec, Pageable pageable);
+
+    List<Product> findProductsByShop(Shop shop);
+
+    Page<Product> findDistinctByCategoriesInAndIsEnabledAndNameContainingOrNameLike(List<Category> categories, boolean isEnabled, String namec, String name, Pageable pageable);
 }

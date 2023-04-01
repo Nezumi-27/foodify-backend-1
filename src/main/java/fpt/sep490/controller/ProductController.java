@@ -80,6 +80,14 @@ public class ProductController {
         return productService.getAllProductsByShopId(shopId, pageNo, pageSize, sortBy, sortDir);
     }
 
+    @ApiOperation("Get All Products By Shop Id No Pageable")
+    @GetMapping("/products/shops")
+    public ResponseEntity<List<ProductSimpleResponse>> getProductsByShopIdNoPageable(
+            @RequestParam(value = "id") Long shopId
+    ){
+        return ResponseEntity.ok(productService.getAllProductsByShop(shopId));
+    }
+
     @ApiOperation("Get Products By Categories")
     @GetMapping("/products/categories")
     public ProductResponsePageable getProductsByCategories(
@@ -90,6 +98,19 @@ public class ProductController {
             @RequestParam(value = "id") List<Long> categoryIds
             ){
         return productService.getAllProductsByCategoryIds(categoryIds, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @ApiOperation("Search Enable Products By Categories And Name")
+    @GetMapping("/products/categoriesAndName")
+    public ResponseEntity<ProductResponsePageable> getProductsByCategories(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PRODUCT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam(value = "id") List<Long> categoryIds,
+            @RequestParam(value = "name") String name
+    ){
+        return ResponseEntity.ok(productService.findProductsByCategoryIdsAndName(categoryIds, name, pageNo, pageSize, sortBy, sortDir));
     }
 
     @ApiOperation("Get Product By Id")

@@ -1,5 +1,6 @@
 package fpt.sep490.service;
 
+import fpt.sep490.entity.Product;
 import fpt.sep490.payload.*;
 
 import java.util.List;
@@ -15,10 +16,13 @@ public interface ProductService {
     RandomProductResponsePageable getRandomEnableProducts(int pageNo, int pageSize);
 
     Set<ProductSimpleResponse> getAllEnableProductsNoPageable();
+    List<ProductSimpleResponse> getAllProductsByShop(Long shopId);
 
     ProductResponsePageable getAllProductsByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     ProductResponsePageable getAllProductsByCategoryIds(List<Long> categoryIds, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    ProductResponsePageable findProductsByCategoryIdsAndName(List<Long> categoryIds, String name, int pageNo, int pageSize, String sortBy, String sortDir);
 
     ProductResponse getProductById(Long productId);
 
