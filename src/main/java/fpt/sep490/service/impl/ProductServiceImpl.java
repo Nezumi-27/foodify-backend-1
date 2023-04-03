@@ -1,14 +1,10 @@
 package fpt.sep490.service.impl;
 
-import fpt.sep490.entity.Category;
-import fpt.sep490.entity.Product;
-import fpt.sep490.entity.Shop;
+import fpt.sep490.entity.*;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.*;
-import fpt.sep490.repository.CategoryRepository;
-import fpt.sep490.repository.ProductRepository;
-import fpt.sep490.repository.ShopRepository;
+import fpt.sep490.repository.*;
 import fpt.sep490.service.ProductService;
 import fpt.sep490.utils.StringConverter;
 import org.modelmapper.ModelMapper;
@@ -28,13 +24,22 @@ public class ProductServiceImpl implements ProductService {
     private final StringConverter stringConverter;
 
     private final String newCategoryImage = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Category%2Fupdating.png?alt=media&token=a64a5b4d-76cb-48a3-a3db-64fa37c712c8";
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ModelMapper mapper, StringConverter stringConverter) {
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ShopRepository shopRepository, ModelMapper mapper, StringConverter stringConverter,
+                              UserRepository userRepository,
+                              OrderRepository orderRepository,
+                              OrderDetailRepository orderDetailRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
         this.mapper = mapper;
         this.stringConverter = stringConverter;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     @Override
@@ -329,5 +334,30 @@ public class ProductServiceImpl implements ProductService {
         responses.setProducts(content);
         responses.setPage(pageableDto);
         return responses;
+    }
+
+    @Override
+    public StringBoolObject productHasBeenBoughtByUser(Long productId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        List<Order> orders = orderRepository.findOrdersByUser(user);
+
+        for (Order order: orders){
+            if (order.getStatus().equals("COMPLETED")){
+                List<OrderDetail> details = orderDetailRepository.findOrderDetailsByOrder(order);
+                for (OrderDetail detail : details){
+                    if (detail.getProduct().getId().equals(productId)){
+                        return new StringBoolObject("isBought", true);
+                    }
+                }
+            }
+
+        }
+
+        return new StringBoolObject("isBought", false);
     }
 }

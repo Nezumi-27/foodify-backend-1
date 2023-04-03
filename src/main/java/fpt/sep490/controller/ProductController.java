@@ -145,4 +145,11 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir){
         return productService.findProductsByName(name, pageNo, pageSize, sortBy, sortDir);
     }
+
+    @ApiOperation("Check user has buy product")
+    @GetMapping("/products/{productId}/user")
+    public ResponseEntity<StringBoolObject> checkBought(@PathVariable(value = "productId") Long productId,
+                                                @RequestParam(value = "userId") Long userId){
+        return ResponseEntity.ok(productService.productHasBeenBoughtByUser(productId, userId));
+    }
 }

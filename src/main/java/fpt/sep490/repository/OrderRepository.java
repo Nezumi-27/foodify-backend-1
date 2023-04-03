@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findOrdersByUser(User user, Pageable pageable);
+
+    List<Order> findOrdersByUser(User user);
     Page<Order> findOrdersByUserAndStatus(User user, String status, Pageable pageable);
     Page<Order> findOrdersByShipper(Shipper shipper, Pageable pageable);
 }
