@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +31,11 @@ public class OrderServiceImpl implements OrderService {
     private AddressRepository addressRepository;
     private ModelMapper mapper;
     private final ProductRepository productRepository;
+    private final ShopRepository shopRepository;
 
     public OrderServiceImpl(UserRepository userRepository, ShipperRepository shipperRepository, OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, AddressRepository addressRepository, ModelMapper mapper,
-                            ProductRepository productRepository) {
+                            ProductRepository productRepository,
+                            ShopRepository shopRepository) {
         this.userRepository = userRepository;
         this.shipperRepository = shipperRepository;
         this.orderRepository = orderRepository;
@@ -39,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
         this.addressRepository = addressRepository;
         this.mapper = mapper;
         this.productRepository = productRepository;
+        this.shopRepository = shopRepository;
     }
 
     @Override
@@ -199,6 +204,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponsePageable getOrdersByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        List<Product> products = productRepository.findProductsByShop(shop);
+        List<OrderDetail> lists = new ArrayList<>();
+
+        for(Product product : products){
+            List<OrderDetail> details = orderDetailRepository.findOrderDetailsByProduct(product);
+            lists.addAll(details);
+        }
+
+        Page<Order> orders = orderRepository.findDistinctByOrderDetailsIn(lists, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
     public OrderResponse getOrderById(Long userId, Long orderId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
@@ -289,6 +328,69 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return mapper.map(orderRepository.save(order), OrderResponse.class);
+    }
+
+    @Override
+    public Integer countOrdersByDistrict(String districtName) {
+        List<Order> orders = orderRepository.findOrdersByAddressContaining(districtName);
+        return orders.toArray().length;
+    }
+
+    @Override
+    public Integer countShopOrdersByDistrict(Long shopId, String districtName) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        List<Product> products = productRepository.findProductsByShop(shop);
+        List<OrderDetail> lists = new ArrayList<>();
+
+        for(Product product : products){
+            List<OrderDetail> details = orderDetailRepository.findOrderDetailsByProduct(product);
+            lists.addAll(details);
+        }
+
+        List<Order> orderList = orderRepository.findDistinctByOrderDetailsIn(lists);
+
+        Integer count = 0;
+
+        for(Order order : orderList){
+            if(order.getAddress().contains(districtName)){
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    @Override
+    public Long countShopRevenueByDay(Long shopId, int day) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        List<Product> products = productRepository.findProductsByShop(shop);
+        List<OrderDetail> lists = new ArrayList<>();
+
+        for(Product product : products){
+            List<OrderDetail> details = orderDetailRepository.findOrderDetailsByProduct(product);
+            lists.addAll(details);
+        }
+
+        List<Order> orderList = orderRepository.findDistinctByOrderDetailsIn(lists);
+
+        LocalDate today = LocalDate.now();
+        LocalDate daysAgo = today.minusDays(day);
+
+        Timestamp daysAgoTS = Timestamp.valueOf(daysAgo.atStartOfDay());
+
+        List<Order> recentOrders = orderList.stream()
+                .filter(order -> order.getOrderTime().after(daysAgoTS)).collect(Collectors.toList());
+
+        Long revenue = 0L;
+
+        for(Order order : recentOrders){
+            revenue = revenue + order.getTotal();
+        }
+        return revenue;
     }
 
     @Override

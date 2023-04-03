@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
 import fpt.sep490.payload.ShopResponsePageable;
+import fpt.sep490.service.OrderService;
 import fpt.sep490.service.impl.ShopServiceImpl;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/shops")
 public class ShopController {
     private ShopServiceImpl shopService;
+    private OrderService orderService;
 
-    public ShopController(ShopServiceImpl shopService) {
+    public ShopController(ShopServiceImpl shopService, OrderService orderService) {
         this.shopService = shopService;
+        this.orderService = orderService;
     }
 
     @ApiOperation("Create Shop")
@@ -75,5 +78,14 @@ public class ShopController {
     public ResponseEntity<String> deleteShop(@PathVariable(name = "id") Long shopId){
         shopService.deleteShop(shopId);
         return ResponseEntity.ok("Shop deleted successfully");
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Count Shop Revenue")
+    @GetMapping("/{shopId}/revenue")
+    public ResponseEntity<Long> countShopRevenue(
+            @PathVariable(value = "shopId") Long shopId,
+            @RequestParam(value = "day") int day) {
+        return ResponseEntity.ok(this.orderService.countShopRevenueByDay(shopId, day));
     }
 }

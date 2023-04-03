@@ -83,6 +83,31 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
+    public ShipperResponsePageable getShippersByShop(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Shipper> shippers = shipperRepository.findShippersByShop(shop, pageable);
+        List<Shipper> shipperList = shippers.getContent();
+        List<ShipperResponse> content = shipperList.stream().map(shipper -> mapper.map(shipper, ShipperResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(shippers.getNumber());
+        pageableDto.setPageSize(shippers.getSize());
+        pageableDto.setTotalElements(shippers.getTotalElements());
+        pageableDto.setTotalPages(shippers.getTotalPages());
+        pageableDto.setLast(shippers.isLast());
+
+        ShipperResponsePageable shipperResponsePageable = new ShipperResponsePageable();
+        shipperResponsePageable.setShippers(content);
+        shipperResponsePageable.setPage(pageableDto);
+        return shipperResponsePageable;
+    }
+
+    @Override
     public ShipperResponse getShipperById(Long shipperId) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));

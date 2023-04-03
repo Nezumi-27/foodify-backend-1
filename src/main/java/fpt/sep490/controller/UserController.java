@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SHOP')")
     @ApiOperation("Create new user")
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserDto userDto){
@@ -102,7 +102,7 @@ public class UserController {
 
 
 
-    @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasAnyRole('SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Update User by Id")
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable(value = "userId") Long userId,
