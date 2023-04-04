@@ -360,6 +360,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponsePageable findShopProductByName(Long shopId, String name, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Product> products = productRepository.findProductsByShopAndNameContaining(shop, name, pageable);
+        List<Product> list = products.getContent();
+        List<ProductResponse> content = list.stream().map(product -> mapper.map(product, ProductResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(products.getNumber());
+        pageableDto.setPageSize(products.getSize());
+        pageableDto.setTotalElements(products.getTotalElements());
+        pageableDto.setTotalPages(products.getTotalPages());
+        pageableDto.setLast(products.isLast());
+
+        ProductResponsePageable responses = new ProductResponsePageable();
+        responses.setProducts(content);
+        responses.setPage(pageableDto);
+        return responses;
+    }
+
+    @Override
     public StringBoolObject productHasBeenBoughtByUser(Long productId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

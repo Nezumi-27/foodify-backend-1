@@ -34,6 +34,8 @@ public interface ProductService {
 
     ProductResponsePageable findProductsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    ProductResponsePageable findShopProductByName(Long shopId, String name, int pageNo, int pageSize, String sortBy, String sortDir);
+
     StringBoolObject productHasBeenBoughtByUser(Long productId, Long userId);
 
 }
