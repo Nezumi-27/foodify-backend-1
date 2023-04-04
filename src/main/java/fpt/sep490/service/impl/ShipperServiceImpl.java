@@ -181,6 +181,16 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
+    public ShipperResponse getShipperByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Shipper shipper = shipperRepository.findShipperByUser(user)
+                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This user is not a shipper"));
+        return mapper.map(shipper, ShipperResponse.class);
+    }
+
+    @Override
     public ShipperDto updateShipperShippingStatus(Long shipperId, Boolean isShipping) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id", shipperId));

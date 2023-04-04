@@ -88,6 +88,12 @@ public class ShipperController {
         return ResponseEntity.ok(shipperService.getShipperById(id));
     }
 
+    @ApiOperation("Get Shipper By User Id")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ShipperResponse> getShipperByUserId(@PathVariable(value = "id") Long userId){
+        return ResponseEntity.ok(shipperService.getShipperByUserId(userId));
+    }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")
     @ApiOperation("Update Shipper Shipping Status by Id")
     @PutMapping("/{id}/shipping")

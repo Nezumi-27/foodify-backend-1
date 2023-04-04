@@ -1,5 +1,6 @@
 package fpt.sep490.service.impl;
 
+import fpt.sep490.entity.Product;
 import fpt.sep490.entity.Shop;
 import fpt.sep490.entity.User;
 import fpt.sep490.exception.FoodifyAPIException;
@@ -8,6 +9,7 @@ import fpt.sep490.payload.PageableDto;
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
 import fpt.sep490.payload.ShopResponsePageable;
+import fpt.sep490.repository.ProductRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.repository.UserRepository;
 import fpt.sep490.service.ShopService;
@@ -27,11 +29,14 @@ public class ShopServiceImpl implements ShopService {
     private ShopRepository shopRepository;
     private ModelMapper mapper;
     private UserRepository userRepository;
+    private final ProductRepository productRepository;
 
-    public ShopServiceImpl(ShopRepository shopRepository, ModelMapper mapper, UserRepository userRepository) {
+    public ShopServiceImpl(ShopRepository shopRepository, ModelMapper mapper, UserRepository userRepository,
+                           ProductRepository productRepository) {
         this.shopRepository = shopRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -124,6 +129,20 @@ public class ShopServiceImpl implements ShopService {
         shop.setImageUrl(shopDto.getImageUrl());
         shop.setIsStudent(shopDto.getIsStudent());
         shop.setIsEnabled(shopDto.getIsEnabled());
+        if(shopDto.getIsEnabled() == false){
+            List<Product> products = productRepository.findProductsByShop(shop);
+            for(Product product : products){
+                product.setIsEnabled(false);
+                productRepository.save(product);
+            }
+        }
+        else {
+            List<Product> products = productRepository.findProductsByShop(shop);
+            for(Product product : products){
+                product.setIsEnabled(true);
+                productRepository.save(product);
+            }
+        }
 
         Shop updateShop = shopRepository.save(shop);
 
