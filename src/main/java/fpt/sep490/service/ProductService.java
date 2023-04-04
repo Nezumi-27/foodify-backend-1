@@ -16,6 +16,8 @@ public interface ProductService {
     RandomProductResponsePageable getRandomEnableProducts(int pageNo, int pageSize);
 
     Set<ProductSimpleResponse> getAllEnableProductsNoPageable();
+
+    List<ProductSimpleResponse> getAllProducts();
     List<ProductSimpleResponse> getAllProductsByShop(Long shopId);
 
     ProductResponsePageable getAllProductsByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);

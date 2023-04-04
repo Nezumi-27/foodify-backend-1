@@ -162,9 +162,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Set<ProductSimpleResponse> getAllEnableProductsNoPageable() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findProductsByIsEnabled(true);
 
         return products.stream().map(product -> mapper.map(product, ProductSimpleResponse.class)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<ProductSimpleResponse> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(product -> mapper.map(product, ProductSimpleResponse.class)).collect(Collectors.toList());
     }
 
     @Override

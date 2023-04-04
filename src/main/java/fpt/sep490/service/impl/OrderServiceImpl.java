@@ -331,6 +331,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponse updateOrderShipper(Long userId, Long orderId, Long shipperId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+
+        Shipper shipper = shipperRepository.findById(shipperId)
+                .orElseThrow(()-> new ResourceNotFoundException("Shipper", "id", shipperId));
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()-> new ResourceNotFoundException("Order", "id", orderId));
+
+        if(!order.getUser().getId().equals(userId)){
+            throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This order doesn't belong to user");
+        }
+
+        order.setShipper(shipper);
+        return mapper.map(orderRepository.save(order), OrderResponse.class);
+    }
+
+    @Override
     public Integer countOrdersByDistrict(String districtName) {
         List<Order> orders = orderRepository.findOrdersByAddressContaining(districtName);
         return orders.toArray().length;

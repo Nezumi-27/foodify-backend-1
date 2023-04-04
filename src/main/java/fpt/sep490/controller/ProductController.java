@@ -62,10 +62,16 @@ public class ProductController {
         return ResponseEntity.ok(this.productService.getRandomEnableProducts(pageNo, pageSize));
     }
 
-    @ApiOperation("Get All Enable Products No Pageable")
+    @ApiOperation("Get All Enable Products No Pageable - User Page")
     @GetMapping("/v1/products/enable")
     public ResponseEntity<Set<ProductSimpleResponse>> getAllProductEnableNoPageable(){
         return ResponseEntity.ok(this.productService.getAllEnableProductsNoPageable());
+    }
+
+    @ApiOperation("Get All Products No Pageable - Admin")
+    @GetMapping("/v1/products")
+    public ResponseEntity<List<ProductSimpleResponse>> getAllProductNoPageable(){
+        return ResponseEntity.ok(this.productService.getAllProducts());
     }
 
     @ApiOperation("Get Products By Shop Id")

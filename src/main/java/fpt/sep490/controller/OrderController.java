@@ -123,6 +123,15 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Update Order Shipper")
+    @PutMapping("/api/users/{userId}/orders/{orderId}/shipper")
+    public ResponseEntity<OrderResponse> updateOrderShipper(@PathVariable(value = "userId") Long userId,
+                                                           @PathVariable(value = "orderId") Long orderId,
+                                                           @RequestParam(value = "shipperId") Long shipperId){
+        return ResponseEntity.ok(orderService.updateOrderShipper(userId, orderId, shipperId));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Delete Order By Id")
     @DeleteMapping("/api/users/{userId}/orders/{orderId}")
     public ResponseEntity<StringBoolObject> deleteOrder(@PathVariable(value = "userId") Long userId,

@@ -20,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -526,6 +528,21 @@ public class UserServiceImpl implements UserService {
             }
         }
         return new StringBoolObject("Address deleted", false);
+    }
+
+    @Override
+    public Integer countUserRegisterByDay(int day) {
+        List<User> users = userRepository.findAll();
+
+        LocalDate today = LocalDate.now();
+        LocalDate daysAgo = today.minusDays(day);
+
+        Timestamp daysAgoTS = Timestamp.valueOf(daysAgo.atStartOfDay());
+
+        List<User> recentList = users.stream().filter(user -> user.getCreatedTime().after(daysAgoTS)).collect(Collectors.toList());
+
+        Integer count = recentList.stream().toArray().length;
+        return count;
     }
 
 

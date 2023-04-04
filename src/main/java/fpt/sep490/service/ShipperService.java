@@ -9,6 +9,10 @@ public interface ShipperService {
     ShipperResponsePageable getAllShipper(int pageNo, int pageSize, String sortBy, String sortDir);
 
     ShipperResponsePageable getShippersByShop(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    ShipperResponsePageable findShipperByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    ShipperResponsePageable findShopShipperByName(Long shopId, String name, int pageNo, int pageSize, String sortBy, String sortDir);
     ShipperResponse getShipperById(Long shipperId);
     ShipperDto updateShipperShippingStatus(Long shipperId, Boolean isShipping);
     ShipperDto swapShipperStatus(Long shipperId, Boolean isActive);

@@ -33,4 +33,6 @@ public interface UserService {
 
     StringBoolObject updateUserDefaultAddress(Long userId, Long defaultAddressId);
     StringBoolObject deleteUserAddress(Long userId, Long addressId);
+
+    Integer countUserRegisterByDay(int day);
 }

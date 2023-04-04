@@ -196,4 +196,11 @@ public class UserController {
                                                     @PathVariable(value = "addressId") Long addressId){
         return ResponseEntity.ok(userService.deleteUserAddress(userId, addressId));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation("Count new users by day")
+    @GetMapping("/count")
+    public ResponseEntity<Integer> count(@RequestParam(value = "day") int day){
+        return ResponseEntity.ok(userService.countUserRegisterByDay(day));
+    }
 }

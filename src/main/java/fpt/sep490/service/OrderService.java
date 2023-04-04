@@ -26,6 +26,8 @@ public interface OrderService {
 
     OrderResponse updateOrderStatus(Long userId, Long orderId, String status);
 
+    OrderResponse updateOrderShipper(Long userId, Long orderId, Long shipperId);
+
     Integer countOrdersByDistrict(String districtName);
 
     Integer countShopOrdersByDistrict(Long shopId, String districtName);
