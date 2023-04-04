@@ -30,6 +30,8 @@ public interface ProductService {
 
     void deleteProduct(Long productId);
 
+    ProductResponsePageable findEnableProductsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
+
     ProductResponsePageable findProductsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
 
     StringBoolObject productHasBeenBoughtByUser(Long productId, Long userId);

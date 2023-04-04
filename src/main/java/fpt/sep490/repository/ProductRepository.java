@@ -24,6 +24,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findProductsByUsersIn(List<User> users, Pageable pageable);
     Page<Product> findProductsByNameLikeOrNameContaining(String name, String namec, Pageable pageable);
 
+    Page<Product> findProductsByIsEnabledAndNameContaining(boolean isEnable, String name, Pageable pageable);
+
     List<Product> findProductsByShop(Shop shop);
 
     Page<Product> findDistinctByCategoriesInAndIsEnabledAndNameContainingOrNameLike(List<Category> categories, boolean isEnabled, String namec, String name, Pageable pageable);
