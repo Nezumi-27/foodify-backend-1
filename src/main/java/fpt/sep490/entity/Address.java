@@ -1,10 +1,13 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "address", uniqueConstraints = {@UniqueConstraint(columnNames = {"address"})})
-public class Address {
+@Table(name = "address")
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +30,7 @@ public class Address {
 
     @Column(name = "ward", nullable = false)
     private String ward;
+
+    @ManyToMany(mappedBy = "addresses")
+    private Set<User> users;
 }

@@ -1,10 +1,13 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,7 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "shippers")
-public class Shipper {
+public class Shipper implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +26,16 @@ public class Shipper {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @Column(name = "is_shipping")
+    private Boolean isShipping;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "shipper", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
 }

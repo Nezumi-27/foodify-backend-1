@@ -1,8 +1,10 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
@@ -13,53 +15,69 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"}),
-        @UniqueConstraint(columnNames = {"identified_code"})
-    })
-public class User {
+//@Table(name = "users", uniqueConstraints = {
+//        @UniqueConstraint(columnNames = {"email"}),
+//        @UniqueConstraint(columnNames = {"identified_code"})
+//    })
+@Table(name = "users")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "first_name", nullable = false)
-    private String firstname;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "dob", nullable = false)
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
     @Column(name = "is_locked", nullable = false)
-    private boolean isLocked;
+    private Boolean isLocked;
 
     @Column(name = "created_time", nullable = false)
+    @CreationTimestamp
     private Timestamp createdTime;
 
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Column(name = "default_address")
+    private Long defaultAddress;
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_address",
-                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-                inverseJoinColumns = @JoinColumn(name = "address_id", referencedColumnName = "id"))
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "address_id"))
     private Set<Address> addresses;
+
+    @ManyToMany
+    @JoinTable(name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> products;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shipper shipper;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shop shop;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
 }

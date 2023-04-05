@@ -1,10 +1,14 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,23 +16,41 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "shops")
-public class Shop {
+@Table(name = "shops", uniqueConstraints = {@UniqueConstraint(columnNames = "user_id")})
+public class Shop implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "description", nullable = false, length = 512)
     private String description;
 
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
     @Column(name = "is_enabled",nullable = false)
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     @Column(name = "is_student",nullable = false)
-    private boolean isStudent;
+    private Boolean isStudent;
 
-    @OneToOne
+    @Column(name = "lat")
+    private double lat;
+
+    @Column(name = "lng")
+    private double lng;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Shipper> shippers = new HashSet<>();
 }

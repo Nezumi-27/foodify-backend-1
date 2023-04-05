@@ -1,10 +1,12 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,17 +14,21 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "user_images")
-public class UserImage {
-
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @Column(name = "image_url",nullable = false)
-    private String imageUrl;
+    private String content;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    private float rating;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

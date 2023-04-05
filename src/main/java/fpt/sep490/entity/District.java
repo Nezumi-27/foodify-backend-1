@@ -1,10 +1,13 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,12 +15,15 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "district")
-public class District {
+@Table(name = "districts")
+public class District implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "district", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Ward> wards;
 }

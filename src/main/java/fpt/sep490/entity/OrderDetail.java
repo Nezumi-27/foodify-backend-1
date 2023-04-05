@@ -1,11 +1,12 @@
 package fpt.sep490.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 @Getter
@@ -15,7 +16,7 @@ import java.math.BigInteger;
 
 @Entity
 @Table(name = "order_details")
-public class OrderDetails {
+public class OrderDetail implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +26,13 @@ public class OrderDetails {
     private int quantity;
 
     @Column(name = "sub_total", nullable = false)
-    private BigInteger subTotal;
+    private Long subTotal;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 }

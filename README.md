@@ -12,4 +12,6 @@
 - JSON Web token
 - MySQL driver
 - Lombok
-- Swagger Documentation
+- Model Mapper
+- Spring Fox Swagger UI
+- Firebase Admin SDK
