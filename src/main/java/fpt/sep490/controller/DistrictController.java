@@ -2,6 +2,7 @@ package fpt.sep490.controller;
 
 import fpt.sep490.entity.District;
 import fpt.sep490.payload.DistrictDto;
+import fpt.sep490.payload.DistrictResponse;
 import fpt.sep490.service.DistrictService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,13 +32,13 @@ public class DistrictController {
 
     @ApiOperation(value = "Get All District")
     @GetMapping
-    public ResponseEntity<List<DistrictDto>> getAllDistricts(){
+    public ResponseEntity<List<DistrictResponse>> getAllDistricts(){
         return ResponseEntity.ok(districtService.getAllDistricts());
     }
 
     @ApiOperation(value = "Get District by Id")
     @GetMapping("{id}")
-    public ResponseEntity<DistrictDto> getDistrict(@PathVariable("id") Long id){
+    public ResponseEntity<DistrictResponse> getDistrict(@PathVariable("id") Long id){
         return ResponseEntity.ok(districtService.getDistrict(id));
     }
 

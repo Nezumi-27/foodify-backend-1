@@ -35,7 +35,7 @@ public class ProductDto {
     private Long shopId;
 
     @NotEmpty(message = "Description of product must not be empty")
-    private List<Long> categoryIds;
+    private List<String> categoryNames;
 
     private float averageRating;
     private float discountPercent;

@@ -1,10 +1,8 @@
 package fpt.sep490.entity;
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -23,6 +21,11 @@ public class Role implements Serializable {
 
     @Column(name = "name")
     private String name;
+
+    public Role(Long id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User> users;

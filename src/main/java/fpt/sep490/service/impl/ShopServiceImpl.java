@@ -1,5 +1,6 @@
 package fpt.sep490.service.impl;
 
+import fpt.sep490.entity.Product;
 import fpt.sep490.entity.Shop;
 import fpt.sep490.entity.User;
 import fpt.sep490.exception.FoodifyAPIException;
@@ -7,6 +8,8 @@ import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.PageableDto;
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
+import fpt.sep490.payload.ShopResponsePageable;
+import fpt.sep490.repository.ProductRepository;
 import fpt.sep490.repository.ShopRepository;
 import fpt.sep490.repository.UserRepository;
 import fpt.sep490.service.ShopService;
@@ -26,11 +29,14 @@ public class ShopServiceImpl implements ShopService {
     private ShopRepository shopRepository;
     private ModelMapper mapper;
     private UserRepository userRepository;
+    private final ProductRepository productRepository;
 
-    public ShopServiceImpl(ShopRepository shopRepository, ModelMapper mapper, UserRepository userRepository) {
+    public ShopServiceImpl(ShopRepository shopRepository, ModelMapper mapper, UserRepository userRepository,
+                           ProductRepository productRepository) {
         this.shopRepository = shopRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -49,7 +55,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public ShopResponse getAllShops(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public ShopResponsePageable getAllShops(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
@@ -67,16 +73,52 @@ public class ShopServiceImpl implements ShopService {
         pageableDto.setTotalPages(shops.getTotalPages());
         pageableDto.setLast(shops.isLast());
 
-        ShopResponse shopResponse = new ShopResponse();
-        shopResponse.setShops(content);
-        shopResponse.setPage(pageableDto);
-        return shopResponse;
+        ShopResponsePageable shopResponsePageable = new ShopResponsePageable();
+        shopResponsePageable.setShops(content);
+        shopResponsePageable.setPage(pageableDto);
+        return shopResponsePageable;
     }
 
     @Override
-    public ShopDto getShopById(Long shopId) {
+    public ShopResponsePageable getAllEnabledShops(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Shop> shops = shopRepository.findShopsByIsEnabled(true, pageable);
+
+        List<Shop> listOfShops = shops.getContent();
+        List<ShopDto> content = listOfShops.stream().map(shop -> mapper.map(shop, ShopDto.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(shops.getNumber());
+        pageableDto.setPageSize(shops.getSize());
+        pageableDto.setTotalElements(shops.getTotalElements());
+        pageableDto.setTotalPages(shops.getTotalPages());
+        pageableDto.setLast(shops.isLast());
+
+        ShopResponsePageable shopResponsePageable = new ShopResponsePageable();
+        shopResponsePageable.setShops(content);
+        shopResponsePageable.setPage(pageableDto);
+        return shopResponsePageable;
+    }
+
+    @Override
+    public ShopResponse getShopById(Long shopId) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
-        return mapper.map(shop, ShopDto.class);
+        return mapper.map(shop, ShopResponse.class);
+    }
+
+    @Override
+    public ShopResponse getShopByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Shop shop = shopRepository.findShopByUser(user)
+                .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This user don't have shop"));
+
+        return mapper.map(shop, ShopResponse.class);
     }
 
     @Override
@@ -87,6 +129,20 @@ public class ShopServiceImpl implements ShopService {
         shop.setImageUrl(shopDto.getImageUrl());
         shop.setIsStudent(shopDto.getIsStudent());
         shop.setIsEnabled(shopDto.getIsEnabled());
+        if(shopDto.getIsEnabled() == false){
+            List<Product> products = productRepository.findProductsByShop(shop);
+            for(Product product : products){
+                product.setIsEnabled(false);
+                productRepository.save(product);
+            }
+        }
+        else {
+            List<Product> products = productRepository.findProductsByShop(shop);
+            for(Product product : products){
+                product.setIsEnabled(true);
+                productRepository.save(product);
+            }
+        }
 
         Shop updateShop = shopRepository.save(shop);
 

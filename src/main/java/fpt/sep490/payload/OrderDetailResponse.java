@@ -8,5 +8,5 @@ public class OrderDetailResponse {
     private ProductResponse product;
     private int quantity;
     private Long subtotal;
-    private OrderResponse order;
+//    private OrderResponse order;
 }

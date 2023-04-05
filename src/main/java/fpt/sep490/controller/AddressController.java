@@ -1,7 +1,7 @@
 package fpt.sep490.controller;
 
 import fpt.sep490.payload.AddressDto;
-import fpt.sep490.payload.AddressResponse;
+import fpt.sep490.payload.AddressResponsePageable;
 import fpt.sep490.service.AddressService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -24,14 +24,14 @@ public class AddressController {
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Create Address")
     @PostMapping
-    public ResponseEntity<AddressDto> createAddress(AddressDto addressDto){
+    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto){
         return new ResponseEntity<>(addressService.createAddress(addressDto), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation("Get all Addresses")
     @GetMapping
-    public AddressResponse getAllAddress(
+    public AddressResponsePageable getAllAddress(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ADDRESS_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,

@@ -41,4 +41,6 @@ public class SignUpDto {
 
     @NotEmpty(message = "Role name must not be empty")
     private String roleName;
-}
+
+    private AddressDto addressDto;
+}   

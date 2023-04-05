@@ -20,9 +20,9 @@ public class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String date;
-    private String paymentMethod;
-    private String deliveryStatus;
-    private Long amount;
+    private String productCost;
+    private String shippingCost;
+    private Long total;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")

@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "address", uniqueConstraints = {@UniqueConstraint(columnNames = {"address"})})
+@Table(name = "address")
 public class Address implements Serializable {
 
     @Id
@@ -30,9 +30,6 @@ public class Address implements Serializable {
 
     @Column(name = "ward", nullable = false)
     private String ward;
-
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Order> orders;
 
     @ManyToMany(mappedBy = "addresses")
     private Set<User> users;

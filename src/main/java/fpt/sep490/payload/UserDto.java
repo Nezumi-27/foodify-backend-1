@@ -15,6 +15,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    private Long id;
+    
     @NotEmpty
     @Email(message = "Email must be a valid email")
     private String email;
@@ -41,4 +43,6 @@ public class UserDto {
 
     @NotEmpty(message = "Role name must not be empty")
     private String roleName;
+
+    private Long defaultAddress;
 }

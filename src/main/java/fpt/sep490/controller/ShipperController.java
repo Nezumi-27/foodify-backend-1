@@ -1,6 +1,7 @@
 package fpt.sep490.controller;
 
 import fpt.sep490.payload.ShipperDto;
+import fpt.sep490.payload.ShipperResponse;
 import fpt.sep490.payload.ShipperResponsePageable;
 import fpt.sep490.service.ShipperService;
 import fpt.sep490.utils.AppConstants;
@@ -24,7 +25,7 @@ public class ShipperController {
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Create Shipper")
     @PostMapping
-    public ResponseEntity<ShipperDto> createShipper(ShipperDto shipperDto){
+    public ResponseEntity<ShipperDto> createShipper(@RequestBody ShipperDto shipperDto){
         return new ResponseEntity<>(shipperService.createShipper(shipperDto), HttpStatus.CREATED);
     }
 
@@ -40,10 +41,57 @@ public class ShipperController {
         return shipperService.getAllShipper(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
+    @ApiOperation("Get All Shippers By Shop")
+    @GetMapping("/shop/{shopId}")
+    public ShipperResponsePageable getAllShippersByShop(
+            @PathVariable(value = "shopId") Long shopId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHIPPER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return shipperService.getShippersByShop(shopId,pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
+    @ApiOperation("Search Shippers By Name")
+    @GetMapping("/search")
+    public ShipperResponsePageable findShippersByName(
+            @RequestParam(value = "shipperName") String shipperName,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHIPPER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return shipperService.findShipperByName(shipperName, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
+    @ApiOperation("Search Shop Shippers By Name")
+    @GetMapping("/shop/{shopId}/search")
+    public ShipperResponsePageable findShopShippersByName(
+            @PathVariable(value = "shopId") Long shopId,
+            @RequestParam(value = "shipperName") String shipperName,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_SHIPPER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return shipperService.findShopShipperByName(shopId, shipperName, pageNo, pageSize, sortBy, sortDir);
+    }
+
+
     @ApiOperation("Get Shipper By Id")
     @GetMapping("/{id}")
-    public ResponseEntity<ShipperDto> getShipperById(@PathVariable(value = "id") Long id){
+    public ResponseEntity<ShipperResponse> getShipperById(@PathVariable(value = "id") Long id){
         return ResponseEntity.ok(shipperService.getShipperById(id));
+    }
+
+    @ApiOperation("Get Shipper By User Id")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ShipperResponse> getShipperByUserId(@PathVariable(value = "id") Long userId){
+        return ResponseEntity.ok(shipperService.getShipperByUserId(userId));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP') || hasRole('SHIPPER')")

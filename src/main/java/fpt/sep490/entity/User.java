@@ -15,10 +15,11 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email"}),
-        @UniqueConstraint(columnNames = {"identified_code"})
-    })
+//@Table(name = "users", uniqueConstraints = {
+//        @UniqueConstraint(columnNames = {"email"}),
+//        @UniqueConstraint(columnNames = {"identified_code"})
+//    })
+@Table(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,13 +54,16 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @Column(name = "default_address")
+    private Long defaultAddress;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_address",
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "address_id"))
     private Set<Address> addresses;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_wishlist",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
@@ -73,4 +77,7 @@ public class User implements Serializable {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Shop shop;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
 }

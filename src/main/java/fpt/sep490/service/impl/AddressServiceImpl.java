@@ -4,6 +4,7 @@ import fpt.sep490.entity.Address;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.AddressDto;
 import fpt.sep490.payload.AddressResponse;
+import fpt.sep490.payload.AddressResponsePageable;
 import fpt.sep490.payload.PageableDto;
 import fpt.sep490.repository.AddressRepository;
 import fpt.sep490.repository.UserRepository;
@@ -38,7 +39,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponse getAllAddresses(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public AddressResponsePageable getAllAddresses(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
@@ -47,7 +48,7 @@ public class AddressServiceImpl implements AddressService {
         Page<Address> addresses = addressRepository.findAll(pageable);
 
         List<Address> listOfAddress = addresses.getContent();
-        List<AddressDto> content =listOfAddress.stream().map(address -> mapper.map(address, AddressDto.class)).collect(Collectors.toList());
+        List<AddressResponse> content =listOfAddress.stream().map(address -> mapper.map(address, AddressResponse.class)).collect(Collectors.toList());
 
         PageableDto pageableDto = new PageableDto();
         pageableDto.setPageNo(addresses.getNumber());
@@ -56,11 +57,11 @@ public class AddressServiceImpl implements AddressService {
         pageableDto.setTotalPages(addresses.getTotalPages());
         pageableDto.setLast(addresses.isLast());
 
-        AddressResponse addressResponse = new AddressResponse();
-        addressResponse.setAddresses(content);
-        addressResponse.setPage(pageableDto);
+        AddressResponsePageable addressResponsePageable = new AddressResponsePageable();
+        addressResponsePageable.setAddresses(content);
+        addressResponsePageable.setPage(pageableDto);
 
-        return addressResponse;
+        return addressResponsePageable;
     }
 
 

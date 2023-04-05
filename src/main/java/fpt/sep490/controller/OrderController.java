@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.payload.OrderDto;
 import fpt.sep490.payload.OrderResponse;
 import fpt.sep490.payload.OrderResponsePageable;
+import fpt.sep490.payload.StringBoolObject;
 import fpt.sep490.service.OrderService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping()
 public class OrderController {
-    private OrderService orderService;
+    private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -56,6 +57,20 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Get Orders by User And Status")
+    @GetMapping("/api/users/{userId}/orders/status/{status}")
+    public OrderResponsePageable getOrdersByUserAndStatus(
+            @PathVariable(value = "userId") Long userId,
+            @PathVariable(value = "status") String status,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return orderService.getOrdersByUserIdAndStatus(userId, status, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get Orders by Shipper")
     @GetMapping("/api/shippers/{shipperId}/orders")
     public OrderResponsePageable getOrdersByShipper(
@@ -66,6 +81,19 @@ public class OrderController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return orderService.getOrdersByShipperId(shipperId, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Get Orders by Shop")
+    @GetMapping("/api/shops/{shopId}/orders")
+    public OrderResponsePageable getOrdersByShop(
+            @PathVariable(value = "shopId") Long shopId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return orderService.getOrdersByShopId(shopId, pageNo, pageSize, sortBy, sortDir);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
@@ -87,7 +115,7 @@ public class OrderController {
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Update Order Status")
-    @PutMapping("/api/users/{userId}/orders/{orderId}/status/{status}")
+    @PutMapping("/api/users/{userId}/orders/{orderId}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable(value = "userId") Long userId,
                                                      @PathVariable(value = "orderId") Long orderId,
                                                      @RequestParam(value = "status") String status){
@@ -95,11 +123,37 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Update Order Shipper")
+    @PutMapping("/api/users/{userId}/orders/{orderId}/shipper")
+    public ResponseEntity<OrderResponse> updateOrderShipper(@PathVariable(value = "userId") Long userId,
+                                                           @PathVariable(value = "orderId") Long orderId,
+                                                           @RequestParam(value = "shipperId") Long shipperId){
+        return ResponseEntity.ok(orderService.updateOrderShipper(userId, orderId, shipperId));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Delete Order By Id")
     @DeleteMapping("/api/users/{userId}/orders/{orderId}")
-    public ResponseEntity<String> deleteOrder(@PathVariable(value = "userId") Long userId,
-                                                      @PathVariable(value = "orderId") Long orderId){
-        return ResponseEntity.ok("Order deleted successfully");
+    public ResponseEntity<StringBoolObject> deleteOrder(@PathVariable(value = "userId") Long userId,
+                                                        @PathVariable(value = "orderId") Long orderId){
+        return ResponseEntity.ok(this.orderService.deleteOrder(userId, orderId));
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Count Order By District")
+    @GetMapping("/api/orders/count")
+    public ResponseEntity<Integer> countOrderByDistrict(@RequestParam(value = "districtName") String districtName) {
+        return ResponseEntity.ok(this.orderService.countOrdersByDistrict(districtName));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Count Shop Order By District")
+    @GetMapping("/api/orders/shop/{shopId}/count")
+    public ResponseEntity<Integer> countShopOrderByDistrict(
+            @PathVariable(value = "shopId") Long shopId,
+            @RequestParam(value = "districtName") String districtName) {
+        return ResponseEntity.ok(this.orderService.countShopOrdersByDistrict(shopId, districtName));
+    }
+
 
 }

@@ -8,19 +8,31 @@ public interface UserService {
 
     UserResponsePageable getUsersByRoles(String roleName, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    UserResponsePageable getUsersByEmailOrPhoneNumber(String emailOrPhoneNumber, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    UserResponsePageable getUserByEmailOrPhoneNumberAndRole(String emailOrPhoneNumber, String roleName, int pageNo, int pageSize, String sortBy, String sortDir);
+
     UserResponse getUserById(Long userId);
+
+    UserResponse getUserByEmailOrPhoneNumber(String emailOrPhoneNumber);
 
     UserResponse updateUser(Long userId, UserDto userDto);
 
     void deleteUser(Long userId);
 
-    void createLoveProduct(Long userId, Long productId);
+    StringBoolObject createLoveProduct(Long userId, Long productId);
     ProductResponsePageable getLoveProductByUserId(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
-    void deleteLoveProduct(Long userId, Long productId);
 
-    void createAddressForUser(Long userId, AddressDto addressDto);
+    StringBoolObject getLoveProductByUserAndProductId(Long userId, Long productId);
+    StringBoolObject deleteLoveProduct(Long userId, Long productId);
 
-    AddressResponse getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
+    StringBoolObject createAddressForUser(Long userId, AddressDto addressDto);
 
-    public void deleteUserAddress(Long userId, Long addressId);
+    AddressResponsePageable getAddressesByUser(Long userId, int pageNo, int pageSize, String sortBy, String sortDir);
+    AddressDto updateUserAddress(Long userId, Long addressId, AddressDto addressDto);
+
+    StringBoolObject updateUserDefaultAddress(Long userId, Long defaultAddressId);
+    StringBoolObject deleteUserAddress(Long userId, Long addressId);
+
+    Integer countUserRegisterByDay(int day);
 }

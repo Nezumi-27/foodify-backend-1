@@ -45,6 +45,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                         WebRequest webRequest){
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
                 webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 }

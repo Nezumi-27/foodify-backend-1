@@ -36,6 +36,7 @@ public class WardServiceImpl implements WardService {
 
         ward.setDistrict(district);
         Ward newWard = wardRepository.save(ward);
+        WardDto newWardDto = mapper.map(newWard, WardDto.class);
 
         return mapper.map(newWard, WardDto.class);
     }

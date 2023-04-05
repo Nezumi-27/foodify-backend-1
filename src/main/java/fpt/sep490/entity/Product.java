@@ -30,7 +30,7 @@ public class Product implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 512)
     private String description;
 
     @Column(name = "created_time", nullable = false)
@@ -52,6 +52,9 @@ public class Product implements Serializable {
     @Column(name = "review_count")
     private int reviewCount;
 
+    @Column(name = "sold")
+    private int sold;
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
@@ -67,6 +70,9 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany
     private Set<User> users;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
 }
