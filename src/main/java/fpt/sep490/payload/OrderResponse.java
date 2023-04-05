@@ -19,6 +19,8 @@ public class OrderResponse {
     private Timestamp orderTime;
     private String status;
     private String address;
+    private String lat;
+    private String lng;
     private UserDto user;
     private ShipperResponse shipper;
     private Set<OrderDetailResponse> orderDetails;
