@@ -204,6 +204,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponsePageable getOrdersByShipperIdAndStatus(Long shipperId, String status, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Shipper shipper = shipperRepository.findById(shipperId)
+                .orElseThrow(()-> new ResourceNotFoundException("Shipper", "id", shipperId));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Order> orders = orderRepository.findOrdersByShipperAndStatus(shipper, status, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
     public OrderResponsePageable getOrdersByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir) {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
@@ -221,6 +247,28 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Page<Order> orders = orderRepository.findDistinctByOrderDetailsIn(lists, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
+    public OrderResponsePageable findOrdersByTrackingNumber(String oTN, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Order> orders = orderRepository.findOrdersByOrderTrackingNumberContaining(oTN, pageable);
         List<Order> orderList = orders.getContent();
         List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
 
@@ -318,7 +366,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setStatus(status);
+
         if(status.equals("COMPLETED")){
+            order.getShipper().setIsShipping(false);
             Set<OrderDetail> details = order.getOrderDetails();
 
             for(OrderDetail detail : details){
@@ -346,6 +396,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setShipper(shipper);
+        shipper.setIsShipping(true);
+        shipperRepository.save(shipper);
         return mapper.map(orderRepository.save(order), OrderResponse.class);
     }
 
@@ -407,7 +459,9 @@ public class OrderServiceImpl implements OrderService {
         Long revenue = 0L;
 
         for(Order order : recentOrders){
-            revenue = revenue + order.getTotal();
+            if(order.getStatus().equals("COMPLETED")) {
+                revenue = revenue + order.getTotal();
+            }
         }
         return revenue;
     }

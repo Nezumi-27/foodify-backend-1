@@ -15,4 +15,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     List<Address> findAddressesByAddress(String address);
     Page<Address> findAddressesByUsersIn(List<User> users, Pageable pageable);
+
+    Page<Address> findAddressesByAddressContaining(String address, Pageable pageable);
 }

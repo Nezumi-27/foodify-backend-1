@@ -15,5 +15,7 @@ public interface ShipperRepository extends JpaRepository<Shipper, Long> {
 
     List<Shipper> findShippersByShop(Shop shop);
 
+    List<Shipper> findShippersByShopAndIsActiveAndAndIsShipping(Shop shop, boolean isActive, boolean isShipping);
+
     Optional<Shipper> findShipperByUser(User user);
 }

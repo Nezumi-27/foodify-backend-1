@@ -10,10 +10,7 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class UserDto {
     private Long id;
     

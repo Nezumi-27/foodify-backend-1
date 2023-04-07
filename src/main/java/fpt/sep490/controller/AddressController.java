@@ -40,6 +40,19 @@ public class AddressController {
         return addressService.getAllAddresses(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation("Find address by name")
+    @GetMapping("/search")
+    public AddressResponsePageable findAddressesByName(
+            @RequestParam(value = "address") String name,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ADDRESS_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return addressService.findAddressesByName(name, pageNo, pageSize, sortBy, sortDir);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP','SHIPPER')")
     @ApiOperation("Get Address by Id")
     @GetMapping("{id}")

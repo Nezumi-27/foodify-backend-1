@@ -8,6 +8,8 @@ public interface AddressService {
 
     AddressResponsePageable getAllAddresses(int pageNo, int pageSize, String sortBy, String sortDir);
 
+    AddressResponsePageable findAddressesByName(String address, int pageNo, int pageSize, String sortBy, String sortDir);
+
     AddressDto getAddressById(Long addressId);
 
     AddressDto updateAddress(Long addressId, AddressDto addressDto);

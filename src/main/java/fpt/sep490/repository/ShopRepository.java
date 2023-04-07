@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ShopRepository extends JpaRepository<Shop, Long> {
     Page<Shop> findShopsByIsEnabled(boolean isEnabled, Pageable pageable);
 
+    Page<Shop> findShopsByNameContaining(String name, Pageable pageable);
     Optional<Shop> findShopByUser(User user);
 }
