@@ -167,6 +167,8 @@ public class ShopServiceImpl implements ShopService {
         shop.setImageUrl(shopDto.getImageUrl());
         shop.setIsStudent(shopDto.getIsStudent());
         shop.setIsEnabled(shopDto.getIsEnabled());
+        shop.setLat(shopDto.getLat());
+        shop.setLng(shopDto.getLng());
         if(shopDto.getIsEnabled() == false){
             List<Product> products = productRepository.findProductsByShop(shop);
             for(Product product : products){

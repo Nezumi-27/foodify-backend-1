@@ -10,9 +10,9 @@ import lombok.Setter;
 public class Location {
     @SerializedName("lat")
     @Expose
-    private Double lat;
+    private String lat;
 
     @SerializedName("lng")
     @Expose
-    private Double lng;
+    private String lng;
 }
