@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @PreAuthorize("hasAnyRole('ADMIN', 'SHOP')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SHOP')")
     @ApiOperation("Create new user")
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserDto userDto){
