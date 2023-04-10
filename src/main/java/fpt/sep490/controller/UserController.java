@@ -204,6 +204,13 @@ public class UserController {
         return ResponseEntity.ok(userService.countUserRegisterByDay(day));
     }
 
+    @ApiOperation("Get FCM Token")
+    @PutMapping("/{userId}/fcm")
+    public ResponseEntity<String> getFcmTokenFromUser(
+            @PathVariable(value = "userId") Long userId){
+        return ResponseEntity.ok(userService.getFcmToken(userId));
+    }
+
     @ApiOperation("Update FCM Token")
     @PutMapping("/{userId}/update/fcm")
     public ResponseEntity<StringBoolObject> updateUserFcmToken(

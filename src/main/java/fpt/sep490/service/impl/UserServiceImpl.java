@@ -555,5 +555,13 @@ public class UserServiceImpl implements UserService {
         return new StringBoolObject("updatedFcm", true);
     }
 
+    @Override
+    public String getFcmToken(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+
+        return user.getFcmToken();
+    }
+
 
 }

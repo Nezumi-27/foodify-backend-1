@@ -23,4 +23,5 @@ public interface UserService {
     StringBoolObject deleteUserAddress(Long userId, Long addressId);
     Integer countUserRegisterByDay(int day);
     StringBoolObject updateFcmToken(Long userId, String token);
+    String getFcmToken(Long userId);
 }
