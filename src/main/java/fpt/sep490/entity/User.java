@@ -50,6 +50,9 @@ public class User implements Serializable {
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @ManyToOne()
     @JoinColumn(name = "role_id")
     private Role role;
