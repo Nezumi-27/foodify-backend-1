@@ -205,7 +205,7 @@ public class UserController {
     }
 
     @ApiOperation("Get FCM Token")
-    @PutMapping("/{userId}/fcm")
+    @GetMapping("/{userId}/fcm")
     public ResponseEntity<String> getFcmTokenFromUser(
             @PathVariable(value = "userId") Long userId){
         return ResponseEntity.ok(userService.getFcmToken(userId));

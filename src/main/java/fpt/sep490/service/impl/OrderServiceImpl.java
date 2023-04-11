@@ -1,6 +1,9 @@
 package fpt.sep490.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.sep490.entity.*;
+import fpt.sep490.entity.notification.Notification;
+import fpt.sep490.entity.notification.Sender;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.*;
@@ -12,8 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -398,6 +402,29 @@ public class OrderServiceImpl implements OrderService {
         order.setShipper(shipper);
         shipper.setIsShipping(true);
         shipperRepository.save(shipper);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer AAAAMcAdgF0:APA91bE9OPI9SBgvFV_8KijtnWEQ5nx4PyOhrY61u8BRv5xKnPzhiqCqcLvz4WVYSgVNLHWjUiOJBaxhIiwhwB6YsAPXDn1aNfbKx-q8FvypzW7lmiKC8vOxFpYUAh8YaItk4Vf-eZ_F");
+
+        String url = "https://fcm.googleapis.com/fcm/send";
+        String fcmToken = shipper.getUser().getFcmToken();
+        if (fcmToken.startsWith("\"") && fcmToken.endsWith("\"")) {
+            fcmToken = fcmToken.substring(1, fcmToken.length() - 1);
+        }
+
+        Sender sender = new Sender("", new Notification());
+        sender.setTo(fcmToken);
+        sender.getNotification().setTitle("Đơn hàng mới");
+        sender.getNotification().setBody("Bạn vừa nhận được một đơn hàng mới. Vui lòng kiểm tra ứng dụng của bạn");
+        sender.getNotification().setImage("https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fbell-mobile.jpg?alt=media&token=f00a2dce-2556-4d32-894a-c26e4f18db6b");
+        sender.getNotification().setSound("notificationsound.mp3");
+        sender.getNotification().setAndroidChannelId("foodify-notification");
+
+        HttpEntity<Sender> request = new HttpEntity<>(sender, headers);
+        ResponseEntity<Sender> response = restTemplate.postForEntity(url, request, Sender.class);
+
         return mapper.map(orderRepository.save(order), OrderResponse.class);
     }
 
