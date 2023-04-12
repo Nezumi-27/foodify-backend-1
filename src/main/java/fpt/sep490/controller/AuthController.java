@@ -31,6 +31,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.checkEmailOrPhoneNumberExist(signUpDto));
     }
 
+    @ApiOperation("Check identified code")
+    @GetMapping("/check")
+    public ResponseEntity<StringBoolObject> checkEmailOrPhoneNumber(@RequestParam("code") String code){
+        return ResponseEntity.ok(authService.checkIdentifiedCodeExist(code));
+    }
+
     @ApiOperation("Sign-up mobile user")
     @PostMapping("/signup")
     public ResponseEntity<UserDto> registerUser(@RequestBody SignUpDto signUpDto){

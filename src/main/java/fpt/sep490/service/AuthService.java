@@ -6,5 +6,7 @@ public interface AuthService {
 //    String login(LoginDto loginDto);
 
     StringBoolObject checkEmailOrPhoneNumberExist(SignUpDto signUpDto);
+
+    StringBoolObject checkIdentifiedCodeExist(String code);
     UserDto register(SignUpDto signUpDto);
 }
