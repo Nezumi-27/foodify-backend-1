@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
-    @ApiOperation("Get Love Product By Id")
+    @ApiOperation("Check Love Product By User")
     @GetMapping("/{userId}/loves/{productId}")
     public StringBoolObject getLoveProduct(@PathVariable(value = "userId") Long userId,
                                            @PathVariable(value = "productId") Long productId){
