@@ -10,7 +10,10 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     private Long id;
     
@@ -42,4 +45,5 @@ public class UserDto {
     private String roleName;
 
     private Long defaultAddress;
+
 }

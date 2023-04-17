@@ -55,9 +55,9 @@ public class UserServiceTest {
 
     @Test
     public void stage1_testCreateUser(){
-        UserDto userDto = new UserDto(
+        UserDto userDto = new UserDto(1L,
                 "test@gmail.com", "0905000001", "Test name", "1-1-2001", "test.png",
-                false, "123123123", "ROLE_ANY"
+                false, "123123123", "ROLE_ANY", 1L
         );
         User user = mapper.map(userDto, User.class);
 
@@ -74,9 +74,9 @@ public class UserServiceTest {
     @Test
     public void stage2_testGetAllUsers(){
         List<UserDto> userDtos = new ArrayList<>();
-        userDtos.add(new UserDto("test1@gmail.com", "0905000001", "Test name 1", "1-1-2001", "test1.png",false, "123123123", "ROLE_ANY"));
-        userDtos.add(new UserDto("test2@gmail.com", "0905000002", "Test name 2", "2-1-2001", "test2.png",false, "123123125", "ROLE_ANY"));
-        userDtos.add(new UserDto("test3@gmail.com", "0905000003", "Test name 3", "3-1-2001", "test3.png",false, "123123120", "ROLE_ANY"));
+        userDtos.add(new UserDto(1L, "test1@gmail.com", "0905000001", "Test name 1", "1-1-2001", "test1.png",false, "123123123", "ROLE_ANY", 1L));
+        userDtos.add(new UserDto(2L, "test2@gmail.com", "0905000002", "Test name 2", "2-1-2001", "test2.png",false, "123123125", "ROLE_ANY", 1L));
+        userDtos.add(new UserDto(3L, "test3@gmail.com", "0905000003", "Test name 3", "3-1-2001", "test3.png",false, "123123120", "ROLE_ANY", 1L));
         List<User> users = userDtos.stream().map(userDto -> mapper.map(userDto, User.class)).collect(Collectors.toList());
 
         int pageNumber = 0;

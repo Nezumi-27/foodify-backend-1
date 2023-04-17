@@ -23,6 +23,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findOrdersByShipperAndStatus(Shipper shipper, String status, Pageable pageable);
 
+    Page<Order> findOrdersByShipperAndStatusIn(Shipper shipper, List<String> statuses, Pageable pageable);
+
     Page<Order> findDistinctByOrderDetailsIn(List<OrderDetail> orderDetails, Pageable pageable);
 
     List<Order> findDistinctByOrderDetailsIn(List<OrderDetail> orderDetails);

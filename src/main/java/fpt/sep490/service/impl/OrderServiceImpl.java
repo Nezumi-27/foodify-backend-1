@@ -1,13 +1,14 @@
 package fpt.sep490.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fpt.sep490.entity.*;
+import fpt.sep490.entity.map.Location;
 import fpt.sep490.entity.notification.Notification;
 import fpt.sep490.entity.notification.Sender;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.*;
 import fpt.sep490.repository.*;
+import fpt.sep490.service.GeocodeService;
 import fpt.sep490.service.OrderService;
 import fpt.sep490.utils.AppConstants;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +34,19 @@ public class OrderServiceImpl implements OrderService {
     private ShipperRepository shipperRepository;
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
-    private AddressRepository addressRepository;
+    private GeocodeService geocodeService;
     private ModelMapper mapper;
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
 
-    public OrderServiceImpl(UserRepository userRepository, ShipperRepository shipperRepository, OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, AddressRepository addressRepository, ModelMapper mapper,
+    public OrderServiceImpl(UserRepository userRepository, ShipperRepository shipperRepository, OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, GeocodeService geocodeService, ModelMapper mapper,
                             ProductRepository productRepository,
                             ShopRepository shopRepository) {
         this.userRepository = userRepository;
         this.shipperRepository = shipperRepository;
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
-        this.addressRepository = addressRepository;
+        this.geocodeService = geocodeService;
         this.mapper = mapper;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
@@ -217,6 +219,32 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
         Page<Order> orders = orderRepository.findOrdersByShipperAndStatus(shipper, status, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
+    public OrderResponsePageable getOrdersByShipperIdAndStatuses(Long shipperId, List<String> statuses, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Shipper shipper = shipperRepository.findById(shipperId)
+                .orElseThrow(()-> new ResourceNotFoundException("Shipper", "id", shipperId));
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Order> orders = orderRepository.findOrdersByShipperAndStatusIn(shipper, statuses, pageable);
         List<Order> orderList = orders.getContent();
         List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
 
@@ -508,5 +536,42 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
 
         return new StringBoolObject("isDeleted", true);
+    }
+
+    @Override
+    public ShippingResponse findDistanceAndShippingCost(String address, Long shopId) {
+        int Radius = 6371;
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        Location location = this.geocodeService.getLocation(address);
+        double userLat = Double.parseDouble(location.getLat());
+        double shopLat = Double.parseDouble(shop.getLat());
+        double userLng = Double.parseDouble(location.getLng());
+        double shopLng = Double.parseDouble(shop.getLng());
+
+        double dLat = Math.toRadians(shopLat - userLat);
+        double dLon = Math.toRadians(shopLng - userLng);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(userLat))
+                * Math.cos(Math.toRadians(shopLat)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+
+        int distance = Integer.valueOf(newFormat.format(km));
+        float shipCost;
+
+        //Calculate ship cost
+        if(distance <= 3){
+            shipCost = 15000;
+        } else if(distance > 3 && distance <= 10){
+            shipCost = 5000 * (float) distance;
+        } else {
+            shipCost = 3000 * (float) distance;
+        }
+        return new ShippingResponse(distance, (long) shipCost);
     }
 }

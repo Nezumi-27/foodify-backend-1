@@ -17,6 +17,7 @@ public interface OrderService {
     OrderResponsePageable getOrdersByShipperId(Long shipperId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     OrderResponsePageable getOrdersByShipperIdAndStatus(Long shipperId, String status, int pageNo, int pageSize, String sortBy, String sortDir);
+    OrderResponsePageable getOrdersByShipperIdAndStatuses(Long shipperId, List<String> statuses, int pageNo, int pageSize, String sortBy, String sortDir);
 
     OrderResponsePageable getOrdersByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
 
@@ -29,6 +30,8 @@ public interface OrderService {
     OrderResponse updateOrderStatus(Long userId, Long orderId, String status);
 
     OrderResponse updateOrderShipper(Long userId, Long orderId, Long shipperId);
+
+    ShippingResponse findDistanceAndShippingCost(String address, Long shopId);
 
     Integer countOrdersByDistrict(String districtName);
 
