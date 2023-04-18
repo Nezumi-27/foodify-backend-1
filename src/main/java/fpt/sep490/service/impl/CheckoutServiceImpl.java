@@ -93,7 +93,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             put("app_time", System.currentTimeMillis()); // miliseconds
             put("app_user", "abc123");
             put("amount", Long.parseLong(merchantDto.getAmount()));
-            put("description", "Shopify - Payment for the order #" + random_id);
+            put("description", "Foodify - Payment for the order #" + random_id);
             put("bank_code", "zalopayapp");
             put("item", new JSONArray(mapItems).toString());
             put("embed_data", new JSONObject(embed_data).toString());

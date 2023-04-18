@@ -15,7 +15,7 @@ public class OrderResponse {
     private Long shippingCost;
     private Long total;
 
-    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy", timezone = "GMT+7")
+    @JsonFormat(pattern="HH:mm dd-MM-yyyy", timezone = "GMT+7")
     private Timestamp orderTime;
     private String status;
     private String address;

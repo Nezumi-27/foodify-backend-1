@@ -64,7 +64,6 @@ public class ProductController {
     @ApiOperation("Get All Enable Products No Pageable - User Page")
     @GetMapping("/v1/products/enable")
     public ResponseEntity<Set<ProductSimpleResponse>> getAllProductEnableNoPageable(){
-//        System.out.println("Service called");
         return ResponseEntity.ok(this.productService.getAllEnableProductsNoPageable());
     }
 

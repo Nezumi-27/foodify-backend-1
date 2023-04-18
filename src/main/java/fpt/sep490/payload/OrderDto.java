@@ -16,7 +16,6 @@ public class OrderDto {
 //    @NotEmpty(message = "User Id must not be empty")
 //    private Long userId;
 
-    @NotEmpty(message = "Shipper Id must not be empty")
     private Long shipperId;
 
     @NotEmpty(message = "Payment method must not be empty")

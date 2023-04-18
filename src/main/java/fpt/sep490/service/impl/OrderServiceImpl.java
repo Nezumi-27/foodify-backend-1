@@ -72,7 +72,6 @@ public class OrderServiceImpl implements OrderService {
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Product " + productDisable + " has been disabled");
         }
 
-
         Long productCost= 0L;
         Order order = new Order();
         order.setOrderTrackingNumber(orderDto.getOrderTrackingNumber());
@@ -339,8 +338,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("Order", "id", orderId));
 
-        Shipper shipper = shipperRepository.findById(orderDto.getShipperId())
-                .orElseThrow(() -> new ResourceNotFoundException("Shipper", "id",orderDto.getShipperId()));
+        Shipper shipper = order.getShipper();
 
 
         if(!order.getUser().getId().equals(userId)){
@@ -572,6 +570,6 @@ public class OrderServiceImpl implements OrderService {
         } else {
             shipCost = 3000 * (float) distance;
         }
-        return new ShippingResponse(distance, (long) shipCost);
+        return new ShippingResponse(distance, (long) shipCost, location);
     }
 }
