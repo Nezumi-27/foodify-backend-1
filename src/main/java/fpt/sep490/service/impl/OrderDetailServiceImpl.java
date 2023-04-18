@@ -1,14 +1,19 @@
 package fpt.sep490.service.impl;
 
+import com.google.type.LatLng;
 import fpt.sep490.entity.Order;
 import fpt.sep490.entity.OrderDetail;
 import fpt.sep490.entity.Product;
+import fpt.sep490.entity.Shop;
+import fpt.sep490.entity.map.Location;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.*;
 import fpt.sep490.repository.OrderDetailRepository;
 import fpt.sep490.repository.OrderRepository;
 import fpt.sep490.repository.ProductRepository;
+import fpt.sep490.repository.ShopRepository;
+import fpt.sep490.service.GeocodeService;
 import fpt.sep490.service.OrderDetailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -18,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +32,19 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
     private ProductRepository productRepository;
-    private ModelMapper mapper;
 
-    public OrderDetailServiceImpl(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, ModelMapper mapper) {
+    private GeocodeService geocodeService;
+    private ModelMapper mapper;
+    private final ShopRepository shopRepository;
+
+    public OrderDetailServiceImpl(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, ProductRepository productRepository, GeocodeService geocodeService, ModelMapper mapper,
+                                  ShopRepository shopRepository) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
+        this.geocodeService = geocodeService;
         this.mapper = mapper;
+        this.shopRepository = shopRepository;
     }
 
     @Override

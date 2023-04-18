@@ -24,7 +24,7 @@ public class SliderController {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create new Slider")
     @PostMapping
-    public ResponseEntity<SliderDto> createSlider(SliderDto sliderDto){
+    public ResponseEntity<SliderDto> createSlider(@RequestBody SliderDto sliderDto){
         return new ResponseEntity<>(sliderService.createSlider(sliderDto), HttpStatus.CREATED);
     }
 
@@ -50,8 +50,8 @@ public class SliderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Delete Slider by Id")
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteSlider(@PathVariable("id") Long id){
+    @DeleteMapping()
+    public ResponseEntity<String> deleteSlider(@RequestParam("id") Long id){
         sliderService.deleteSlider(id);
         return ResponseEntity.ok("Slider deleted successfully");
     }

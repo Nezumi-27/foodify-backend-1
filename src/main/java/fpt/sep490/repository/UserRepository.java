@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByPhoneNumber(String phoneNumber);
 
+    Boolean existsByIdentifiedCode(String code);
+
     Page<User> findUsersByRole(Role role, Pageable pageable);
 
     Page<User> findUsersByEmailContainingOrPhoneNumberContaining(String email, String phoneNumber, Pageable pageable);

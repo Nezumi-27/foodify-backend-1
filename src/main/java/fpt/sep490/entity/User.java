@@ -15,11 +15,10 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-//@Table(name = "users", uniqueConstraints = {
-//        @UniqueConstraint(columnNames = {"email"}),
-//        @UniqueConstraint(columnNames = {"identified_code"})
-//    })
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"identified_code"})
+    })
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +48,9 @@ public class User implements Serializable {
 
     @Column(name = "identified_code", nullable = false)
     private String identifiedCode;
+
+    @Column(name = "fcm_token")
+    private String fcmToken;
 
     @ManyToOne()
     @JoinColumn(name = "role_id")

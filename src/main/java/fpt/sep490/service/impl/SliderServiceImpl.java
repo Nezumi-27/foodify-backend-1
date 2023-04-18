@@ -23,7 +23,8 @@ public class SliderServiceImpl implements SliderService {
 
     @Override
     public SliderDto createSlider(SliderDto sliderDto) {
-        Slider slider = mapper.map(sliderDto, Slider.class);
+        Slider slider = new Slider();
+        slider.setImageUrl(sliderDto.getImageUrl());
         sliderRepository.save(slider);
         return mapper.map(slider, SliderDto.class);
     }

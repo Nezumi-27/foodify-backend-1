@@ -3,7 +3,7 @@ package fpt.sep490.service;
 import fpt.sep490.payload.OrderDetailDto;
 import fpt.sep490.payload.OrderDetailResponse;
 import fpt.sep490.payload.OrderDetailResponsePageable;
-import fpt.sep490.payload.OrderDto;
+import fpt.sep490.payload.ShippingResponse;
 
 public interface OrderDetailService {
     OrderDetailResponse createOrderDetail(Long orderId, OrderDetailDto orderDetailDto);

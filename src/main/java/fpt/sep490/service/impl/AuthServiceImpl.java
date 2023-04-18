@@ -60,6 +60,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public StringBoolObject checkIdentifiedCodeExist(String code) {
+        if(userRepository.existsByIdentifiedCode(code)){
+            return new StringBoolObject("existed", true);
+        }
+        return new StringBoolObject("existed", false);
+    }
+
+    @Override
     public UserDto register(SignUpDto signUpDto) {
         if(userRepository.existsByEmail(signUpDto.getEmail())){
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "This email has been taken");

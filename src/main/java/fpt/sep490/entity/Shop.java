@@ -39,10 +39,10 @@ public class Shop implements Serializable {
     private Boolean isStudent;
 
     @Column(name = "lat")
-    private double lat;
+    private String lat;
 
     @Column(name = "lng")
-    private double lng;
+    private String lng;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

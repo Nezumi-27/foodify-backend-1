@@ -9,6 +9,8 @@ public interface ShopService {
 
     ShopResponsePageable getAllShops(int pageNo, int pageSize, String sortBy, String sortDir);
 
+    ShopResponsePageable findShopsByName(String name, int pageNo, int pageSize, String sortBy, String sortDir);
+
     ShopResponsePageable getAllEnabledShops(int pageNo, int pageSize, String sortBy, String sortDir);
 
     ShopResponse getShopById(Long shopId);

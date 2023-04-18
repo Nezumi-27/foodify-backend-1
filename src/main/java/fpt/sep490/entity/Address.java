@@ -28,7 +28,7 @@ public class Address implements Serializable {
     @Column(name = "district", nullable = false)
     private String district;
 
-    @Column(name = "ward", nullable = false)
+    @Column(name = "ward")
     private String ward;
 
     @ManyToMany(mappedBy = "addresses")

@@ -138,6 +138,15 @@ public class ShipperServiceImpl implements ShipperService {
     }
 
     @Override
+    public List<ShipperResponse> findFreeShipperByShop(Long shopId) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));
+
+        List<Shipper> shippers = shipperRepository.findShippersByShopAndIsActiveAndAndIsShipping(shop, true, false);
+        return shippers.stream().map(shipper -> mapper.map(shipper, ShipperResponse.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public ShipperResponsePageable findShopShipperByName(Long shopId, String name, int pageNo, int pageSize, String sortBy, String sortDir) {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Shop", "id", shopId));

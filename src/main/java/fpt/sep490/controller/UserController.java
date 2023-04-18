@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")
-    @ApiOperation("Get Love Product By Id")
+    @ApiOperation("Check Love Product By User")
     @GetMapping("/{userId}/loves/{productId}")
     public StringBoolObject getLoveProduct(@PathVariable(value = "userId") Long userId,
                                            @PathVariable(value = "productId") Long productId){
@@ -202,5 +202,20 @@ public class UserController {
     @GetMapping("/count")
     public ResponseEntity<Integer> count(@RequestParam(value = "day") int day){
         return ResponseEntity.ok(userService.countUserRegisterByDay(day));
+    }
+
+    @ApiOperation("Get FCM Token")
+    @GetMapping("/{userId}/fcm")
+    public ResponseEntity<String> getFcmTokenFromUser(
+            @PathVariable(value = "userId") Long userId){
+        return ResponseEntity.ok(userService.getFcmToken(userId));
+    }
+
+    @ApiOperation("Update FCM Token")
+    @PutMapping("/{userId}/update/fcm")
+    public ResponseEntity<StringBoolObject> updateUserFcmToken(
+            @PathVariable(value = "userId") Long userId,
+            @RequestBody String token){
+        return ResponseEntity.ok(userService.updateFcmToken(userId, token));
     }
 }

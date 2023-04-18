@@ -1,9 +1,6 @@
 package fpt.sep490.controller;
 
-import fpt.sep490.payload.OrderDto;
-import fpt.sep490.payload.OrderResponse;
-import fpt.sep490.payload.OrderResponsePageable;
-import fpt.sep490.payload.StringBoolObject;
+import fpt.sep490.payload.*;
 import fpt.sep490.service.OrderService;
 import fpt.sep490.utils.AppConstants;
 import io.swagger.annotations.Api;
@@ -12,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api("CRUD Apis for Order Resource")
 @RestController
@@ -81,6 +80,34 @@ public class OrderController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return orderService.getOrdersByShipperId(shipperId, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Get Orders by Shipper And Status")
+    @GetMapping("/api/shippers/{shipperId}/orders/status")
+    public OrderResponsePageable getOrdersByShipperAndStatus(
+            @PathVariable(value = "shipperId") Long shipperId,
+            @RequestParam(value = "status") String status,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return orderService.getOrdersByShipperIdAndStatus(shipperId, status, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Get Orders by Shipper And Statuses (Latest)")
+    @GetMapping("/api/shippers/{shipperId}/orders/statuses")
+    public OrderResponsePageable getOrdersByShipperAndStatuses(
+            @PathVariable(value = "shipperId") Long shipperId,
+            @RequestParam(value = "status") List<String> statuses,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return orderService.getOrdersByShipperIdAndStatuses(shipperId, statuses, pageNo, pageSize, sortBy, sortDir);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
@@ -155,5 +182,25 @@ public class OrderController {
         return ResponseEntity.ok(this.orderService.countShopOrdersByDistrict(shopId, districtName));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Find Order By Tracking Number")
+    @GetMapping("/api/orders/search")
+    public ResponseEntity<OrderResponsePageable> findOrderByTrackingNumber(
+            @RequestParam(value = "trackingNumber") String trackingNumber,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+        return ResponseEntity.ok(this.orderService.findOrdersByTrackingNumber(trackingNumber, pageNo, pageSize, sortBy, sortDir));
+    }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Find Order Distance and Shipping Cost")
+    @GetMapping("/api/orders/cost")
+    public ResponseEntity<ShippingResponse> countDistance(
+            @RequestParam("address") String address,
+            @RequestParam("shopId") Long shopId
+    ) {
+        return ResponseEntity.ok(this.orderService.findDistanceAndShippingCost(address, shopId));
+    }
 }

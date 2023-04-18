@@ -1,9 +1,7 @@
 package fpt.sep490.service;
 
-import fpt.sep490.payload.OrderDto;
-import fpt.sep490.payload.OrderResponse;
-import fpt.sep490.payload.OrderResponsePageable;
-import fpt.sep490.payload.StringBoolObject;
+import fpt.sep490.payload.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,7 +16,12 @@ public interface OrderService {
 
     OrderResponsePageable getOrdersByShipperId(Long shipperId, int pageNo, int pageSize, String sortBy, String sortDir);
 
+    OrderResponsePageable getOrdersByShipperIdAndStatus(Long shipperId, String status, int pageNo, int pageSize, String sortBy, String sortDir);
+    OrderResponsePageable getOrdersByShipperIdAndStatuses(Long shipperId, List<String> statuses, int pageNo, int pageSize, String sortBy, String sortDir);
+
     OrderResponsePageable getOrdersByShopId(Long shopId, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    OrderResponsePageable findOrdersByTrackingNumber(String oTN, int pageNo, int pageSize, String sortBy, String sortDir);
 
     OrderResponse getOrderById(Long userId, Long orderId);
 
@@ -27,6 +30,8 @@ public interface OrderService {
     OrderResponse updateOrderStatus(Long userId, Long orderId, String status);
 
     OrderResponse updateOrderShipper(Long userId, Long orderId, Long shipperId);
+
+    ShippingResponse findDistanceAndShippingCost(String address, Long shopId);
 
     Integer countOrdersByDistrict(String districtName);
 

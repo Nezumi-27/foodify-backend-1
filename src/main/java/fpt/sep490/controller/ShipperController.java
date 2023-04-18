@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api("CRUD APIs for Shippers Resource")
 @RestController
 @RequestMapping("/api/shippers")
@@ -79,6 +81,15 @@ public class ShipperController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return shipperService.findShopShipperByName(shopId, shipperName, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
+    @ApiOperation("Search Shop Free Shippers")
+    @GetMapping("/shop/{shopId}/search/free")
+    public ResponseEntity<List<ShipperResponse>> findShopFreeShippers(
+            @PathVariable(value = "shopId") Long shopId
+    ){
+        return ResponseEntity.ok(shipperService.findFreeShipperByShop(shopId));
     }
 
 
