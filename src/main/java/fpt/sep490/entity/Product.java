@@ -70,7 +70,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "products")
     private Set<User> users;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
