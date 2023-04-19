@@ -278,7 +278,6 @@ public class UserServiceImpl implements UserService {
 
         List<Product> products = productRepository.findProductsByUsersIn(users);
         List<Long> loveproductIds = products.stream().map(loveproduct -> loveproduct.getId()).collect(Collectors.toList());
-        System.out.println(loveproductIds);
         if(loveproductIds.contains(productId)){
             return new StringBoolObject("Love product", true);
         }
@@ -314,7 +313,6 @@ public class UserServiceImpl implements UserService {
         if(!user.getAddresses().isEmpty()){
             isHaveAddress = true;
         }
-        System.out.println(isHaveAddress);
 
         if(addressDto.getDistrict() == "Huyện Hoàng Sa") addressDto.setWard("");
 

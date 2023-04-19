@@ -3,6 +3,7 @@ package fpt.sep490.controller;
 import fpt.sep490.payload.ShopDto;
 import fpt.sep490.payload.ShopResponse;
 import fpt.sep490.payload.ShopResponsePageable;
+import fpt.sep490.payload.StringBoolObject;
 import fpt.sep490.service.OrderService;
 import fpt.sep490.service.impl.ShopServiceImpl;
 import fpt.sep490.utils.AppConstants;
@@ -87,9 +88,9 @@ public class ShopController {
     @PreAuthorize("hasRole('ADMIN') || hasRole('SHOP')")
     @ApiOperation("Delete Shop by Id")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteShop(@PathVariable(name = "id") Long shopId){
+    public ResponseEntity<StringBoolObject> deleteShop(@PathVariable(name = "id") Long shopId){
         shopService.deleteShop(shopId);
-        return ResponseEntity.ok("Shop deleted successfully");
+        return ResponseEntity.ok(new StringBoolObject("isDeleted", true));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")

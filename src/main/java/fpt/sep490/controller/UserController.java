@@ -113,9 +113,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('SHOP', 'SHIPPER', 'USER') and principal.password==#userId.toString()")
     @ApiOperation("Delete user by Id")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable(value = "userId") Long userId){
+    public ResponseEntity<StringBoolObject> deleteUser(@PathVariable(value = "userId") Long userId){
         userService.deleteUser(userId);
-        return ResponseEntity.ok("User deleted successfully");
+        return ResponseEntity.ok(new StringBoolObject("isDeleted", true));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasAnyRole('USER') and principal.password==#userId.toString()")

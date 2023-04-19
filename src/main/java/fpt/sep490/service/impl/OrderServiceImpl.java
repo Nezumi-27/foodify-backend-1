@@ -360,7 +360,6 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepository.delete(oldOrderDetail);
         }
 
-        System.out.println("Debug here");
         Order orderUpdated = orderRepository.save(order);
 
         for(OrderDetailDto orderDetail : orderDetails){
