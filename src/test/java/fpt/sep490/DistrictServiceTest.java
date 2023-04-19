@@ -2,6 +2,7 @@ package fpt.sep490;
 
 import fpt.sep490.entity.District;
 import fpt.sep490.payload.DistrictDto;
+import fpt.sep490.payload.DistrictResponse;
 import fpt.sep490.repository.DistrictRepository;
 import fpt.sep490.service.DistrictService;
 import fpt.sep490.service.impl.DistrictServiceImpl;
@@ -34,7 +35,7 @@ public class DistrictServiceTest {
     @InjectMocks
     private DistrictServiceImpl districtService;
 
-    private District district = new District(1L, "test_district");
+    private District district = new District(1L, "test_district", null);
 
     @Test
     public void stage1_testCreateDistrict(){
@@ -50,12 +51,12 @@ public class DistrictServiceTest {
     public void stage2_testGetAllDistricts(){
         List<District> list = new ArrayList<>();
         list.add(district);
-        list.add(new District(2L, "test_district2"));
-        list.add(new District(3L, "test_district3"));
+        list.add(new District(2L, "test_district2", null));
+        list.add(new District(3L, "test_district3", null));
 
         Mockito.when(districtRepository.findAll()).thenReturn(list);
 
-        List<DistrictDto> listDtos = districtService.getAllDistricts();
+        List<DistrictResponse> listDtos = districtService.getAllDistricts();
 
         Assert.assertNotNull(listDtos);
     }
@@ -64,7 +65,7 @@ public class DistrictServiceTest {
     public void stage3_testGetDistrictById(){
         Mockito.when(districtRepository.findById(1L)).thenReturn(Optional.of(district));
 
-        DistrictDto districtGET = districtService.getDistrict(1L);
+        DistrictResponse districtGET = districtService.getDistrict(1L);
 
         Assert.assertNotNull(districtGET);
         Assert.assertEquals("test_district", districtGET.getName());

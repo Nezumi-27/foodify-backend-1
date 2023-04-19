@@ -35,7 +35,7 @@ public class CategoryServiceTest {
 
     @Test
     public void stage1_testCreateCategory(){
-        Category category = new Category(1L, "cat_test", "cat_test_img");
+        Category category = new Category(1L, "cat_test", "cat_test_img",null);
         CategoryDto categoryDto = mapper.map(category, CategoryDto.class);
 
         Mockito.when(categoryRepository.save(Mockito.any(Category.class))).thenReturn(category);
@@ -49,9 +49,9 @@ public class CategoryServiceTest {
     @Test
     public void stage2_testGetAllCategories(){
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category(1L, "cat_test1", "cat_test1_img"));
-        categories.add(new Category(2L, "cat_test2", "cat_test2_img"));
-        categories.add(new Category(3L, "cat_test3", "cat_test3_img"));
+        categories.add(new Category(1L, "cat_test1", "cat_test1_img",null));
+        categories.add(new Category(2L, "cat_test2", "cat_test2_img",null));
+        categories.add(new Category(3L, "cat_test3", "cat_test3_img",null));
 
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
 
@@ -62,7 +62,7 @@ public class CategoryServiceTest {
 
     @Test
     public void stage3_testGetRoleById(){
-        Category category = new Category(1L, "cat_test", "cat_test_img");
+        Category category = new Category(1L, "cat_test", "cat_test_img",null);
 
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
 
@@ -74,8 +74,8 @@ public class CategoryServiceTest {
 
     @Test
     public void stage4_testUpdateRoleById(){
-        Category category = new Category(1L, "cat_test", "cat_test_img");
-        Category categoryU = new Category(1L, "cat_testU", "cat_testU_img");
+        Category category = new Category(1L, "cat_test", "cat_test_img",null);
+        Category categoryU = new Category(1L, "cat_testU", "cat_testU_img",null);
         CategoryDto categoryUDto = mapper.map(categoryU, CategoryDto.class);
 
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
@@ -91,7 +91,7 @@ public class CategoryServiceTest {
 
     @Test
     public void stage5_testDeleteRoleById(){
-        Category category = new Category(1L, "cat_test", "cat_test_img");
+        Category category = new Category(1L, "cat_test", "cat_test_img",null);
 
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
 

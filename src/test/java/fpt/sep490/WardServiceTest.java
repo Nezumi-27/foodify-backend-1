@@ -39,7 +39,7 @@ public class WardServiceTest {
 
     @Test
     public void stage1_createWard(){
-        District district = new District(1L, "DISTRICT_TEST");
+        District district = new District(1L, "DISTRICT_TEST", null);
         Ward ward = new Ward(1L,"WARD_TEST", district);
         WardDto wardDto = mapper.map(ward, WardDto.class);
         System.out.println(wardDto);
@@ -55,7 +55,7 @@ public class WardServiceTest {
 
     @Test
     public void stage2_testGetAllWardByDistrictId(){
-        District district = new District(1L, "DISTRICT_TEST");
+        District district = new District(1L, "DISTRICT_TEST", null);
         List<Ward> wards = new ArrayList<>();
         wards.add(new Ward(1L, "Ward_1", district));
         wards.add(new Ward(2L, "Ward_2", district));
