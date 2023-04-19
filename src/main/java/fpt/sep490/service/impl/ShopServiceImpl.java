@@ -55,7 +55,6 @@ public class ShopServiceImpl implements ShopService {
 
         Address address = user.getAddresses().stream().findFirst().get();
         String addressString = address.getAddress() + ", " + address.getWard() + ", " + address.getDistrict() + ", Đà Nẵng";
-        System.out.println(addressString);
 
         Location shopLocation = geocodeService.getLocation(addressString);
 

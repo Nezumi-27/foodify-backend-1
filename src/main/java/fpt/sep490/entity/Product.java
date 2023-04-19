@@ -55,11 +55,11 @@ public class Product implements Serializable {
     @Column(name = "sold")
     private int sold;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -75,4 +75,7 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderDetail> details;
 }

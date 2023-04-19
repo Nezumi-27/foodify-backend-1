@@ -42,13 +42,11 @@ public class WardServiceTest {
         District district = new District(1L, "DISTRICT_TEST", null);
         Ward ward = new Ward(1L,"WARD_TEST", district);
         WardDto wardDto = mapper.map(ward, WardDto.class);
-        System.out.println(wardDto);
 
         Mockito.when(districtRepository.findById(1L)).thenReturn(Optional.of(district));
         Mockito.when(wardRepository.save(Mockito.any(Ward.class))).thenReturn(ward);
 
         WardDto newWard = wardService.createWard(1L, wardDto);
-        System.out.println("ward" + newWard);
 
         Assert.assertNotNull(newWard);
     }
@@ -64,7 +62,6 @@ public class WardServiceTest {
         Mockito.when(wardRepository.findByDistrictId(1L)).thenReturn(wards);
 
         List<WardDto> dtos = wardService.getAllWardsByDistrictId(1L);
-        System.out.println(dtos);
 
         Assert.assertNotNull(dtos);
     }
