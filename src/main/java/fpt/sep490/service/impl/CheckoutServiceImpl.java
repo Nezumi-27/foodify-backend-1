@@ -81,7 +81,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         appTransId = getCurrentTimeString("yyMMdd") + "_" + random_id;
         Map embed_data = new HashMap() {{
-            put("redirecturl", "http://localhost:4200/shop/checkout/success/TOK_" + merchantDto.getOrderId());
+            put("redirecturl", "https://foodify-fpt.vercel.app/shop/checkout/success/TOK_" + merchantDto.getOrderId());
         }};
 
 
