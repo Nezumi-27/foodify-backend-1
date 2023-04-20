@@ -97,7 +97,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             put("bank_code", "zalopayapp");
             put("item", new JSONArray(mapItems).toString());
             put("embed_data", new JSONObject(embed_data).toString());
-            put("callback_url", "http://localhost:4200/shop/checkout/success");
+            put("callback_url", "https://foodify-fpt.vercel.app/shop/checkout/success");
         }};
 
 
