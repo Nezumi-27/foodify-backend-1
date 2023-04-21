@@ -20,8 +20,10 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "rating", nullable = false)
     private float rating;
 
     @ManyToOne
