@@ -60,6 +60,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public StringBoolObject checkEmailExist(String email) {
+        if(userRepository.existsByEmail(email)) return new StringBoolObject("isExisted", true);
+        else return new StringBoolObject("isExisted", false);
+    }
+
+    @Override
     public StringBoolObject checkIdentifiedCodeExist(String code) {
         if(userRepository.existsByIdentifiedCode(code)){
             return new StringBoolObject("existed", true);

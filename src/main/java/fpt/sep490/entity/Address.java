@@ -31,6 +31,6 @@ public class Address implements Serializable {
     @Column(name = "ward")
     private String ward;
 
-    @ManyToMany(mappedBy = "addresses")
+    @ManyToMany(mappedBy = "addresses", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<User> users;
 }

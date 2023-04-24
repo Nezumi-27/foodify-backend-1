@@ -28,6 +28,6 @@ public class Category implements Serializable {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categories", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Product> products;
 }
