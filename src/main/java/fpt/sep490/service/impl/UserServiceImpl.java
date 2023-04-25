@@ -1,16 +1,13 @@
 package fpt.sep490.service.impl;
 
-import fpt.sep490.entity.Address;
-import fpt.sep490.entity.Product;
-import fpt.sep490.entity.Role;
-import fpt.sep490.entity.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import fpt.sep490.entity.*;
 import fpt.sep490.exception.FoodifyAPIException;
 import fpt.sep490.exception.ResourceNotFoundException;
 import fpt.sep490.payload.*;
-import fpt.sep490.repository.AddressRepository;
-import fpt.sep490.repository.ProductRepository;
-import fpt.sep490.repository.RoleRepository;
-import fpt.sep490.repository.UserRepository;
+import fpt.sep490.repository.*;
 import fpt.sep490.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -32,14 +29,17 @@ public class UserServiceImpl implements UserService {
     private ProductRepository productRepository;
     private ModelMapper mapper;
     private AddressRepository addressRepository;
+    private final ShopRepository shopRepository;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ProductRepository productRepository, ModelMapper mapper,
-                           AddressRepository addressRepository) {
+                           AddressRepository addressRepository,
+                           ShopRepository shopRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.productRepository = productRepository;
         this.mapper = mapper;
         this.addressRepository = addressRepository;
+        this.shopRepository = shopRepository;
     }
 
 
@@ -559,6 +559,37 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
 
         return user.getFcmToken();
+    }
+
+    @Override
+    public UserInfo getUserByToken(String token) {
+        try{
+            FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            String email = firebaseToken.getEmail();
+            UserInfo userInfo = new UserInfo();
+            User user = userRepository.findByEmailOrPhoneNumber(email, email)
+                    .orElseThrow(() -> new FoodifyAPIException(HttpStatus.BAD_REQUEST, "User not found with email" + email));
+            if(user.getRole().getName().equals("ROLE_SHOP")){
+                userInfo.setUserEmail(email);
+                userInfo.setUserId(user.getId());
+                userInfo.setUserRole(user.getRole().getName());
+
+                Shop shop = shopRepository.findShopByUser(user)
+                        .orElseThrow(() -> new ResourceNotFoundException("Shop", "user Id", user.getId()));
+                userInfo.setShopId(shop.getId());
+            }
+            else{
+                userInfo.setUserEmail(email);
+                userInfo.setUserId(user.getId());
+                userInfo.setUserRole(user.getRole().getName());
+                userInfo.setShopId(0L);
+            }
+
+            return userInfo;
+        }
+        catch (FirebaseAuthException e){
+            throw new RuntimeException("Failed to validate Firebase JWT token", e);
+        }
     }
 
 

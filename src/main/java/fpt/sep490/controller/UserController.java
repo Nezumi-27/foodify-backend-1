@@ -218,4 +218,10 @@ public class UserController {
             @RequestBody String token){
         return ResponseEntity.ok(userService.updateFcmToken(userId, token));
     }
+
+    @ApiOperation("Get User By Token")
+    @GetMapping("/info")
+    public ResponseEntity<UserInfo> getUserByToken(@RequestParam(name = "token") String token){
+        return ResponseEntity.ok(userService.getUserByToken(token));
+    }
 }
