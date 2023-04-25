@@ -24,4 +24,5 @@ public interface UserService {
     Integer countUserRegisterByDay(int day);
     StringBoolObject updateFcmToken(Long userId, String token);
     String getFcmToken(Long userId);
+    UserInfo getUserByToken(String token);
 }
