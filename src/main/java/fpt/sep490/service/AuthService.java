@@ -11,4 +11,5 @@ public interface AuthService {
 
     StringBoolObject checkIdentifiedCodeExist(String code);
     UserDto register(SignUpDto signUpDto);
+
 }

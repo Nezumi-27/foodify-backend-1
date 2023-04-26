@@ -83,6 +83,19 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
+    @ApiOperation("Get Orders by Status")
+    @GetMapping("/api/orders/get")
+    public OrderResponsePageable getOrdersByStatus(
+            @RequestParam(value = "status") String status,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_ORDER_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return orderService.getOrdersByStatus(status, pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER','SHOP', 'SHIPPER')")
     @ApiOperation("Get Orders by Shipper And Status")
     @GetMapping("/api/shippers/{shipperId}/orders/status")
     public OrderResponsePageable getOrdersByShipperAndStatus(
