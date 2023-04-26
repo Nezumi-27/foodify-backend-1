@@ -39,7 +39,7 @@ public class AuthController {
 
     @ApiOperation("Check identified code")
     @GetMapping("/check")
-    public ResponseEntity<StringBoolObject> checkEmailOrPhoneNumber(@RequestParam("code") String code){
+    public ResponseEntity<StringBoolObject> checkIdentifiedCodeExist(@RequestParam("code") String code){
         return ResponseEntity.ok(authService.checkIdentifiedCodeExist(code));
     }
 

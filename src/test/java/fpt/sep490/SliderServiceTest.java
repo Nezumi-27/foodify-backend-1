@@ -38,6 +38,7 @@ public class SliderServiceTest {
     @Test
     public void stage1_testCreateSlider(){
         SliderDto sliderDto = new SliderDto(1L, "slider_test.png");
+        Mockito.when(sliderRepository.save(Mockito.any(Slider.class))).thenReturn(mapper.map(sliderDto, Slider.class));
 
         SliderDto saveSlider = sliderService.createSlider(sliderDto);
 
