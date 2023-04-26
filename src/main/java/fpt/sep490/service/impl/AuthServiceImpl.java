@@ -1,5 +1,6 @@
 package fpt.sep490.service.impl;
 
+import com.google.firebase.auth.FirebaseAuth;
 import fpt.sep490.entity.Address;
 import fpt.sep490.entity.Role;
 import fpt.sep490.entity.User;
@@ -26,6 +27,8 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
     private AddressRepository addressRepository;
     private ModelMapper mapper;
+
+    private FirebaseAuth firebaseAuth;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, AddressRepository addressRepository, ModelMapper mapper) {
         this.authenticationManager = authenticationManager;

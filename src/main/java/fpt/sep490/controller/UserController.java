@@ -219,6 +219,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateFcmToken(userId, token));
     }
 
+    @PreAuthorize("hasAnyRole('SHOP', 'SHIPPER', 'USER', 'ADMIN')")
     @ApiOperation("Get User By Token")
     @GetMapping("/info")
     public ResponseEntity<UserInfo> getUserByToken(@RequestParam(name = "token") String token){

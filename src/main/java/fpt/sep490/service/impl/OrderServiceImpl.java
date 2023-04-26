@@ -22,8 +22,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,9 +74,11 @@ public class OrderServiceImpl implements OrderService {
             throw new FoodifyAPIException(HttpStatus.BAD_REQUEST, "Product " + productDisable + " has been disabled");
         }
 
+
+
         Long productCost= 0L;
         Order order = new Order();
-        order.setOrderTrackingNumber(orderDto.getOrderTrackingNumber());
+        order.setOrderTrackingNumber(getAppTransId());
         order.setPaymentMethod(orderDto.getPaymentMethod());
         order.setStatus(String.valueOf(AppConstants.ORDER_STATUS.AWAITING));
         order.setShippingCost(orderDto.getShippingCost());
@@ -166,6 +170,29 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
         Page<Order> orders = orderRepository.findOrdersByUserAndStatus(user, status, pageable);
+        List<Order> orderList = orders.getContent();
+        List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setPageNo(orders.getNumber());
+        pageableDto.setPageSize(orders.getSize());
+        pageableDto.setTotalElements(orders.getTotalElements());
+        pageableDto.setTotalPages(orders.getTotalPages());
+        pageableDto.setLast(orders.isLast());
+
+        OrderResponsePageable orderResponsePageable = new OrderResponsePageable();
+        orderResponsePageable.setOrders(content);
+        orderResponsePageable.setPage(pageableDto);
+        return orderResponsePageable;
+    }
+
+    @Override
+    public OrderResponsePageable getOrdersByStatus(String status, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Order> orders = orderRepository.findOrdersByStatus(status, pageable);
         List<Order> orderList = orders.getContent();
         List<OrderResponse> content = orderList.stream().map(order -> mapper.map(order, OrderResponse.class)).collect(Collectors.toList());
 
@@ -570,5 +597,17 @@ public class OrderServiceImpl implements OrderService {
             shipCost = 3000 * (float) distance;
         }
         return new ShippingResponse(distance, (long) shipCost, location);
+    }
+
+    public static String getAppTransId() {
+        int transIdDefault = 1;
+        if (transIdDefault >= 100000) {
+            transIdDefault = 1;
+        }
+
+        transIdDefault += 1;
+       SimpleDateFormat formatDateTime = new SimpleDateFormat("yyMMdd_hhmmss");
+        String timeString = formatDateTime.format(new Date());
+        return String.format("%s%06d", timeString, transIdDefault);
     }
 }
