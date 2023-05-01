@@ -462,20 +462,26 @@ public class OrderServiceImpl implements OrderService {
 
         String url = "https://fcm.googleapis.com/fcm/send";
         String fcmToken = shipper.getUser().getFcmToken();
-        if (fcmToken.startsWith("\"") && fcmToken.endsWith("\"")) {
-            fcmToken = fcmToken.substring(1, fcmToken.length() - 1);
+
+        if(fcmToken == null){
+
         }
+        else {
+            if (fcmToken.startsWith("\"") && fcmToken.endsWith("\"")) {
+                fcmToken = fcmToken.substring(1, fcmToken.length() - 1);
+            }
 
-        Sender sender = new Sender("", new Notification());
-        sender.setTo(fcmToken);
-        sender.getNotification().setTitle("Đơn hàng mới");
-        sender.getNotification().setBody("Bạn vừa nhận được một đơn hàng mới. Vui lòng kiểm tra ứng dụng của bạn");
-        sender.getNotification().setImage("https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fbell-mobile.jpg?alt=media&token=f00a2dce-2556-4d32-894a-c26e4f18db6b");
-        sender.getNotification().setSound("notificationsound.mp3");
-        sender.getNotification().setAndroidChannelId("foodify-notification");
+            Sender sender = new Sender("", new Notification());
+            sender.setTo(fcmToken);
+            sender.getNotification().setTitle("Đơn hàng mới");
+            sender.getNotification().setBody("Bạn vừa nhận được một đơn hàng mới. Vui lòng kiểm tra ứng dụng của bạn");
+            sender.getNotification().setImage("https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fbell-mobile.jpg?alt=media&token=f00a2dce-2556-4d32-894a-c26e4f18db6b");
+            sender.getNotification().setSound("notificationsound.mp3");
+            sender.getNotification().setAndroidChannelId("foodify-notification");
 
-        HttpEntity<Sender> request = new HttpEntity<>(sender, headers);
-        ResponseEntity<Sender> response = restTemplate.postForEntity(url, request, Sender.class);
+            HttpEntity<Sender> request = new HttpEntity<>(sender, headers);
+            ResponseEntity<Sender> response = restTemplate.postForEntity(url, request, Sender.class);
+        }
 
         return mapper.map(orderRepository.save(order), OrderResponse.class);
     }
