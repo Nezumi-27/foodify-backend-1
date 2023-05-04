@@ -424,7 +424,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
 
         if(status.equals("COMPLETED")){
-            order.getShipper().setIsShipping(false);
+            if(order.getShipper() != null){
+                order.getShipper().setIsShipping(false);
+            }
             Set<OrderDetail> details = order.getOrderDetails();
 
             for(OrderDetail detail : details){
