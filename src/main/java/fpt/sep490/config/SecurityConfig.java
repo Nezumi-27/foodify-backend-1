@@ -69,7 +69,7 @@ public class SecurityConfig {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://adm-foodify.vercel.app", "https://admin-foodify.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://adm-foodify.vercel.app", "http://foodify-fpt.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 //        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", ""));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
